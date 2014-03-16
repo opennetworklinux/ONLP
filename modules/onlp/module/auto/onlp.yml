@@ -1,0 +1,67 @@
+###############################################################################
+#
+# onlp Autogeneration Definitions.
+#
+###############################################################################
+
+cdefs: &cdefs
+- ONLP_CONFIG_INCLUDE_LOGGING:
+    doc: "Include or exclude logging."
+    default: 1
+- ONLP_CONFIG_LOG_OPTIONS_DEFAULT:
+    doc: "Default enabled log options."
+    default: AIM_LOG_OPTIONS_DEFAULT
+- ONLP_CONFIG_LOG_BITS_DEFAULT:
+    doc: "Default enabled log bits."
+    default: AIM_LOG_BITS_DEFAULT
+- ONLP_CONFIG_LOG_CUSTOM_BITS_DEFAULT:
+    doc: "Default enabled custom log bits."
+    default: 0
+- ONLP_CONFIG_PORTING_STDLIB:
+    doc: "Default all porting macros to use the C standard libraries."
+    default: 1
+- ONLP_CONFIG_PORTING_INCLUDE_STDLIB_HEADERS:
+    doc: "Include standard library headers for stdlib porting macros."
+    default: ONLP_CONFIG_PORTING_STDLIB
+- ONLP_CONFIG_INCLUDE_UCLI:
+    doc: "Include generic uCli support."
+    default: 0
+- ONLP_CONFIG_DYNAMIC_PLATFORM_LOADING:
+    doc: "Use dynamic platform loading."
+    default: 1
+- ONLP_CONFIG_INCLUDE_SHLOCK_GLOBAL_INIT:
+    doc: "Include global shlock initialization at module init time."
+    default: 0
+
+# OID Types
+oid_types: &oid_types
+- THERMAL : 1
+- FAN : 2
+- PSU : 3
+- LED : 4
+- MODULE : 5
+
+# SFP Status
+sfp_status_flags: &sfp_status_flags
+- TX_FAILURE : (1 << 0)
+- RX_LOS :     (1 << 1)
+
+definitions:
+  cdefs:
+    ONLP_CONFIG_HEADER:
+      defs: *cdefs
+      basename: onlp_config
+
+  enum:
+    onlp_oid_type:
+      members: *oid_types
+    onlp_sfp_status:
+      members: *sfp_status_flags
+
+  portingmacro:
+    ONLP:
+      macros:
+        - memset
+        - memcpy
+        - strncpy
+        - strlen
