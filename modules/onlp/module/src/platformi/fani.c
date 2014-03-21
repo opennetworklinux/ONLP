@@ -14,6 +14,7 @@
  * defined interface functions.
  */
 __ONLP_DEFAULTI_IMPLEMENTATION(onlp_fani_init(void));
+__ONLP_DEFAULTI_IMPLEMENTATION(onlp_fani_info_get(onlp_oid_t id, onlp_fan_info_t* info));
 __ONLP_DEFAULTI_IMPLEMENTATION(onlp_fani_rpm_set(onlp_oid_t id, int rpm));
 __ONLP_DEFAULTI_IMPLEMENTATION(onlp_fani_percentage_set(onlp_oid_t id, int p));
 __ONLP_DEFAULTI_IMPLEMENTATION(onlp_fani_mode_set(onlp_oid_t id, onlp_fan_mode_t mode));
