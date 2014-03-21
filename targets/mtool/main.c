@@ -1,21 +1,21 @@
 /************************************************************
  * <bsn.cl fy=2014 v=onl>
- * 
- *           Copyright 2014 BigSwitch Networks, Inc.           
- * 
+ *
+ *           Copyright 2014 BigSwitch Networks, Inc.
+ *
  * Licensed under the Eclipse Public License, Version 1.0 (the
  * "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
- * 
+ *
  *        http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the
  * License.
- * 
+ *
  * </bsn.cl>
  ************************************************************
  *
@@ -36,11 +36,11 @@ aim_main(int argc, char* argv[])
     int size;
     uint8_t* va = NULL;
 
-#define USAGE()                                                \
-    do {                                                       \
-        fprintf(stderr, "usage: mtool dump PHYSADDR BYTES\n"); \
-        fprintf(stderr, "usage: mtool odump PHYSADDR\n");      \
-        return 1;                                              \
+#define USAGE()                                                         \
+    do {                                                                \
+        fprintf(stderr, "usage: mtool dump PHYSADDR BYTES\n");          \
+        fprintf(stderr, "usage: mtool odump PHYSADDR [json]\n");        \
+        return 1;                                                       \
     } while(0)
 
     if(argc < 3) {
@@ -66,7 +66,12 @@ aim_main(int argc, char* argv[])
         if(va) {
             onlp_onie_info_t info;
             if(onlp_onie_decode(&info, va, size) == 0) {
-                onlp_onie_show(&info, &aim_pvs_stdout);
+                if(argv[3] && !strcmp(argv[3], "json")) {
+                    onlp_onie_show_json(&info, &aim_pvs_stdout);
+                }
+                else {
+                    onlp_onie_show(&info, &aim_pvs_stdout, "");
+                }
                 onlp_onie_info_free(&info);
             }
             else {
