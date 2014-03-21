@@ -45,6 +45,6 @@ int onlp_ledi_ioctl(onlp_oid_t id, va_list vargs);
  * @param mode The new mode.
  * @notes Only called if the mode is advertised in the LED capabilities.
  */
-int onlp_led_mode_set(onlp_oid_t id, onlp_led_mode_t mode);
+int onlp_ledi_mode_set(onlp_oid_t id, onlp_led_mode_t mode);
 
 #endif /* __ONLP_LED_H__ */

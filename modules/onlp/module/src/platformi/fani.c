@@ -15,8 +15,8 @@
  */
 __ONLP_DEFAULTI_IMPLEMENTATION(onlp_fani_init(void));
 __ONLP_DEFAULTI_IMPLEMENTATION(onlp_fani_rpm_set(onlp_oid_t id, int rpm));
-__ONLP_DEFAULTI_IMPLEMENTATION(onlp_fani_percentage_set(int fid, int p));
-__ONLP_DEFAULTI_IMPLEMENTATION(onlp_fani_mode_set(int fid, onlp_fan_mode_t mode));
-__ONLP_DEFAULTI_IMPLEMENTATION(onlp_fan_dir_set(int fid, onlp_fan_dir_t dir));
-__ONLP_DEFAULTI_IMPLEMENTATION(onlp_fani_ioctl(onlp_oid_t fid, va_list vargs));
+__ONLP_DEFAULTI_IMPLEMENTATION(onlp_fani_percentage_set(onlp_oid_t id, int p));
+__ONLP_DEFAULTI_IMPLEMENTATION(onlp_fani_mode_set(onlp_oid_t id, onlp_fan_mode_t mode));
+__ONLP_DEFAULTI_IMPLEMENTATION(onlp_fani_dir_set(onlp_oid_t id, onlp_fan_dir_t dir));
+__ONLP_DEFAULTI_IMPLEMENTATION(onlp_fani_ioctl(onlp_oid_t id, va_list vargs));
 

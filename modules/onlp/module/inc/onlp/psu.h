@@ -34,20 +34,20 @@ typedef struct onlp_psu_info_t {
     /** OID Header */
     onlp_oid_hdr_t hdr;
 
-    /* Capabilities */
-    uint32_t caps;
-
     /* Status */
     uint32_t status;
 
+    /* Capabilities */
+    uint32_t caps;
+
     /* input voltage */
-    uint32_t input_voltage;
+    float input_voltage;
 
     /* Output voltage */
-    uint32_t output_voltage;
+    float output_voltage;
 
     /* Current */
-    uint32_t current;
+    float output_current;
 
     /* child oids */
     onlp_oid_table_t oid_table;
@@ -64,7 +64,14 @@ int onlp_psu_init(void);
  * @param id The PSU OID.
  * @param rv [out] Receives the information structure.
  */
-int onlp_psu_info_get(int pid, onlp_psu_info_t* rv);
+int onlp_psu_info_get(onlp_oid_t id, onlp_psu_info_t* rv);
 
+/**
+ * @brief Show PSU information.
+ * @param id The PSU OID
+ * @param pvs The output pvs
+ * @param flags The output flags
+ */
+void onlp_psu_show(onlp_oid_t id, aim_pvs_t* pvs, uint32_t flags);
 
 #endif /* __ONLP_PSU_H__ */

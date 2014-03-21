@@ -99,7 +99,7 @@ int onlp_fan_init(void);
  * @param id The fan OID.
  * @param rv [out] Receives the fan information.
  */
-int onlp_fan_info_get(int fid, onlp_fan_info_t* rv);
+int onlp_fan_info_get(onlp_oid_t id, onlp_fan_info_t* rv);
 
 /**
  * @brief Set the fan speed in RPMs.
@@ -107,7 +107,7 @@ int onlp_fan_info_get(int fid, onlp_fan_info_t* rv);
  * @param rpm The new RPM.
  * @note Only valid if the fan has the SET_RPM capability.
  */
-int onlp_fan_rpm_set(int fid, int rpm);
+int onlp_fan_rpm_set(onlp_oid_t id, int rpm);
 
 /**
  * @brief Set the fan speed in percentage.
@@ -115,14 +115,14 @@ int onlp_fan_rpm_set(int fid, int rpm);
  * @param p The percentage.
  * @note Only valid if the fan has the SET_PERCENTAGE capability.
  */
-int onlp_fan_percentage_set(int fid, int p);
+int onlp_fan_percentage_set(onlp_oid_t id, int p);
 
 /**
  * @brief Set the fan speed by mode.
  * @param id The fan OID.
  * @param mode The fan mode value.
  */
-int onlp_fan_mode_set(int fid, onlp_fan_mode_t mode);
+int onlp_fan_mode_set(onlp_oid_t id, onlp_fan_mode_t mode);
 
 /**
  * @brief Set the fan direction.
@@ -130,7 +130,15 @@ int onlp_fan_mode_set(int fid, onlp_fan_mode_t mode);
  * @param dir The fan direction (B2F or F2B)
  * @notes Only called if both capabilities are set.
  */
-int onlp_fan_dir_set(int fid, onlp_fan_dir_t dir);
+int onlp_fan_dir_set(onlp_oid_t id, onlp_fan_dir_t dir);
+
+/**
+ * @brief Show the current information about the given fan id.
+ * @param id The fan OID.
+ * @param pvs The output pvs.
+ * @param flags The output flags.
+ */
+void onlp_fan_show(onlp_oid_t id, aim_pvs_t* pvs, uint32_t flags);
 
 #endif /* __ONLP_FAN_H__ */
 

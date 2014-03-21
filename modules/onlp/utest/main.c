@@ -4,6 +4,7 @@
  *
  *****************************************************************************/
 #include <onlp/onlp_config.h>
+#include <onlp/oids.h>
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -80,7 +81,8 @@ aim_main(int argc, char* argv[])
     //    TEST(shlock_test());
 
     /* Example Platform Dump */
-    onlp_platform_dump(&aim_pvs_stdout);
+    onlp_init();
+    onlp_platform_dump(&aim_pvs_stdout, ONLP_OID_SHOW_F_RECURSE);
 
     return 0;
 }

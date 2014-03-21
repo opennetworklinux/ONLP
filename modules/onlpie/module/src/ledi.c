@@ -20,10 +20,26 @@ onlp_ledi_init(void)
 /*
  * Get the information for the given LED OID.
  */
+static onlp_led_info_t linfo[] =
+    {
+        { }, /* Not used */
+        {
+            { ONLP_LED_ID_CREATE(1), "Chassis LED 1", 0 },
+            0x1,
+            ONLP_LED_CAPS_ON_OFF | ONLP_LED_CAPS_RED | ONLP_LED_CAPS_RED_BLINKING,
+            ONLP_LED_MODE_RED
+        },
+        {
+            { ONLP_LED_ID_CREATE(2), "Chassis LED 2", 0 },
+            0x0,
+        },
+    };
+
 int
-onlp_ledi_info_get(onlp_oid_t id, onlp_led_info_t* rv)
+onlp_ledi_info_get(onlp_oid_t id, onlp_led_info_t* info)
 {
-    return ONLP_STATUS_E_UNSUPPORTED;
+    *info = linfo[ONLP_OID_ID_GET(id)];
+    return ONLP_STATUS_OK;
 }
 
 /*
@@ -48,7 +64,7 @@ onlp_ledi_set(onlp_oid_t id, int on_or_off)
  * Only modes reported in the LED's capabilities will be attempted.
  */
 int
-onlp_led_mode_set(onlp_oid_t id, onlp_led_mode_t mode)
+onlp_ledi_mode_set(onlp_oid_t id, onlp_led_mode_t mode)
 {
     return ONLP_STATUS_E_UNSUPPORTED;
 }

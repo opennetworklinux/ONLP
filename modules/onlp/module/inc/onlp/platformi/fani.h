@@ -38,14 +38,14 @@ int onlp_fani_rpm_set(onlp_oid_t id, int rpm);
  * @param p The new fan speed percentage.
  * @note This is only relevant if the PERCENTAGE capability is set.
  */
-int onlp_fani_percentage_set(int fid, int p);
+int onlp_fani_percentage_set(onlp_oid_t id, int p);
 
 /**
  * @brief Set the fan mode.
  * @param id The fan OID.
  * @param mode The new fan mode.
  */
-int onlp_fani_mode_set(int fid, onlp_fan_mode_t mode);
+int onlp_fani_mode_set(onlp_oid_t id, onlp_fan_mode_t mode);
 
 
 /**
@@ -53,7 +53,7 @@ int onlp_fani_mode_set(int fid, onlp_fan_mode_t mode);
  * @param id The fan OID
  * @param dir The direction.
  */
-int onlp_fan_dir_set(int fid, onlp_fan_dir_t dir);
+int onlp_fani_dir_set(onlp_oid_t id, onlp_fan_dir_t dir);
 
 /**
  * @brief Generic fan ioctl

@@ -45,18 +45,19 @@ typedef enum onlp_oid_type_e {
  */
 #define ONLP_OID_TYPE_GET(_id) ( ( (_id) >> 24) )
 #define ONLP_OID_TYPE_CREATE(_type, _id) ( ( (_type) << 24) | (_id))
-
+#define ONLP_OID_IS_TYPE(_type,_id) (ONLP_OID_TYPE_GET((_id)) == _type)
+#define ONLP_OID_ID_GET(_id) (_id & 0xFFFFFF)
 #define ONLP_THERMAL_ID_CREATE(_id) ONLP_OID_TYPE_CREATE(ONLP_OID_TYPE_THERMAL, _id)
 #define ONLP_FAN_ID_CREATE(_id)     ONLP_OID_TYPE_CREATE(ONLP_OID_TYPE_FAN, _id)
 #define ONLP_PSU_ID_CREATE(_id)     ONLP_OID_TYPE_CREATE(ONLP_OID_TYPE_PSU, _id)
 #define ONLP_LED_ID_CREATE(_id)     ONLP_OID_TYPE_CREATE(ONLP_OID_TYPE_LED, _id)
 #define ONLP_MODULE_ID_CREATE(_id)  ONLP_OID_TYPE_CREATE(ONLP_OID_TYPE_MODULE, _id)
 
-#define ONLP_OID_IS_THERMAL(_id) ONLP_OID_IS_TYPE(ONLP_OID_TYPE_THERMAL)
-#define ONLP_OID_IS_FAN(_id)     ONLP_OID_IS_TYPE(ONLP_OID_TYPE_FAN)
-#define ONLP_OID_IS_PSU(_id)     ONLP_OID_IS_TYPE(ONLP_OID_TYPE_PSU)
-#define ONLP_OID_IS_LED(_id)     ONLP_OID_IS_TYPE(ONLP_OID_TYPE_LED)
-#define ONLP_OID_IS_MODULE(_id)  ONLP_OID_IS_TYPE(ONLP_OID_TYPE_MODULE)
+#define ONLP_OID_IS_THERMAL(_id) ONLP_OID_IS_TYPE(ONLP_OID_TYPE_THERMAL,_id)
+#define ONLP_OID_IS_FAN(_id)     ONLP_OID_IS_TYPE(ONLP_OID_TYPE_FAN,_id)
+#define ONLP_OID_IS_PSU(_id)     ONLP_OID_IS_TYPE(ONLP_OID_TYPE_PSU,_id)
+#define ONLP_OID_IS_LED(_id)     ONLP_OID_IS_TYPE(ONLP_OID_TYPE_LED,_id)
+#define ONLP_OID_IS_MODULE(_id)  ONLP_OID_IS_TYPE(ONLP_OID_TYPE_MODULE,_id)
 
 /**
  * All OIDs have user-level description strings:
@@ -90,10 +91,14 @@ typedef struct onlp_oid_hdr_s {
 
 
 
+#define ONLP_OID_SHOW_F_RECURSE 0x1
+#define ONLP_OID_SHOW_F_EVEN_IF_ABSENT 0x2
+
 /**
  * All OIDs can be dumped.
  */
-void onlp_oid_show(onlp_oid_t oid, aim_pvs_t* pvs);
-
+void onlp_oid_show(onlp_oid_t oid, aim_pvs_t* pvs, uint32_t flags);
+void onlp_oids_show(onlp_oid_t* oids, int count, aim_pvs_t* pvs,
+                    uint32_t flags);
 
 #endif /* __ONLP_OID_H__ */

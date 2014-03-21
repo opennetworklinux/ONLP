@@ -21,11 +21,31 @@ onlp_psui_init(void)
 /*
  * Get all information about the given PSU oid.
  */
+static onlp_psu_info_t pinfo[] =
+    {
+        { }, /* Not used */
+        {
+            { ONLP_PSU_ID_CREATE(1), "PSU-1", 0 },
+            0x1,
+            0,
+            240.0,
+            12.0,
+            2.0,
+            /* This PSU has 2 fans */
+            { ONLP_FAN_ID_CREATE(3), ONLP_FAN_ID_CREATE(4) },
+        },
+        {
+            { ONLP_PSU_ID_CREATE(1), "PSU-2", 0 },
+            0,
+        }
+    };
+
+
 int
-onlp_psui_info_get_f(onlp_oid_t id, onlp_psu_info_t* rv)
+onlp_psui_info_get(onlp_oid_t id, onlp_psu_info_t* info)
 {
-    /* Do somethign here */
-    return ONLP_STATUS_E_INTERNAL;
+    *info = pinfo[ONLP_OID_ID_GET(id)];
+    return ONLP_STATUS_OK;
 }
 
 /*

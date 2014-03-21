@@ -19,6 +19,50 @@ onlp_fani_init(void)
 }
 
 /*
+ * Get the fan information.
+ */
+
+/* Static fan information */
+onlp_fan_info_t finfo[] = {
+    { }, /* Not used */
+    {
+        { ONLP_FAN_ID_CREATE(1), "Chassis Fan 1", 0 },
+        0x1,
+        ONLP_FAN_CAPS_B2F,
+        9000,
+        100,
+        ONLP_FAN_MODE_MAX,
+    },
+    {
+        { ONLP_FAN_ID_CREATE(2), "Chassis Fan 2", 0 },
+        0x0,
+    },
+    {
+        { ONLP_FAN_ID_CREATE(3), "PSU-1 Fan 1", 0 },
+        0x1,
+        ONLP_FAN_CAPS_B2F,
+        5004,
+        50,
+        ONLP_FAN_MODE_NORMAL,
+    },
+    {
+        { ONLP_FAN_ID_CREATE(3), "PSU-1 Fan 2", 0 },
+        0x1,
+        ONLP_FAN_CAPS_B2F,
+        5020,
+        50,
+        ONLP_FAN_MODE_NORMAL,
+    },
+};
+
+int
+onlp_fani_info_get(onlp_oid_t id, onlp_fan_info_t* info)
+{
+    *info = finfo[ONLP_OID_ID_GET(id)];
+    return ONLP_STATUS_OK;
+}
+
+/*
  * This function sets the speed of the given fan in RPM.
  *
  * This function will only be called if the fan supprots the RPM_SET
@@ -42,7 +86,7 @@ onlp_fani_rpm_set(onlp_oid_t id, int rpm)
  * It is optional if you have no fans at all with this feature.
  */
 int
-onlp_fani_percentage_set(int fid, int p)
+onlp_fani_percentage_set(onlp_oid_t id, int p)
 {
     return ONLP_STATUS_E_UNSUPPORTED;
 }
@@ -55,7 +99,7 @@ onlp_fani_percentage_set(int fid, int p)
  *
  */
 int
-onlp_fani_mode_set(int fid, onlp_fan_mode_t mode)
+onlp_fani_mode_set(onlp_oid_t id, onlp_fan_mode_t mode)
 {
     return ONLP_STATUS_E_UNSUPPORTED;
 }
@@ -69,7 +113,7 @@ onlp_fani_mode_set(int fid, onlp_fan_mode_t mode)
  * This function is optional unless the functionality is available.
  */
 int
-onlp_fan_dir_set(int fid, onlp_fan_dir_t dir)
+onlp_fani_dir_set(onlp_oid_t id, onlp_fan_dir_t dir)
 {
     return ONLP_STATUS_E_UNSUPPORTED;
 }
@@ -78,7 +122,7 @@ onlp_fan_dir_set(int fid, onlp_fan_dir_t dir)
  * Generic fan ioctl. Optional.
  */
 int
-onlp_fani_ioctl(onlp_oid_t fid, va_list vargs)
+onlp_fani_ioctl(onlp_oid_t id, va_list vargs)
 {
     return ONLP_STATUS_E_UNSUPPORTED;
 }

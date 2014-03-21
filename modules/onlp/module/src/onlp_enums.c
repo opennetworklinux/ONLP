@@ -848,5 +848,11 @@ onlp_led_mode_desc(onlp_led_mode_t e)
     }
 }
 
+int
+onlp_led_mode_valid(onlp_led_mode_t e)
+{
+    return aim_map_si_i(NULL, e, onlp_led_mode_map, 0) ? 1 : 0;
+}
+
 /* <auto.end.enum(ALL).source> */
 

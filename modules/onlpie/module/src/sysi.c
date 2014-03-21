@@ -136,7 +136,25 @@ onlp_sysi_onie_data_free(uint8_t* data)
 int
 onlp_sysi_oids_get(onlp_oid_t* table, int max)
 {
+    onlp_oid_t* e = table;
     memset(table, 0, max*sizeof(onlp_oid_t));
+
+    /* This example supports 2 Thermal sensors on the chassis */
+    *e++ = ONLP_THERMAL_ID_CREATE(1);
+    *e++ = ONLP_THERMAL_ID_CREATE(2);
+
+    /* 2 PSUs */
+    *e++ = ONLP_PSU_ID_CREATE(1);
+    *e++ = ONLP_PSU_ID_CREATE(2);
+
+    /* 2 Fans */
+    *e++ = ONLP_FAN_ID_CREATE(1);
+    *e++ = ONLP_FAN_ID_CREATE(2);
+
+    /* 2 LEDs */
+    *e++ = ONLP_LED_ID_CREATE(1);
+    *e++ = ONLP_LED_ID_CREATE(2);
+
     return 0;
 }
 

@@ -33,6 +33,13 @@ onlp_thermali_init(void)
 int
 onlp_thermali_info_get(onlp_oid_t id, onlp_thermal_info_t* rv)
 {
-    /* Do something here */
-    return ONLP_STATUS_E_INTERNAL;
+    /* Static values */
+    onlp_thermal_info_t info[] = {
+        { }, /* Not used */
+        { { ONLP_THERMAL_ID_CREATE(1), "Chassis Thermal Sensor 1", 0}, 0x1, 23.0 },
+        { { ONLP_THERMAL_ID_CREATE(2), "Chassis Thermal Sensor 2", 0}, 0x0, 0 }
+    };
+    *rv = info[ONLP_OID_ID_GET(id)];
+
+    return ONLP_STATUS_OK;
 }

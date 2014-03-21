@@ -35,6 +35,6 @@ int onlp_init(void);
  * @param pvs The output pvs
  */
 
-void onlp_platform_dump(aim_pvs_t* pvs);
+void onlp_platform_dump(aim_pvs_t* pvs, uint32_t flags);
 
 #endif /* __ONLP_ONLP_H__ */

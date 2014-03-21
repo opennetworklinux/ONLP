@@ -12,7 +12,7 @@
 #include <onlp/sfp.h>
 
 void
-onlp_platform_dump(aim_pvs_t* pvs)
+onlp_platform_dump(aim_pvs_t* pvs, uint32_t flags)
 {
     /* Everything starts with the SYS interface. */
     int rv;
@@ -25,18 +25,15 @@ onlp_platform_dump(aim_pvs_t* pvs)
     }
 
     /* Display the ONIE system information */
+    aim_printf(pvs, "\n");
     aim_printf(pvs, "System Information:\n");
     onlp_onie_show(&sysinfo.onie_info, pvs, "  ");
+    aim_printf(pvs, "\n");
 
     /* Dump all platform OID objects */
-    int i;
-    for(i = 0; i < AIM_ARRAYSIZE(sysinfo.oids); i++) {
-        if(sysinfo.oids[i] != 0) {
-            /* Valid OID */
-            onlp_oid_show(sysinfo.oids[i], pvs);
-        }
-    }
+    onlp_oids_show(sysinfo.oids, AIM_ARRAYSIZE(sysinfo.oids), pvs, flags);
 
+    aim_printf(pvs, "\nSFPs:\n");
     /* Dump all SFPs */
     onlp_sfp_dump(pvs);
 }

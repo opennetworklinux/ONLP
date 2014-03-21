@@ -53,7 +53,10 @@ int onlp_thermal_info_get(onlp_oid_t id, onlp_thermal_info_t* rv);
  * @brief Show the current information about the given thermal id.
  * @param id The thermal id.
  * @param pvs The output pvs.
+ * @param recurse Show child OIDs recursively.
+ * @param only_if_present Show nothing if the OID is not present.
  */
-void onlp_thermal_show(onlp_oid_t tid, aim_pvs_t* pvs);
+void onlp_thermal_show(onlp_oid_t id, aim_pvs_t* pvs, uint32_t flags);
+
 
 #endif /* __ONLP_THERMAL_H__ */

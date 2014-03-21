@@ -18,7 +18,7 @@ int onlp_psui_init(void);
  * @param id The PSU OID
  * @param rv [out] Receives the PSU information.
  */
-int onlp_psui_info_get_f(onlp_oid_t id, onlp_psu_info_t* rv);
+int onlp_psui_info_get(onlp_oid_t id, onlp_psu_info_t* rv);
 
 /**
  * @brief Generic PSU ioctl
