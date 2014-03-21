@@ -65,7 +65,11 @@ void onlp_onie_info_free(onlp_onie_info_t* info);
 /**
  * Show the contents of an ONIE info structure.
  */
-void onlp_onie_show(onlp_onie_info_t* info, aim_pvs_t* pvs);
+void onlp_onie_show(onlp_onie_info_t* info, aim_pvs_t* pvs, const char* indent);
 
+/**
+ * Dump the contents of an ONIE info structure as JSON
+ */
+void onlp_onie_show_json(onlp_onie_info_t* info, aim_pvs_t* pvs);
 
 #endif /* __ONLP_ONIE_H__ */

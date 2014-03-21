@@ -9,37 +9,23 @@
 #include <onlp/psu.h>
 
 /**
- * Init
+ * @brief Initialize the PSU subsystem.
  */
-typedef int (*onlp_psui_init_f)(void);
+int onlp_psui_init(void);
 
 /**
- * info_get
+ * @brief Get the information structure for the given PSU
+ * @param id The PSU OID
+ * @param rv [out] Receives the PSU information.
  */
-typedef int (*onlp_psui_info_get_f)(onlp_oid_t pid, onlp_psu_info_t* rv);
+int onlp_psui_info_get_f(onlp_oid_t id, onlp_psu_info_t* rv);
 
 /**
- * ioctl
+ * @brief Generic PSU ioctl
+ * @param id The PSU OID
+ * @param vargs The variable argument list for the ioctl call.
  */
-typedef int (*onlp_psui_ioctl_f)(onlp_oid_t pid, va_list vargs);
-
-
-typedef struct onlp_psui_vectors_s {
-
-    onlp_psui_init_f init;
-    onlp_psui_info_get_f info_get;
-    onlp_psui_ioctl_f ioctl;
-
-} onlp_psui_vectors_t;
-
-/**
- * This is the interface implementation vector create function.
- * The platform provider must implement a single entry point
- * called 'onlp_psui_vectors_create' with the following signature:
- */
-typedef int (*onlp_psui_vectors_create_f)(onlp_psui_vectors_t* rv);
-
-int onlp_psui_vectors_create(onlp_psui_vectors_t* rv);
+int onlp_psui_ioctl(onlp_oid_t pid, va_list vargs);
 
 
 #endif /* __ONLP_PSUI_H__ */

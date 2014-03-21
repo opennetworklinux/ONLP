@@ -90,13 +90,13 @@
 #endif
 
 /**
- * ONLP_CONFIG_DYNAMIC_PLATFORM_LOADING
+ * ONLP_CONFIG_INCLUDE_PLATFORM_ERROR_CHECK
  *
- * Use dynamic platform loading. */
+ * Include platform error checking at initialization. */
 
 
-#ifndef ONLP_CONFIG_DYNAMIC_PLATFORM_LOADING
-#define ONLP_CONFIG_DYNAMIC_PLATFORM_LOADING 1
+#ifndef ONLP_CONFIG_INCLUDE_PLATFORM_ERROR_CHECK
+#define ONLP_CONFIG_INCLUDE_PLATFORM_ERROR_CHECK 1
 #endif
 
 /**

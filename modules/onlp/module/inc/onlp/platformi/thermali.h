@@ -1,6 +1,9 @@
 /************************************************************
+ * <bsn.cl fy=2014 v=onl>
+ * </bsn.cl>
+ ************************************************************
  *
- * Thermal Sensor Implementation.
+ * Thermal Sensor Platform Implementation.
  *
  ***********************************************************/
 #ifndef __ONLP_THERMALI_H__
@@ -9,31 +12,17 @@
 #include <onlp/thermal.h>
 
 /**
- * Initialize thermal system.
+ * @brief Initialize the thermal subsystem.
  */
-typedef int (*onlp_thermali_init_f)(void);
+int onlp_thermali_init(void);
+
 
 /**
- * Get the information for this thermal id
+ * @brief Get the information for the given thermal OID.
+ * @param id The Thermal OID
+ * @param rv [out] Receives the thermal information.
  */
-typedef int (*onlp_thermali_info_get_f)(onlp_oid_t tid, onlp_thermal_info_t* rv);
-
-
-/* Thermal vector structure */
-typedef struct onlp_thermali_vectors_s {
-    onlp_thermali_init_f init;
-    onlp_thermali_info_get_f info_get;
-} onlp_thermali_vectors_t;
-
-/**
- * This is the interface implementation vector create function.
- * The platform provider must implement a single entry point
- * called 'onlp_thermali_vectors_create' with the following signature:
- */
-typedef int (*onlp_thermali_vectors_create_f)(onlp_thermali_vectors_t* rv);
-
-int onlp_thermali_vectors_create(onlp_thermali_vectors_t* rv);
-
+int onlp_thermali_info_get(onlp_oid_t id, onlp_thermal_info_t* rv);
 
 
 #endif /* __ONLP_THERMALI_H__ */

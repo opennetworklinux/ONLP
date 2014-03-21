@@ -1,56 +1,67 @@
 /************************************************************
+ * <bsn.cl fy=2014 v=onl>
+ * </bsn.cl>
+ ************************************************************
  *
- * Fan Interface
+ * Fan Platform Implementation.
  *
- ************************************************************/
+ ***********************************************************/
 #ifndef __ONLP_FANI_H__
 #define __ONLP_FANI_H__
 
 #include <onlp/fan.h>
 
 /**
- * Initialize
+ * @brief Initialize the fan platform subsystem.
  */
-typedef int (*onlp_fani_init_f)(void);
+int onlp_fani_init(void);
 
 /**
- * Query fan info
+ * @brief Get the information structure for the given fan OID.
+ * @param id The fan OID
+ * @param rv [out] Receives the fan information.
  */
-typedef int (*onlp_fani_info_get_f)(onlp_oid_t fid, onlp_fan_info_t* rv);
+int onlp_fani_info_get(onlp_oid_t id, onlp_fan_info_t* rv);
 
 /**
- * Set the fan speed (if supported)
+ * @brief Set the fan speed in RPM.
+ * @param id The fan OID
+ * @param rpm The new RPM
+ * @note This is only relevant if the RPM capability is set.
  */
-typedef int (*onlp_fani_speed_set_f)(onlp_oid_t fid, uint32_t rpm);
+int onlp_fani_rpm_set(onlp_oid_t id, int rpm);
+
 
 /**
- * Set the fan direction (if supported)
+ * @brief Set the fan speed in percentage.
+ * @param id The fan OID.
+ * @param p The new fan speed percentage.
+ * @note This is only relevant if the PERCENTAGE capability is set.
  */
-typedef int (*onlp_fani_direction_set_f)(onlp_oid_t fid, int direction);
+int onlp_fani_percentage_set(int fid, int p);
 
 /**
- * Fan ioctl
+ * @brief Set the fan mode.
+ * @param id The fan OID.
+ * @param mode The new fan mode.
  */
-typedef int (*onlp_fani_ioctl_f)(onlp_oid_t fid, va_list vargs);
+int onlp_fani_mode_set(int fid, onlp_fan_mode_t mode);
 
-
-typedef struct onlp_fani_vectors_s {
-    onlp_fani_init_f init;
-    onlp_fani_info_get_f info_get;
-    onlp_fani_speed_set_f speed_set;
-    onlp_fani_direction_set_f direction_set;
-    onlp_fani_ioctl_f ioctl;
-} onlp_fani_vectors_t;
 
 /**
- * This is the interface implementation vector create function.
- * The platform provider must implement a single entry point
- * called 'onlp_fani_vectors_create' with the following signature:
+ * @brief Set the fan direction (if supported).
+ * @param id The fan OID
+ * @param dir The direction.
  */
-typedef int (*onlp_fani_vectors_create_f)(onlp_fani_vectors_t* rv);
+int onlp_fan_dir_set(int fid, onlp_fan_dir_t dir);
 
-int onlp_fani_vectors_create(onlp_fani_vectors_t* rv);
-
+/**
+ * @brief Generic fan ioctl
+ * @param id The fan OID
+ * @param vargs The variable argument list for the ioctl call.
+ * @param Optional
+ */
+int onlp_fani_ioctl(onlp_oid_t fid, va_list vargs);
 
 #endif /* __ONLP_FANI_H__ */
 

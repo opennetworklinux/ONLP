@@ -10,7 +10,7 @@
 #define __ONLP_SFP_H__
 
 #include <onlp/onlp_config.h>
-
+#include <onlp/onlp.h>
 #include <AIM/aim_bitmap.h>
 #include <AIM/aim_pvs.h>
 
@@ -62,7 +62,7 @@ int onlp_sfp_is_present(int port);
  * @returns The size of the eeprom data, if successful
  * @returns -1 on error.
  */
-int onlp_sfp_eeprom(int port, uint8_t** rv);
+int onlp_sfp_eeprom_read(int port, uint8_t** rv);
 
 /**
  * @brief Reset the SFP on the given port.

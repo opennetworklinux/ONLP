@@ -1,6 +1,9 @@
 /************************************************************
+ * <bsn.cl fy=2014 v=onl>
+ * </bsn.cl>
+ ************************************************************
  *
- * LED Interface Implementation
+ * LED Platform Implementation.
  *
  ***********************************************************/
 #ifndef __ONLP_LEDI_H__
@@ -9,45 +12,39 @@
 #include <onlp/led.h>
 
 /**
- * Init
+ * @brief Initialize the LED subsystem.
  */
-typedef int (*onlp_ledi_init_f)(void);
+int onlp_ledi_init(void);
 
 /**
- * Info_get
+ * @brief Get the information for the given LED
+ * @param id The LED OID
+ * @param rv [out] Receives the LED information.
  */
-typedef int (*onlp_ledi_info_get_f)(onlp_oid_t lid, onlp_led_info_t* rv);
+int onlp_ledi_info_get(onlp_oid_t id, onlp_led_info_t* rv);
 
 /**
- * Turn an led on or off with a given mode
+ * @brief Turn an LED on or off
+ * @param id The LED OID
+ * @param on_or_off (boolean) on if 1 off if 0
+ * @param This function is only relevant if the ONOFF capability is set.
+ * @notes See onlp_led_set() for a description of the default behavior.
  */
-typedef int (*onlp_ledi_set_f)(onlp_oid_t lid, int on_or_off, int mode);
+int onlp_ledi_set(onlp_oid_t id, int on_or_off);
 
 /**
- * ioctl
+ * @brief LED ioctl
+ * @param id The LED OID
+ * @param vargs The variable argument list for the ioctl call.
  */
-typedef int (*onlp_ledi_ioctl_f)(onlp_oid_t lid, va_list vargs);
-
+int onlp_ledi_ioctl(onlp_oid_t id, va_list vargs);
 
 /**
- * LEDI vector structure
+ * @brief Set the LED mode.
+ * @param id The LED OID
+ * @param mode The new mode.
+ * @notes Only called if the mode is advertised in the LED capabilities.
  */
-typedef struct onlp_ledi_vectors_s {
-    onlp_ledi_init_f init;
-    onlp_ledi_info_get_f info_get;
-    onlp_ledi_set_f set;
-    onlp_ledi_ioctl_f ioctl;
-} onlp_ledi_vectors_t;
-
-
-/**
- * This is the interface implementation vector create function.
- * The platform provider must implement a single entry point
- * called 'onlp_ledi_vectors_create' with the following signature:
- */
-typedef int (*onlp_ledi_vectors_create_f)(onlp_ledi_vectors_t* rv);
-
-int onlp_ledi_vectors_create(onlp_ledi_vectors_t* rv);
-
+int onlp_led_mode_set(onlp_oid_t id, onlp_led_mode_t mode);
 
 #endif /* __ONLP_LED_H__ */

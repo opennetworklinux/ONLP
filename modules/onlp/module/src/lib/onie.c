@@ -179,7 +179,7 @@ onlp_onie_decode(onlp_onie_info_t* rv, const uint8_t* data, int size)
     tlvinfo_header_t* data_hdr = (tlvinfo_header_t *) data;
     tlvinfo_tlv_t* data_tlv;
 
-    if(rv == NULL || data == NULL || size < sizeof(*data_hdr)) {
+    if(rv == NULL || data == NULL || (size && size < sizeof(*data_hdr))) {
         return -1;
     }
 
@@ -287,22 +287,59 @@ onlp_onie_info_free(onlp_onie_info_t* info)
 }
 
 void
-onlp_onie_show(onlp_onie_info_t* info, aim_pvs_t* pvs)
+onlp_onie_show(onlp_onie_info_t* info, aim_pvs_t* pvs, const char* indent)
 {
-    aim_printf(pvs, "Product Name: %s\n", info->product_name);
-    aim_printf(pvs, "Part Number: %s\n", info->part_number);
-    aim_printf(pvs, "Serial Number: %s\n", info->serial_number);
-    aim_printf(pvs, "MAC: %{mac}\n", info->mac);
-    aim_printf(pvs, "MAC Range: %d\n", info->mac_range);
-    aim_printf(pvs, "Manufacturer: %s\n", info->device_version);
-    aim_printf(pvs, "Manufacture Date: %s\n", info->manufacture_date);
-    aim_printf(pvs, "Vendor: %s\n", info->vendor);
-    aim_printf(pvs, "Platform Name: %s\n", info->platform_name);
-    aim_printf(pvs, "Device Version: %s\n", info->device_version);
-    aim_printf(pvs, "Label Revision: %s\n", info->label_revision);
-    aim_printf(pvs, "Country Code: %s\n", info->country_code);
-    aim_printf(pvs, "Diag Version: %s\n", info->diag_version);
-    aim_printf(pvs, "Service Tag: %s\n", info->service_tag);
-    aim_printf(pvs, "ONIE Version: %s\n", info->onie_version);
-    aim_printf(pvs, "CRC: 0x%x\n", info->crc);
+    const char* i = indent ? indent : "";
+    aim_printf(pvs, "%sProduct Name: %s\n", i, info->product_name);
+    aim_printf(pvs, "%sPart Number: %s\n", i, info->part_number);
+    aim_printf(pvs, "%sSerial Number: %s\n", i, info->serial_number);
+    aim_printf(pvs, "%sMAC: %{mac}\n", i, info->mac);
+    aim_printf(pvs, "%sMAC Range: %d\n", i, info->mac_range);
+    aim_printf(pvs, "%sManufacturer: %s\n", i, info->device_version);
+    aim_printf(pvs, "%sManufacture Date: %s\n", i, info->manufacture_date);
+    aim_printf(pvs, "%sVendor: %s\n", i, info->vendor);
+    aim_printf(pvs, "%sPlatform Name: %s\n", i, info->platform_name);
+    aim_printf(pvs, "%sDevice Version: %s\n", i, info->device_version);
+    aim_printf(pvs, "%sLabel Revision: %s\n", i, info->label_revision);
+    aim_printf(pvs, "%sCountry Code: %s\n", i, info->country_code);
+    aim_printf(pvs, "%sDiag Version: %s\n", i, info->diag_version);
+    aim_printf(pvs, "%sService Tag: %s\n", i, info->service_tag);
+    aim_printf(pvs, "%sONIE Version: %s\n", i, info->onie_version);
+    aim_printf(pvs, "%sCRC: 0x%x\n", i, info->crc);
 }
+
+void
+onlp_onie_show_json(onlp_onie_info_t* info, aim_pvs_t* pvs)
+{
+    aim_printf(pvs, "{\n");
+
+#define STROUT(_name, _member)                                   \
+    do {                                                         \
+        aim_printf(pvs, "    \"%s\" : ", #_name);                 \
+        if(info-> _member) {                                     \
+            aim_printf(pvs, "\"%s\",\n", info->_member);         \
+        }                                                        \
+        else {                                                   \
+            aim_printf(pvs, "null,\n");                          \
+        }                                                        \
+    } while(0)
+
+    STROUT(Product Name, product_name);
+    STROUT(Part Number, part_number);
+    STROUT(Serial Number, serial_number);
+    aim_printf(pvs, "    \"MAC\": \"%{mac}\", ", info->mac);
+    aim_printf(pvs, "    \"MAC Range\": %d,\n", info->mac_range);
+    STROUT(Manufacture Date,manufacture_date);
+    STROUT(Vendor,vendor);
+    STROUT(Platform Name,platform_name);
+    STROUT(Device Version,device_version);
+    STROUT(Label Revision,label_revision);
+    STROUT(Country Code,country_code);
+    STROUT(Diag Version,diag_version);
+    STROUT(Service Tag,service_tag);
+    STROUT(ONIE Version,onie_version);
+    aim_printf(pvs, "    \"CRC\": \"0x%x\"\n", info->crc);
+    aim_printf(pvs, "}\n");
+}
+
+

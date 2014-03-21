@@ -9,6 +9,11 @@
 #ifndef __ONLP_OID_H__
 #define __ONLP_OID_H__
 
+#include <onlp/onlp_config.h>
+
+#include <stdint.h>
+#include <AIM/aim_pvs.h>
+
 /**
  * System peripherals are identified by a 32bit OID.
  *
@@ -62,6 +67,33 @@ typedef char onlp_oid_desc_t[ONLP_OID_DESC_SIZE];
 
 /* fixme */
 typedef onlp_oid_t onlp_oid_table_t[32];
+
+
+/**
+ * This macro can be used to construct your OID hdr tables
+ */
+#define ONLP_OID_THERMAL_ENTRY(_id, _desc, _parent_type, _parent_id) \
+    { ONLP_THERMAL_ID_CREATE(_id), _desc, ONLP_OID_TYPE_CREATE(_parent_type, _parent_id) }
+
+/**
+ * All OID objects contain this header as the first member.
+ */
+typedef struct onlp_oid_hdr_s {
+    /** The OID */
+    onlp_oid_t id;
+    /** The description of this object. */
+    onlp_oid_desc_t description;
+    /** The parent OID of this object. */
+    onlp_oid_t pid;
+} onlp_oid_hdr_t;
+
+
+
+
+/**
+ * All OIDs can be dumped.
+ */
+void onlp_oid_show(onlp_oid_t oid, aim_pvs_t* pvs);
 
 
 #endif /* __ONLP_OID_H__ */

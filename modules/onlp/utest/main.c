@@ -8,11 +8,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <AIM/aim.h>
-
-#include <onlp/lib/shlocks.h>
-
 #include <unistd.h>
+
+#include <AIM/aim.h>
+#include <onlp/onlp.h>
+#include <onlp/lib/shlocks.h>
 
 /**
  * Base functionality unit tests.
@@ -77,7 +77,11 @@ onie_test(void)
 int
 aim_main(int argc, char* argv[])
 {
-    TEST(shlock_test());
+    //    TEST(shlock_test());
+
+    /* Example Platform Dump */
+    onlp_platform_dump(&aim_pvs_stdout);
+
     return 0;
 }
 
