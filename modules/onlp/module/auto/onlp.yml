@@ -90,18 +90,18 @@ thermal_status: &thermal_status
 # LED caps
 led_caps: &led_caps
 - ON_OFF : (1 << 0)
-- RED : (1 << 2)
-- RED_BLINKING : (1 << 3)
-- ORANGE : (1 << 4)
-- ORANGE_BLINKING : (1<<5)
-- YELLOW : ( 1 << 6)
-- YELLOW_BLINKING : (1<<7)
-- GREEN : (1 << 8)
-- GREEN_BLINKING : (1 << 9)
-- BLUE : (1 << 10)
-- BLUE_BLINKING : (1<<11)
-- PURPLE: (1 << 12)
-- PURPLE_BLINKING : (1 << 13)
+- RED : (1 << 10)
+- RED_BLINKING : (1 << 11)
+- ORANGE : (1 << 12)
+- ORANGE_BLINKING : (1 << 13)
+- YELLOW : ( 1 << 14)
+- YELLOW_BLINKING : (1 << 15)
+- GREEN : (1 << 16)
+- GREEN_BLINKING : (1 << 17)
+- BLUE : (1 << 18)
+- BLUE_BLINKING : (1 << 19)
+- PURPLE: (1 << 20)
+- PURPLE_BLINKING : (1 << 21)
 
 # LED status
 led_status: &led_status
@@ -110,22 +110,23 @@ led_status: &led_status
 - 'ON' : (1 << 2)
 
 # LED modes
+# The enumerations MUST match the CAP bit positions.
 led_mode: &led_mode
 - 'OFF'
 - 'ON'
 - 'BLINKING'
-- 'RED'
-- 'RED_BLINKING'
-- 'ORANGE'
-- 'ORANGE_BLINKING'
-- 'YELLOW'
-- 'YELLOW_BLINKING'
-- 'GREEN'
-- 'GREEN_BLINKING'
-- 'BLUE'
-- 'BLUE_BLINKING'
-- 'PURPLE'
-- 'PURPLE_BLINKING'
+- 'RED' : 10
+- 'RED_BLINKING' : 11
+- 'ORANGE' : 12
+- 'ORANGE_BLINKING' : 13
+- 'YELLOW' : 14
+- 'YELLOW_BLINKING' : 15
+- 'GREEN' : 16
+- 'GREEN_BLINKING' : 17
+- 'BLUE' : 18
+- 'BLUE_BLINKING' : 19
+- 'PURPLE' : 20
+- 'PURPLE_BLINKING' : 21
 
 # PSU Status
 psu_status: &psu_status
