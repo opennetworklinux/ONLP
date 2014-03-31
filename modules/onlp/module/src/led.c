@@ -82,7 +82,12 @@ onlp_led_mode_set(onlp_oid_t id, onlp_led_mode_t mode)
 {
     onlp_led_info_t info;
     ONLP_LED_PRESENT_OR_RETURN(id, &info);
-    if(info.caps & (1 < mode)) {
+
+    /*
+     * The mode enumeration values always match
+     * the capability bit positions.
+     */
+    if(info.caps & (1 << mode)) {
         return onlp_ledi_mode_set(id, mode);
     }
     else {
