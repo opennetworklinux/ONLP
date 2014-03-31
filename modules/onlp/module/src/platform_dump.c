@@ -17,7 +17,6 @@ onlp_platform_dump(aim_pvs_t* pvs, uint32_t flags)
     /* Everything starts with the SYS interface. */
     int rv;
     onlp_sys_info_t sysinfo;
-    onlp_sys_init();
     rv = onlp_sys_info_get(&sysinfo);
     if(rv < 0) {
         aim_printf(pvs, "sys_info_get() failed: %d\n", rv);
