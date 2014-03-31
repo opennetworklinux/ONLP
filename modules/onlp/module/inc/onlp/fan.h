@@ -27,9 +27,9 @@ typedef enum onlp_fan_caps_e {
 /** onlp_fan_status */
 typedef enum onlp_fan_status_e {
     ONLP_FAN_STATUS_PRESENT = (1 << 0),
-    ONLP_FAN_STATUS_FAILED = (1 << 2),
-    ONLP_FAN_STATUS_B2F = (1 << 0),
-    ONLP_FAN_STATUS_F2B = (1 << 1),
+    ONLP_FAN_STATUS_FAILED = (1 << 1),
+    ONLP_FAN_STATUS_B2F = (1 << 2),
+    ONLP_FAN_STATUS_F2B = (1 << 3),
 } onlp_fan_status_t;
 /* <auto.end.enum(onlp_fan_status).define> */
 

@@ -82,7 +82,7 @@ onlp_fan_percentage_set(onlp_oid_t id, int p)
     onlp_fan_info_t info;
     ONLP_FAN_PRESENT_OR_RETURN(id, &info);
     if(info.caps & ONLP_FAN_CAPS_SET_PERCENTAGE) {
-        return onlp_fani_rpm_set(id, p);
+        return onlp_fani_percentage_set(id, p);
     }
     else {
         return ONLP_STATUS_E_UNSUPPORTED;
