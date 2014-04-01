@@ -1,0 +1,190 @@
+###############################################################################
+#
+# onlp Autogeneration Definitions.
+#
+###############################################################################
+
+cdefs: &cdefs
+- ONLP_CONFIG_INCLUDE_LOGGING:
+    doc: "Include or exclude logging."
+    default: 1
+- ONLP_CONFIG_LOG_OPTIONS_DEFAULT:
+    doc: "Default enabled log options."
+    default: AIM_LOG_OPTIONS_DEFAULT
+- ONLP_CONFIG_LOG_BITS_DEFAULT:
+    doc: "Default enabled log bits."
+    default: AIM_LOG_BITS_DEFAULT
+- ONLP_CONFIG_LOG_CUSTOM_BITS_DEFAULT:
+    doc: "Default enabled custom log bits."
+    default: 0
+- ONLP_CONFIG_PORTING_STDLIB:
+    doc: "Default all porting macros to use the C standard libraries."
+    default: 1
+- ONLP_CONFIG_PORTING_INCLUDE_STDLIB_HEADERS:
+    doc: "Include standard library headers for stdlib porting macros."
+    default: ONLP_CONFIG_PORTING_STDLIB
+- ONLP_CONFIG_INCLUDE_UCLI:
+    doc: "Include generic uCli support."
+    default: 0
+- ONLP_CONFIG_INCLUDE_PLATFORM_ERROR_CHECK:
+    doc: "Include platform error checking at initialization."
+    default: 1
+- ONLP_CONFIG_INCLUDE_SHLOCK_GLOBAL_INIT:
+    doc: "Include global shlock initialization at module init time."
+    default: 0
+
+
+# Error codes
+onlp_status: &onlp_status
+- OK : 0
+- E_UNSUPPORTED : -1
+- E_MISSING : -2
+- E_INVALID : -3
+- E_INTERNAL : -4
+
+# OID Types
+oid_types: &oid_types
+- THERMAL : 1
+- FAN : 2
+- PSU : 3
+- LED : 4
+- MODULE : 5
+
+# SFP Status
+sfp_status_flags: &sfp_status_flags
+- TX_FAILURE : (1 << 0)
+- RX_LOS :     (1 << 1)
+
+# Fan modes
+fan_modes: &fan_modes
+- 'OFF'
+- SLOW
+- NORMAL
+- FAST
+- MAX
+
+# Fan Capabilities
+fan_caps: &fan_caps
+- B2F : (1 << 0)
+- F2B : (1 << 1)
+- SET_RPM : (1 << 2)
+- SET_PERCENTAGE : (1 << 3)
+
+# Fan Direction
+fan_dirs: &fan_dirs
+- B2F
+- F2B
+
+# Fan status
+fan_status: &fan_status
+- PRESENT : (1 << 0)
+- FAILED  : (1 << 1)
+- B2F     : (1 << 2)
+- F2B     : (1 << 3)
+
+# Thermal status
+thermal_status: &thermal_status
+- PRESENT : (1 << 0)
+- FAILED  : (1 << 1)
+
+# LED caps
+led_caps: &led_caps
+- ON_OFF : (1 << 0)
+- RED : (1 << 10)
+- RED_BLINKING : (1 << 11)
+- ORANGE : (1 << 12)
+- ORANGE_BLINKING : (1 << 13)
+- YELLOW : ( 1 << 14)
+- YELLOW_BLINKING : (1 << 15)
+- GREEN : (1 << 16)
+- GREEN_BLINKING : (1 << 17)
+- BLUE : (1 << 18)
+- BLUE_BLINKING : (1 << 19)
+- PURPLE: (1 << 20)
+- PURPLE_BLINKING : (1 << 21)
+
+# LED status
+led_status: &led_status
+- PRESENT : (1 << 0)
+- FAILED : (1 << 1)
+- 'ON' : (1 << 2)
+
+# LED modes
+# The enumerations MUST match the CAP bit positions.
+led_mode: &led_mode
+- 'OFF'
+- 'ON'
+- 'BLINKING'
+- 'RED' : 10
+- 'RED_BLINKING' : 11
+- 'ORANGE' : 12
+- 'ORANGE_BLINKING' : 13
+- 'YELLOW' : 14
+- 'YELLOW_BLINKING' : 15
+- 'GREEN' : 16
+- 'GREEN_BLINKING' : 17
+- 'BLUE' : 18
+- 'BLUE_BLINKING' : 19
+- 'PURPLE' : 20
+- 'PURPLE_BLINKING' : 21
+
+# PSU Status
+psu_status: &psu_status
+- PRESENT : (1 << 0)
+- FAILED : (1 << 1)
+
+# PSU caps
+psu_caps: &psu_caps
+- SOMETHING : (1 << 0)
+
+definitions:
+  cdefs:
+    ONLP_CONFIG_HEADER:
+      defs: *cdefs
+      basename: onlp_config
+
+  enum: &enums
+    onlp_status:
+      members: *onlp_status
+    onlp_oid_type:
+      members: *oid_types
+    onlp_thermal_status:
+      members: *thermal_status
+    onlp_sfp_status:
+      members: *sfp_status_flags
+    onlp_fan_mode:
+      members: *fan_modes
+    onlp_fan_status:
+      members: *fan_status
+    onlp_fan_dir:
+      members: *fan_dirs
+    onlp_fan_caps:
+      members: *fan_caps
+    onlp_led_caps:
+      members: *led_caps
+    onlp_led_status:
+      members: *led_status
+    onlp_led_mode:
+      members: *led_mode
+    onlp_psu_status:
+      members: *psu_status
+    onlp_psu_caps:
+      members: *psu_caps
+
+  portingmacro:
+    ONLP:
+      macros:
+        - memset
+        - memcpy
+        - strncpy
+        - strlen
+
+  xenum:
+    ONLP_ENUMERATION_ENTRY:
+      members: *enums
+
+  xmacro:
+    ONLP_OID_TYPE_ENTRY:
+      members: *oid_types
+
+

@@ -7,7 +7,7 @@
  *
  ***********************************************************/
 #include <onlp/platformi/sysi.h>
-#include <onlp/lib/crc32.h>
+#include <onlplib/crc32.h>
 #include "onlpie_log.h"
 
 
