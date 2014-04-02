@@ -89,6 +89,16 @@
 #define ONLP_PLATFORM_DEFAULTS_CONFIG_INCLUDE_UCLI 0
 #endif
 
+/**
+ * ONLP_PLATFORM_DEFAULTS_CONFIG_AS_PLATFORM
+ *
+ * Build as the onlp-platform library stub. */
+
+
+#ifndef ONLP_PLATFORM_DEFAULTS_CONFIG_AS_PLATFORM
+#define ONLP_PLATFORM_DEFAULTS_CONFIG_AS_PLATFORM 0
+#endif
+
 
 
 /**

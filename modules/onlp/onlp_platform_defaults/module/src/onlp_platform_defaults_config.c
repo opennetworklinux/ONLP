@@ -45,6 +45,11 @@ onlp_platform_defaults_config_settings_t onlp_platform_defaults_config_settings[
 #else
 { ONLP_PLATFORM_DEFAULTS_CONFIG_INCLUDE_UCLI(__onlp_platform_defaults_config_STRINGIFY_NAME), "__undefined__" },
 #endif
+#ifdef ONLP_PLATFORM_DEFAULTS_CONFIG_AS_PLATFORM
+    { __onlp_platform_defaults_config_STRINGIFY_NAME(ONLP_PLATFORM_DEFAULTS_CONFIG_AS_PLATFORM), __onlp_platform_defaults_config_STRINGIFY_VALUE(ONLP_PLATFORM_DEFAULTS_CONFIG_AS_PLATFORM) },
+#else
+{ ONLP_PLATFORM_DEFAULTS_CONFIG_AS_PLATFORM(__onlp_platform_defaults_config_STRINGIFY_NAME), "__undefined__" },
+#endif
     { NULL, NULL }
 };
 #undef __onlp_platform_defaults_config_STRINGIFY_VALUE

@@ -25,5 +25,10 @@ void __onlp_module_init__(void)
     onlp_shlock_global_init();
 #endif
 
+    {
+        extern int __onlp_platform_version__;
+        extern int __onlp_platform_version_default__;
+        __onlp_platform_version_default__ = __onlp_platform_version__;
+    }
 }
 

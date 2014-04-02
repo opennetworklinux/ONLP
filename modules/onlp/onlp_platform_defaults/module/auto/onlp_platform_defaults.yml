@@ -26,6 +26,9 @@ cdefs: &cdefs
 - ONLP_PLATFORM_DEFAULTS_CONFIG_INCLUDE_UCLI:
     doc: "Include generic uCli support."
     default: 0
+- ONLP_PLATFORM_DEFAULTS_CONFIG_AS_PLATFORM:
+    doc: "Build as the onlp-platform library stub."
+    default: 0
 
 
 definitions:

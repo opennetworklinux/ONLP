@@ -21,3 +21,11 @@ void __onlp_platform_defaults_module_init__(void)
     datatypes_init__();
 }
 
+#if ONLP_PLATFORM_DEFAULTS_CONFIG_AS_PLATFORM == 0
+int __onlp_platform_version_default__ = 0;
+#else
+int __onlp_platform_version__ = 0;
+#endif
+
+
+
