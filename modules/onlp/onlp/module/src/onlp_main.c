@@ -7,6 +7,7 @@
  *
  ***********************************************************/
 #include <onlp/onlp.h>
+#include <onlp/oids.h>
 
 int
 onlpdump_main(int argc, char* argv[])

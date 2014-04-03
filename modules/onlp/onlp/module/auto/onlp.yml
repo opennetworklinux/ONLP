@@ -32,7 +32,9 @@ cdefs: &cdefs
 - ONLP_CONFIG_INCLUDE_SHLOCK_GLOBAL_INIT:
     doc: "Include global shlock initialization at module init time."
     default: 0
-
+- ONLP_CONFIG_PLATFORM_FILENAME:
+    doc: "The local filename containing the current platform identifier."
+    default: "\"/etc/onl_platform\""
 
 # Error codes
 onlp_status: &onlp_status

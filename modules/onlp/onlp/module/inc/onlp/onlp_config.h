@@ -109,6 +109,16 @@
 #define ONLP_CONFIG_INCLUDE_SHLOCK_GLOBAL_INIT 0
 #endif
 
+/**
+ * ONLP_CONFIG_PLATFORM_FILENAME
+ *
+ * The local filename containing the current platform identifier. */
+
+
+#ifndef ONLP_CONFIG_PLATFORM_FILENAME
+#define ONLP_CONFIG_PLATFORM_FILENAME "/etc/onl_platform"
+#endif
+
 
 
 /**
