@@ -13,7 +13,7 @@
 #include "onlp_log.h"
 
 static char*
-platform_detect_fs__(void)
+platform_detect_fs__(int warn)
 {
     /*
      * Check the filesystem for the platform identifier.
@@ -34,6 +34,11 @@ platform_detect_fs__(void)
             }
             fclose(fp);
         }
+        else {
+            if(warn) {
+                AIM_LOG_WARN("could not open platform filename '%s'", ONLP_CONFIG_PLATFORM_FILENAME);
+            }
+        }
     }
     return rv;
 }
@@ -42,7 +47,7 @@ static char*
 platform_detect__(void)
 {
     /* Only detection from the filesystem is currently supported. */
-    return platform_detect_fs__();
+    return platform_detect_fs__(1);
 }
 
 int
