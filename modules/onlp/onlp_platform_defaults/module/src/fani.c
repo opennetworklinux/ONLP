@@ -8,6 +8,7 @@
  ***********************************************************/
 #include <onlp/platformi/fani.h>
 #include "onlp_platform_defaults_int.h"
+#include "onlp_platform_defaults_log.h"
 
 /**
  * These are the default implementations for all currently

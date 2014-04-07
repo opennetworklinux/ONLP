@@ -7,6 +7,7 @@
  ***********************************************************/
 #include <onlp/platformi/sysi.h>
 #include "onlp_platform_defaults_int.h"
+#include "onlp_platform_defaults_log.h"
 
 const char* __ONLP_DEFAULTI
 onlp_sysi_platform_get(void)

@@ -20,26 +20,6 @@
 #include <memory.h>
 #endif
 
-#ifndef ONLP_PLATFORM_DEFAULTS_MALLOC
-    #if defined(GLOBAL_MALLOC)
-        #define ONLP_PLATFORM_DEFAULTS_MALLOC GLOBAL_MALLOC
-    #elif ONLP_PLATFORM_DEFAULTS_CONFIG_PORTING_STDLIB == 1
-        #define ONLP_PLATFORM_DEFAULTS_MALLOC malloc
-    #else
-        #error The macro ONLP_PLATFORM_DEFAULTS_MALLOC is required but cannot be defined.
-    #endif
-#endif
-
-#ifndef ONLP_PLATFORM_DEFAULTS_FREE
-    #if defined(GLOBAL_FREE)
-        #define ONLP_PLATFORM_DEFAULTS_FREE GLOBAL_FREE
-    #elif ONLP_PLATFORM_DEFAULTS_CONFIG_PORTING_STDLIB == 1
-        #define ONLP_PLATFORM_DEFAULTS_FREE free
-    #else
-        #error The macro ONLP_PLATFORM_DEFAULTS_FREE is required but cannot be defined.
-    #endif
-#endif
-
 #ifndef ONLP_PLATFORM_DEFAULTS_MEMSET
     #if defined(GLOBAL_MEMSET)
         #define ONLP_PLATFORM_DEFAULTS_MEMSET GLOBAL_MEMSET
@@ -67,26 +47,6 @@
         #define ONLP_PLATFORM_DEFAULTS_STRNCPY strncpy
     #else
         #error The macro ONLP_PLATFORM_DEFAULTS_STRNCPY is required but cannot be defined.
-    #endif
-#endif
-
-#ifndef ONLP_PLATFORM_DEFAULTS_VSNPRINTF
-    #if defined(GLOBAL_VSNPRINTF)
-        #define ONLP_PLATFORM_DEFAULTS_VSNPRINTF GLOBAL_VSNPRINTF
-    #elif ONLP_PLATFORM_DEFAULTS_CONFIG_PORTING_STDLIB == 1
-        #define ONLP_PLATFORM_DEFAULTS_VSNPRINTF vsnprintf
-    #else
-        #error The macro ONLP_PLATFORM_DEFAULTS_VSNPRINTF is required but cannot be defined.
-    #endif
-#endif
-
-#ifndef ONLP_PLATFORM_DEFAULTS_SNPRINTF
-    #if defined(GLOBAL_SNPRINTF)
-        #define ONLP_PLATFORM_DEFAULTS_SNPRINTF GLOBAL_SNPRINTF
-    #elif ONLP_PLATFORM_DEFAULTS_CONFIG_PORTING_STDLIB == 1
-        #define ONLP_PLATFORM_DEFAULTS_SNPRINTF snprintf
-    #else
-        #error The macro ONLP_PLATFORM_DEFAULTS_SNPRINTF is required but cannot be defined.
     #endif
 #endif
 

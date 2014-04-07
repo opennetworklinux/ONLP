@@ -30,6 +30,8 @@ cdefs: &cdefs
     doc: "Build as the onlp-platform library stub."
     default: 0
 
+log_types: &log_types
+- called
 
 definitions:
   cdefs:
@@ -37,14 +39,19 @@ definitions:
       defs: *cdefs
       basename: onlp_platform_defaults_config
 
+  aim_custom_log_macro:
+    onlp_platform_defaults:
+      flags: *log_types
+      prefix: ONLP_PLATFORM_DEFAULTS_LOG_FLAG_
+
+  enum: &enum
+    onlp_platform_defaults_log_flag:
+      members: *log_types
+
   portingmacro:
     ONLP_PLATFORM_DEFAULTS:
       macros:
-        - malloc
-        - free
         - memset
         - memcpy
         - strncpy
-        - vsnprintf
-        - snprintf
         - strlen

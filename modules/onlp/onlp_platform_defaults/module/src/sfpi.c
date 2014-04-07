@@ -7,6 +7,7 @@
  ***********************************************************/
 #include <onlp/platformi/sfpi.h>
 #include "onlp_platform_defaults_int.h"
+#include "onlp_platform_defaults_log.h"
 
 __ONLP_DEFAULTI_IMPLEMENTATION(onlp_sfpi_init(void));
 __ONLP_DEFAULTI_IMPLEMENTATION(onlp_sfpi_bitmap_get(onlp_sfp_bitmap_t* bmap));
