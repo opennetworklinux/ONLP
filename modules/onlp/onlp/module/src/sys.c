@@ -121,7 +121,7 @@ onlp_sys_info_get(onlp_sys_info_t* rv)
     /*
      * Query the sys oids
      */
-    onlp_sysi_oids_get(rv->oids, AIM_ARRAYSIZE(rv->oids));
+    onlp_sysi_oids_get(rv->oid_table, AIM_ARRAYSIZE(rv->oid_table));
 
     return 0;
 }

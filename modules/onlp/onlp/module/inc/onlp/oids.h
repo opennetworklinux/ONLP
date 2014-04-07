@@ -67,7 +67,8 @@ typedef enum onlp_oid_type_e {
 typedef char onlp_oid_desc_t[ONLP_OID_DESC_SIZE];
 
 /* fixme */
-typedef onlp_oid_t onlp_oid_table_t[32];
+#define ONLP_OID_TABLE_SIZE 32
+typedef onlp_oid_t onlp_oid_table_t[ONLP_OID_TABLE_SIZE];
 
 
 /**
@@ -89,8 +90,6 @@ typedef struct onlp_oid_hdr_s {
 } onlp_oid_hdr_t;
 
 
-
-
 #define ONLP_OID_SHOW_F_RECURSE 0x1
 #define ONLP_OID_SHOW_F_EVEN_IF_ABSENT 0x2
 
@@ -100,5 +99,34 @@ typedef struct onlp_oid_hdr_s {
 void onlp_oid_show(onlp_oid_t oid, aim_pvs_t* pvs, uint32_t flags);
 void onlp_oids_show(onlp_oid_t* oids, int count, aim_pvs_t* pvs,
                     uint32_t flags);
+
+
+/**
+ * @brief Iterate over all OIDS in the given table that match the given expression.
+ * @param _table The OID table
+ * @param _oidp    OID pointer iterator
+ * @param _expr    OID Expression which must be true
+ */
+#define ONLP_OID_TABLE_ITER_EXPR(_table, _oidp, _expr)                 \
+    for(_oidp = _table; _oidp < (_table+ONLP_OID_TABLE_SIZE); _oidp++) \
+        if( (*_oidp) && (_expr) )
+
+/**
+ * @brief Iterate over all OIDs in the given table.
+ * @param _table The OID table
+ * @param _oidp  OID pointer iterator
+ */
+#define ONLP_OID_TABLE_ITER(_table, _oidp) ONLP_SYS_OID_ITER_EXPR(_table, _oidp, 1)
+
+/**
+ * @brief Iterate over all OIDs in the given table of the given type.
+ * @param _table The OID table
+ * @param _oidp  OID pointer iteration.
+ * @param _type  The OID Type
+ */
+
+#define ONLP_OID_TABLE_ITER_TYPE(_table, _oidp, _type)                  \
+    ONLP_OID_TABLE_ITER_EXPR(_table, _oidp, ONLP_OID_IS_TYPE(ONLP_OID_TYPE_##_type, *_oidp))
+
 
 #endif /* __ONLP_OID_H__ */

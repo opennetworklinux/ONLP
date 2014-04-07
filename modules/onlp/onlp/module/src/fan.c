@@ -131,6 +131,8 @@ onlp_fan_show(onlp_oid_t id, aim_pvs_t* pvs, uint32_t flags)
         aim_printf(pvs, "Fan: %s\n", info.hdr.description);
         aim_printf(pvs, "  Status: 0x%x\n", info.status);
         aim_printf(pvs, "  Caps:   0x%x\n", info.caps);
+        aim_printf(pvs, "  RPM:  %d\n", info.rpm);
+        aim_printf(pvs, "  Per:  %d\n", info.percentage);
     }
     else if(flags & ONLP_OID_SHOW_F_EVEN_IF_ABSENT) {
         aim_printf(pvs, "Fan: %s (Not present)\n", info.hdr.description);

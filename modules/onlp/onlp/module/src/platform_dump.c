@@ -30,7 +30,7 @@ onlp_platform_dump(aim_pvs_t* pvs, uint32_t flags)
     aim_printf(pvs, "\n");
 
     /* Dump all platform OID objects */
-    onlp_oids_show(sysinfo.oids, AIM_ARRAYSIZE(sysinfo.oids), pvs, flags);
+    onlp_oids_show(sysinfo.oid_table, AIM_ARRAYSIZE(sysinfo.oid_table), pvs, flags);
 
     aim_printf(pvs, "\nSFPs:\n");
     /* Dump all SFPs */
