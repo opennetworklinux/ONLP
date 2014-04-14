@@ -46,7 +46,9 @@ platform_detect_fs__(int warn)
 static char*
 platform_detect__(void)
 {
-    /* Only detection from the filesystem is currently supported. */
+#if ONLP_CONFIG_INCLUDE_PLATFORM_STATIC == 1
+    return ONLP_CONFIG_PLATFORM_STATIC ;
+#endif
     return platform_detect_fs__(1);
 }
 
