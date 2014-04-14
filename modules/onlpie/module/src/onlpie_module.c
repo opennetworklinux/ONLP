@@ -21,3 +21,4 @@ void __onlpie_module_init__(void)
     datatypes_init__();
 }
 
+int __onlp_platform_version__ = 1;

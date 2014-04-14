@@ -143,9 +143,10 @@ onlp_sysi_oids_get(onlp_oid_t* table, int max)
     *e++ = ONLP_THERMAL_ID_CREATE(1);
     *e++ = ONLP_THERMAL_ID_CREATE(2);
 
-    /* 2 PSUs */
+    /* 3 PSUs */
     *e++ = ONLP_PSU_ID_CREATE(1);
     *e++ = ONLP_PSU_ID_CREATE(2);
+    *e++ = ONLP_PSU_ID_CREATE(3);
 
     /* 2 Fans */
     *e++ = ONLP_FAN_ID_CREATE(1);
