@@ -110,6 +110,26 @@
 #endif
 
 /**
+ * ONLP_CONFIG_INCLUDE_PLATFORM_STATIC
+ *
+ * Specify the platform name directly as a compile-time option. */
+
+
+#ifndef ONLP_CONFIG_INCLUDE_PLATFORM_STATIC
+#define ONLP_CONFIG_INCLUDE_PLATFORM_STATIC 0
+#endif
+
+/**
+ * ONLP_CONFIG_PLATFORM_STATIC
+ *
+ * The name of the static platform if configured. */
+
+
+#ifndef ONLP_CONFIG_PLATFORM_STATIC
+#define ONLP_CONFIG_PLATFORM_STATIC "unknown"
+#endif
+
+/**
  * ONLP_CONFIG_PLATFORM_FILENAME
  *
  * The local filename containing the current platform identifier. */

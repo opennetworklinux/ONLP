@@ -713,13 +713,17 @@ onlp_fan_dir_desc(onlp_fan_dir_t e)
 
 aim_map_si_t onlp_psu_caps_map[] =
 {
-    { "SOMETHING", ONLP_PSU_CAPS_SOMETHING },
+    { "AC", ONLP_PSU_CAPS_AC },
+    { "DC12", ONLP_PSU_CAPS_DC12 },
+    { "DC48", ONLP_PSU_CAPS_DC48 },
     { NULL, 0 }
 };
 
 aim_map_si_t onlp_psu_caps_desc_map[] =
 {
-    { "None", ONLP_PSU_CAPS_SOMETHING },
+    { "None", ONLP_PSU_CAPS_AC },
+    { "None", ONLP_PSU_CAPS_DC12 },
+    { "None", ONLP_PSU_CAPS_DC48 },
     { NULL, 0 }
 };
 

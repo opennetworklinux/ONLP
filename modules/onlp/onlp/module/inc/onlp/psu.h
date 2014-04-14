@@ -23,7 +23,9 @@ typedef enum onlp_psu_status_e {
 /* <auto.start.enum(onlp_psu_caps).define> */
 /** onlp_psu_caps */
 typedef enum onlp_psu_caps_e {
-    ONLP_PSU_CAPS_SOMETHING = (1 << 0),
+    ONLP_PSU_CAPS_AC = (1 << 0),
+    ONLP_PSU_CAPS_DC12 = (1 << 1),
+    ONLP_PSU_CAPS_DC48 = (1 << 2),
 } onlp_psu_caps_t;
 /* <auto.end.enum(onlp_psu_caps).define> */
 

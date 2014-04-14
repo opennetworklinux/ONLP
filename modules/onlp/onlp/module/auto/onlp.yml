@@ -32,6 +32,12 @@ cdefs: &cdefs
 - ONLP_CONFIG_INCLUDE_SHLOCK_GLOBAL_INIT:
     doc: "Include global shlock initialization at module init time."
     default: 0
+- ONLP_CONFIG_INCLUDE_PLATFORM_STATIC:
+    doc: "Specify the platform name directly as a compile-time option."
+    default: 0
+- ONLP_CONFIG_PLATFORM_STATIC:
+    doc: "The name of the static platform if configured."
+    default: "\"unknown\""
 - ONLP_CONFIG_PLATFORM_FILENAME:
     doc: "The local filename containing the current platform identifier."
     default: "\"/etc/onl_platform\""
@@ -137,7 +143,9 @@ psu_status: &psu_status
 
 # PSU caps
 psu_caps: &psu_caps
-- SOMETHING : (1 << 0)
+- AC :   (1 << 0)
+- DC12 : (1 << 1)
+- DC48 : (1 << 2)
 
 definitions:
   cdefs:

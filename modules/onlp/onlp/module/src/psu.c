@@ -99,7 +99,21 @@ onlp_psu_show(onlp_oid_t id, aim_pvs_t* pvs, uint32_t flags)
         /* Present */
         aim_printf(pvs, "PSU: %s\n", info.hdr.description);
         aim_printf(pvs, "  Status: 0x%x\n", info.status);
-        aim_printf(pvs, "  Caps:   0x%x\n", info.caps);
+        aim_printf(pvs, "  Caps:   0x%x", info.caps);
+        if(info.caps) {
+            aim_printf(pvs, " [");
+            if(info.caps & ONLP_PSU_CAPS_AC) {
+                aim_printf(pvs, " AC ");
+            }
+            if(info.caps & ONLP_PSU_CAPS_DC12) {
+                aim_printf(pvs, " DC12 ");
+            }
+            if(info.caps & ONLP_PSU_CAPS_DC48) {
+                aim_printf(pvs, " DC48 ");
+            }
+            aim_printf(pvs, "]");
+        }
+        aim_printf(pvs, "\n");
         aim_printf(pvs, "  IV: %f\n", info.input_voltage);
         aim_printf(pvs, "  OV: %f\n", info.output_voltage);
         aim_printf(pvs, "  OI: %f\n", info.output_current);
