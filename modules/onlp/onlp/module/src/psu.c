@@ -100,9 +100,13 @@ onlp_psu_show(onlp_oid_t id, aim_pvs_t* pvs, uint32_t flags)
         aim_printf(pvs, "PSU: %s\n", info.hdr.description);
         aim_printf(pvs, "  Status: %{onlp_psu_status_flags}\n", info.status);
         aim_printf(pvs, "  Caps:   %{onlp_psu_caps_flags}\n", info.caps);
-        aim_printf(pvs, "  IV: %f\n", info.input_voltage);
-        aim_printf(pvs, "  OV: %f\n", info.output_voltage);
-        aim_printf(pvs, "  OI: %f\n", info.output_current);
+        aim_printf(pvs, "  Vin:  %f\n", info.vin);
+        aim_printf(pvs, "  Vout: %f\n", info.vout);
+        aim_printf(pvs, "  Iin:  %f\n", info.iin);
+        aim_printf(pvs, "  Iout: %f\n", info.iout);
+        aim_printf(pvs, "  Pin:  %f\n", info.pin);
+        aim_printf(pvs, "  Pout: %f\n", info.pout);
+
         if(flags & ONLP_OID_SHOW_F_RECURSE) {
             onlp_oids_show(info.oid_table, AIM_ARRAYSIZE(info.oid_table), pvs, flags);
         }

@@ -48,14 +48,12 @@ typedef struct onlp_psu_info_t {
     /* Capabilities */
     uint32_t caps;
 
-    /* input voltage */
-    float input_voltage;
-
-    /* Output voltage */
-    float output_voltage;
-
-    /* Current */
-    float output_current;
+    float vin;
+    float vout;
+    float iin;
+    float iout;
+    float pin;
+    float pout;
 
     /* child oids */
     onlp_oid_table_t oid_table;
