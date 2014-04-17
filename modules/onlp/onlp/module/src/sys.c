@@ -127,3 +127,10 @@ onlp_sys_info_get(onlp_sys_info_t* rv)
 
     return 0;
 }
+
+void
+onlp_sys_info_free(onlp_sys_info_t* info)
+{
+    onlp_onie_info_free(&info->onie_info);
+}
+

@@ -37,4 +37,9 @@ int onlp_sys_init(void);
  */
 int onlp_sys_info_get(onlp_sys_info_t* rv);
 
+/**
+ * @brief Free a system information structure.
+ */
+void onlp_sys_info_free(onlp_sys_info_t* info);
+
 #endif /* __ONLP_SYS_H_ */
