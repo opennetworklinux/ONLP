@@ -282,8 +282,8 @@ onlp_onie_info_free(onlp_onie_info_t* info)
         aim_free(info->vendor);
         aim_free(info->diag_version);
         aim_free(info->service_tag);
+        aim_free(info->_hdr_id_string);
     }
-
 }
 
 void
