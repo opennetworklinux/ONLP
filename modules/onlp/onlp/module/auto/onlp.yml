@@ -146,6 +146,12 @@ psu_caps: &psu_caps
 - AC :   (1 << 0)
 - DC12 : (1 << 1)
 - DC48 : (1 << 2)
+- VIN  : (1 << 3)
+- VOUT : (1 << 4)
+- IIN  : (1 << 5)
+- IOUT : (1 << 6)
+- PIN  : (1 << 7)
+- POUT : (1 << 8)
 
 definitions:
   cdefs:
