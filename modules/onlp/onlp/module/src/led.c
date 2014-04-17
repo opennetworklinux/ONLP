@@ -113,7 +113,7 @@ onlp_led_show(onlp_oid_t id, aim_pvs_t* pvs, uint32_t flags)
     if(info.status & 1) {
         /* Present */
         aim_printf(pvs, "LED: %s\n", info.hdr.description);
-        aim_printf(pvs, "  Status: 0x%x\n", info.status);
+        aim_printf(pvs, "  Status: %{onlp_led_status_flags}\n", info.status);
         aim_printf(pvs, "  Mode: %{onlp_led_mode}\n", info.mode);
     }
     else if(flags & ONLP_OID_SHOW_F_EVEN_IF_ABSENT) {

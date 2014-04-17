@@ -716,6 +716,12 @@ aim_map_si_t onlp_psu_caps_map[] =
     { "AC", ONLP_PSU_CAPS_AC },
     { "DC12", ONLP_PSU_CAPS_DC12 },
     { "DC48", ONLP_PSU_CAPS_DC48 },
+    { "VIN", ONLP_PSU_CAPS_VIN },
+    { "VOUT", ONLP_PSU_CAPS_VOUT },
+    { "IIN", ONLP_PSU_CAPS_IIN },
+    { "IOUT", ONLP_PSU_CAPS_IOUT },
+    { "PIN", ONLP_PSU_CAPS_PIN },
+    { "POUT", ONLP_PSU_CAPS_POUT },
     { NULL, 0 }
 };
 
@@ -724,6 +730,12 @@ aim_map_si_t onlp_psu_caps_desc_map[] =
     { "None", ONLP_PSU_CAPS_AC },
     { "None", ONLP_PSU_CAPS_DC12 },
     { "None", ONLP_PSU_CAPS_DC48 },
+    { "None", ONLP_PSU_CAPS_VIN },
+    { "None", ONLP_PSU_CAPS_VOUT },
+    { "None", ONLP_PSU_CAPS_IIN },
+    { "None", ONLP_PSU_CAPS_IOUT },
+    { "None", ONLP_PSU_CAPS_PIN },
+    { "None", ONLP_PSU_CAPS_POUT },
     { NULL, 0 }
 };
 

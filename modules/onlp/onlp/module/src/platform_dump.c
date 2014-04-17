@@ -35,5 +35,7 @@ onlp_platform_dump(aim_pvs_t* pvs, uint32_t flags)
     aim_printf(pvs, "\nSFPs:\n");
     /* Dump all SFPs */
     onlp_sfp_dump(pvs);
+
+    onlp_sys_info_free(&sysinfo);
 }
 

@@ -129,8 +129,8 @@ onlp_fan_show(onlp_oid_t id, aim_pvs_t* pvs, uint32_t flags)
     if(info.status & 1) {
         /* Present */
         aim_printf(pvs, "Fan: %s\n", info.hdr.description);
-        aim_printf(pvs, "  Status: 0x%x\n", info.status);
-        aim_printf(pvs, "  Caps:   0x%x\n", info.caps);
+        aim_printf(pvs, "  Status: %{onlp_fan_status_flags}\n", info.status);
+        aim_printf(pvs, "  Caps:   %{onlp_fan_caps_flags}\n", info.caps);
         aim_printf(pvs, "  RPM:  %d\n", info.rpm);
         aim_printf(pvs, "  Per:  %d\n", info.percentage);
     }

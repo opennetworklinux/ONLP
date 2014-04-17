@@ -56,7 +56,7 @@ onlp_thermal_show(onlp_oid_t id, aim_pvs_t* pvs, uint32_t flags)
     if(info.status & 1) {
         /* Present */
         aim_printf(pvs, "Thermal: %s\n", info.hdr.description);
-        aim_printf(pvs, "  Status: 0x%x\n", info.status);
+        aim_printf(pvs, "  Status: %{onlp_thermal_status_flags}\n", info.status);
         aim_printf(pvs, "  Temperature: %f\n", info.temperature);
     }
     else if(flags & ONLP_OID_SHOW_F_EVEN_IF_ABSENT) {

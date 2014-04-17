@@ -26,6 +26,12 @@ typedef enum onlp_psu_caps_e {
     ONLP_PSU_CAPS_AC = (1 << 0),
     ONLP_PSU_CAPS_DC12 = (1 << 1),
     ONLP_PSU_CAPS_DC48 = (1 << 2),
+    ONLP_PSU_CAPS_VIN = (1 << 3),
+    ONLP_PSU_CAPS_VOUT = (1 << 4),
+    ONLP_PSU_CAPS_IIN = (1 << 5),
+    ONLP_PSU_CAPS_IOUT = (1 << 6),
+    ONLP_PSU_CAPS_PIN = (1 << 7),
+    ONLP_PSU_CAPS_POUT = (1 << 8),
 } onlp_psu_caps_t;
 /* <auto.end.enum(onlp_psu_caps).define> */
 
