@@ -98,6 +98,7 @@ onlp_psu_show(onlp_oid_t id, aim_pvs_t* pvs, uint32_t flags)
     if(info.status & 1) {
         /* Present */
         aim_printf(pvs, "PSU: %s\n", info.hdr.description);
+        aim_printf(pvs, "  Model: %s\n", info.model[0] ? info.model[0] : "Unknown.");
         aim_printf(pvs, "  Status: %{onlp_psu_status_flags}\n", info.status);
         aim_printf(pvs, "  Caps:   %{onlp_psu_caps_flags}\n", info.caps);
         aim_printf(pvs, "  Vin:  %f\n", info.vin);
