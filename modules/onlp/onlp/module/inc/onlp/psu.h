@@ -59,9 +59,6 @@ typedef struct onlp_psu_info_t {
     float pin;
     float pout;
 
-    /* child oids */
-    onlp_oid_table_t oid_table;
-
 } onlp_psu_info_t;
 
 /**

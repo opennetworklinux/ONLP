@@ -123,7 +123,7 @@ onlp_sys_info_get(onlp_sys_info_t* rv)
     /*
      * Query the sys oids
      */
-    onlp_sysi_oids_get(rv->oid_table, AIM_ARRAYSIZE(rv->oid_table));
+    onlp_sysi_oids_get(rv->hdr.coids, AIM_ARRAYSIZE(rv->hdr.coids));
 
     return 0;
 }
@@ -133,4 +133,30 @@ onlp_sys_info_free(onlp_sys_info_t* info)
 {
     onlp_onie_info_free(&info->onie_info);
 }
+
+void
+onlp_sys_show(onlp_oid_t id, aim_pvs_t* pvs, uint32_t flags)
+{
+    int rv;
+    onlp_sys_info_t si;
+
+    if(ONLP_OID_TYPE_GET(id) != ONLP_OID_TYPE_SYS) {
+        return;
+    }
+
+    rv = onlp_sys_info_get(&si);
+    if(rv < 0) {
+        aim_printf(pvs, "sys_info_get() failed: %d\n", rv);
+        return;
+    }
+
+    aim_printf(pvs, "System Information:\n");
+    onlp_onie_show(&si.onie_info, pvs, "  ");
+    aim_printf(pvs, "\n");
+
+    /* Dump all platform OID objects */
+    onlp_oids_show(si.hdr.coids, AIM_ARRAYSIZE(si.hdr.coids), pvs, flags);
+    onlp_sys_info_free(&si);
+}
+
 

@@ -12,16 +12,11 @@
 #include <onlp/oids.h>
 
 typedef struct onlp_sys_info_s {
+    /** OID Header */
+    onlp_oid_hdr_t hdr;
 
     /* System Information */
     onlp_onie_info_t onie_info;
-
-    /**
-     * Top-level OIDs.
-     * These do not necessarily represent all system OIDs, only
-     * the root OIDs (objects with no parent OIDS).
-     */
-    onlp_oid_table_t oid_table;
 
 } onlp_sys_info_t;
 
@@ -41,5 +36,13 @@ int onlp_sys_info_get(onlp_sys_info_t* rv);
  * @brief Free a system information structure.
  */
 void onlp_sys_info_free(onlp_sys_info_t* info);
+
+/**
+ * @brief Show the current information about the given sys id.
+ * @param id The SYS OID.
+ * @param pvs The output pvs.
+ * @param flags The output flags.
+ */
+void onlp_sys_show(onlp_oid_t id, aim_pvs_t* pvs, uint32_t flags);
 
 #endif /* __ONLP_SYS_H_ */

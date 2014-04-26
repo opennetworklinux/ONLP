@@ -52,11 +52,13 @@ onlp_status: &onlp_status
 
 # OID Types
 oid_types: &oid_types
-- THERMAL : 1
-- FAN : 2
-- PSU : 3
-- LED : 4
-- MODULE : 5
+- SYS : 1
+- THERMAL : 2
+- FAN : 3
+- PSU : 4
+- LED : 5
+- MODULE : 6
+- RTC : 7
 
 # SFP Status
 sfp_status_flags: &sfp_status_flags

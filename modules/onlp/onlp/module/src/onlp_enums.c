@@ -405,21 +405,25 @@ onlp_thermal_status_valid(onlp_thermal_status_t e)
 
 aim_map_si_t onlp_oid_type_map[] =
 {
+    { "SYS", ONLP_OID_TYPE_SYS },
     { "THERMAL", ONLP_OID_TYPE_THERMAL },
     { "FAN", ONLP_OID_TYPE_FAN },
     { "PSU", ONLP_OID_TYPE_PSU },
     { "LED", ONLP_OID_TYPE_LED },
     { "MODULE", ONLP_OID_TYPE_MODULE },
+    { "RTC", ONLP_OID_TYPE_RTC },
     { NULL, 0 }
 };
 
 aim_map_si_t onlp_oid_type_desc_map[] =
 {
+    { "None", ONLP_OID_TYPE_SYS },
     { "None", ONLP_OID_TYPE_THERMAL },
     { "None", ONLP_OID_TYPE_FAN },
     { "None", ONLP_OID_TYPE_PSU },
     { "None", ONLP_OID_TYPE_LED },
     { "None", ONLP_OID_TYPE_MODULE },
+    { "None", ONLP_OID_TYPE_RTC },
     { NULL, 0 }
 };
 

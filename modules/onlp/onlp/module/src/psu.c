@@ -109,7 +109,7 @@ onlp_psu_show(onlp_oid_t id, aim_pvs_t* pvs, uint32_t flags)
         aim_printf(pvs, "  Pout: %f\n", info.pout);
 
         if(flags & ONLP_OID_SHOW_F_RECURSE) {
-            onlp_oids_show(info.oid_table, AIM_ARRAYSIZE(info.oid_table), pvs, flags);
+            onlp_oids_show(info.hdr.coids, AIM_ARRAYSIZE(info.hdr.coids), pvs, flags);
         }
     }
     else if(flags & ONLP_OID_SHOW_F_EVEN_IF_ABSENT) {

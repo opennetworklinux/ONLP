@@ -32,11 +32,13 @@ typedef uint32_t onlp_oid_t;
 /* <auto.start.enum(onlp_oid_type).define> */
 /** onlp_oid_type */
 typedef enum onlp_oid_type_e {
-    ONLP_OID_TYPE_THERMAL = 1,
-    ONLP_OID_TYPE_FAN = 2,
-    ONLP_OID_TYPE_PSU = 3,
-    ONLP_OID_TYPE_LED = 4,
-    ONLP_OID_TYPE_MODULE = 5,
+    ONLP_OID_TYPE_SYS = 1,
+    ONLP_OID_TYPE_THERMAL = 2,
+    ONLP_OID_TYPE_FAN = 3,
+    ONLP_OID_TYPE_PSU = 4,
+    ONLP_OID_TYPE_LED = 5,
+    ONLP_OID_TYPE_MODULE = 6,
+    ONLP_OID_TYPE_RTC = 7,
 } onlp_oid_type_t;
 /* <auto.end.enum(onlp_oid_type).define> */
 
@@ -58,6 +60,12 @@ typedef enum onlp_oid_type_e {
 #define ONLP_OID_IS_PSU(_id)     ONLP_OID_IS_TYPE(ONLP_OID_TYPE_PSU,_id)
 #define ONLP_OID_IS_LED(_id)     ONLP_OID_IS_TYPE(ONLP_OID_TYPE_LED,_id)
 #define ONLP_OID_IS_MODULE(_id)  ONLP_OID_IS_TYPE(ONLP_OID_TYPE_MODULE,_id)
+
+
+/**
+ * There is only one SYS OID. This value should be used.
+ */
+#define ONLP_OID_SYS ONLP_OID_TYPE_CREATE(ONLP_OID_TYPE_SYS, 1)
 
 /**
  * All OIDs have user-level description strings:
@@ -86,7 +94,9 @@ typedef struct onlp_oid_hdr_s {
     /** The description of this object. */
     onlp_oid_desc_t description;
     /** The parent OID of this object. */
-    onlp_oid_t pid;
+    onlp_oid_t poid;
+    /** The children of this OID */
+    onlp_oid_table_t coids;
 } onlp_oid_hdr_t;
 
 
@@ -116,7 +126,7 @@ void onlp_oids_show(onlp_oid_t* oids, int count, aim_pvs_t* pvs,
  * @param _table The OID table
  * @param _oidp  OID pointer iterator
  */
-#define ONLP_OID_TABLE_ITER(_table, _oidp) ONLP_SYS_OID_ITER_EXPR(_table, _oidp, 1)
+#define ONLP_OID_TABLE_ITER(_table, _oidp) ONLP_OID_TABLE_ITER_EXPR(_table, _oidp, 1)
 
 /**
  * @brief Iterate over all OIDs in the given table of the given type.
@@ -127,6 +137,22 @@ void onlp_oids_show(onlp_oid_t* oids, int count, aim_pvs_t* pvs,
 
 #define ONLP_OID_TABLE_ITER_TYPE(_table, _oidp, _type)                  \
     ONLP_OID_TABLE_ITER_EXPR(_table, _oidp, ONLP_OID_IS_TYPE(ONLP_OID_TYPE_##_type, *_oidp))
+
+
+/**
+ * Iterator
+ */
+typedef int (*onlp_oid_iterate_f)(onlp_oid_t oid, void* cookie);
+
+/**
+ * @brief Iterate over all platform OIDs.
+ * @param oid The root OID.
+ * @param type The OID type filter (optional)
+ * @param itf The iterator function.
+ * @param cookie The cookie.
+ */
+int onlp_oid_iterate(onlp_oid_t oid, onlp_oid_type_t type,
+                     onlp_oid_iterate_f itf, void* cookie);
 
 
 #endif /* __ONLP_OID_H__ */

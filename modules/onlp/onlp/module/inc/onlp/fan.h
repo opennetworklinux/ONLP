@@ -82,9 +82,6 @@ typedef struct onlp_fan_info_s {
     /* Current fan mode, if available  */
     onlp_fan_mode_t mode;
 
-    /* oids associated with this fan */
-    onlp_oid_table_t oid_table;
-
 } onlp_fan_info_t;
 
 
