@@ -76,6 +76,15 @@ onie_test(void)
 }
 
 int
+iter__(onlp_oid_t oid, void* cookie)
+{
+    onlp_oid_hdr_t hdr;
+    onlp_oid_hdr_get(oid, &hdr);
+    printf("OID: 0x%x, D='%s'\n", oid, hdr.description);
+    return 0;
+}
+
+int
 aim_main(int argc, char* argv[])
 {
     //    TEST(shlock_test());
@@ -83,7 +92,7 @@ aim_main(int argc, char* argv[])
     /* Example Platform Dump */
     onlp_init();
     onlp_platform_dump(&aim_pvs_stdout, ONLP_OID_SHOW_F_RECURSE);
-
+    onlp_oid_iterate(0, 0, iter__, NULL);
     return 0;
 }
 

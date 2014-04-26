@@ -30,6 +30,7 @@ oid_type_RTC_show__(onlp_oid_t oid, aim_pvs_t* pvs,
                     uint32_t flags)
 {
     /* Not implemented yet. */
+    AIM_LOG_MSG("RTC_show: 0x%x", oid);
 }
 
 static void
@@ -69,46 +70,70 @@ oid_type_MODULE_show__(onlp_oid_t oid, aim_pvs_t* pvs,
 }
 
 static int
-oid_type_SYS_coids_get__(onlp_oid_t oid, onlp_oid_table_t coids)
+oid_type_SYS_hdr_get__(onlp_oid_t oid, onlp_oid_hdr_t* hdr)
 {
-    return 0;
+    int rv;
+    onlp_sys_info_t si;
+    rv = onlp_sys_info_get(&si);
+    memcpy(hdr, &si.hdr, sizeof(si.hdr));
+    return rv;
 }
 
 static int
-oid_type_THERMAL_coids_get__(onlp_oid_t oid, onlp_oid_table_t coids)
+oid_type_THERMAL_hdr_get__(onlp_oid_t oid, onlp_oid_hdr_t* hdr)
 {
-    return 0;
+    int rv;
+    onlp_thermal_info_t ti;
+    rv = onlp_thermal_info_get(oid, &ti);
+    memcpy(hdr, &ti.hdr, sizeof(ti.hdr));
+    return rv;
 }
 
 static int
-oid_type_FAN_coids_get__(onlp_oid_t oid, onlp_oid_table_t coids)
+oid_type_FAN_hdr_get__(onlp_oid_t oid, onlp_oid_hdr_t* hdr)
 {
-    return 0;
+    int rv;
+    onlp_fan_info_t fi;
+    rv = onlp_fan_info_get(oid, &fi);
+    memcpy(hdr, &fi.hdr, sizeof(fi.hdr));
+    return rv;
 }
 
 static int
-oid_type_LED_coids_get__(onlp_oid_t oid, onlp_oid_table_t coids)
+oid_type_LED_hdr_get__(onlp_oid_t oid, onlp_oid_hdr_t* hdr)
 {
-    return 0;
+    int rv;
+    onlp_led_info_t li;
+    rv = onlp_led_info_get(oid, &li);
+    memcpy(hdr, &li.hdr, sizeof(li.hdr));
+    return rv;
 }
 
 static int
-oid_type_PSU_coids_get__(onlp_oid_t oid, onlp_oid_table_t coids)
+oid_type_PSU_hdr_get__(onlp_oid_t oid, onlp_oid_hdr_t* hdr)
 {
-    return 0;
+    int rv;
+    onlp_psu_info_t pi;
+    rv = onlp_psu_info_get(oid, &pi);
+    memcpy(hdr, &pi.hdr, sizeof(pi.hdr));
+    return rv;
 }
 
 static int
-oid_type_RTC_coids_get__(onlp_oid_t oid, onlp_oid_table_t coids)
+oid_type_RTC_hdr_get__(onlp_oid_t oid, onlp_oid_hdr_t* hdr)
 {
-    return 0;
+    /* Not implemented yet */
+    AIM_LOG_MSG("RTC_coids_get: 0x%x", oid);
+    return ONLP_STATUS_E_INVALID;
 }
 
 
 static int
-oid_type_MODULE_coids_get__(onlp_oid_t oid, onlp_oid_table_t coids)
+oid_type_MODULE_hdr_get__(onlp_oid_t oid, onlp_oid_hdr_t* hdr)
 {
-    return 0;
+    /* Not implemented yet */
+    AIM_LOG_MSG("MODULE_coids_get: 0x%x", oid);
+    return ONLP_STATUS_E_INVALID;
 }
 
 
@@ -152,53 +177,47 @@ onlp_oids_show(onlp_oid_t* oids, int count, aim_pvs_t* pvs,
 
 
 int
+onlp_oid_hdr_get(onlp_oid_t oid, onlp_oid_hdr_t* hdr)
+{
+    switch(ONLP_OID_TYPE_GET(oid))
+        {
+#define ONLP_OID_TYPE_ENTRY(_name, _value)                              \
+            case ONLP_OID_TYPE_##_name:                                 \
+                return oid_type_##_name##_hdr_get__(oid, hdr);
+#include <onlp/onlp.x>
+            /* Intentional compile time error if an OID handler is missing. */
+        }
+    return ONLP_STATUS_E_INVALID;
+}
+
+int
 onlp_oid_iterate(onlp_oid_t oid, onlp_oid_type_t type,
                  onlp_oid_iterate_f itf, void* cookie)
 {
-    int valid = 0;
-    onlp_oid_table_t coids = { 0 };
+    int rv;
+    onlp_oid_hdr_t hdr;
+    onlp_oid_t* oidp;
 
     if(oid == 0) {
         oid = ONLP_OID_SYS;
     }
 
-    switch(ONLP_OID_TYPE_GET(oid)) {
-#define ONLP_OID_TYPE_ENTRY(_name, _value)                              \
-        case ONLP_OID_TYPE_##_name:                                     \
-            {                                                           \
-                int rv = oid_type_##_name##_coids_get__(oid, coids);    \
-                if(rv < 0) {                                            \
-                    return rv;                                          \
-                }                                                       \
-                valid = 1;                                              \
-                break;                                                  \
-            }
-
-#include <onlp/onlp.x>
-
-            /* Intentional compile time error if an OID handler is missing. */
-        }
-
-    if(valid) {
-        onlp_oid_t* oidp;
-        ONLP_OID_TABLE_ITER(coids, oidp) {
-            if(type == 0 || ONLP_OID_IS_TYPE(*oidp, type)) {
-                int rv = itf(*oidp, cookie);
-                if(rv < 0) {
-                    return rv;
-                }
-                rv = onlp_oid_iterate(*oidp, type, itf, cookie);
-                if(rv < 0) {
-                    return rv;
-                }
-            }
-        }
-
-        return ONLP_STATUS_OK;
-    }
-    else {
-        /* The given OID was invalid. */
-        return ONLP_STATUS_E_INVALID;
+    rv = onlp_oid_hdr_get(oid, &hdr);
+    if(rv < 0) {
+        return rv;
     }
 
+    ONLP_OID_TABLE_ITER(hdr.coids, oidp) {
+        if(type == 0 || ONLP_OID_IS_TYPE(*oidp, type)) {
+            int rv = itf(*oidp, cookie);
+            if(rv < 0) {
+                return rv;
+            }
+            rv = onlp_oid_iterate(*oidp, type, itf, cookie);
+            if(rv < 0) {
+                return rv;
+            }
+        }
+    }
+    return ONLP_STATUS_OK;
 }

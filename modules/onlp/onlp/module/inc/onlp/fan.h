@@ -19,6 +19,8 @@ typedef enum onlp_fan_caps_e {
     ONLP_FAN_CAPS_F2B = (1 << 1),
     ONLP_FAN_CAPS_SET_RPM = (1 << 2),
     ONLP_FAN_CAPS_SET_PERCENTAGE = (1 << 3),
+    ONLP_FAN_CAPS_GET_RPM = (1 << 4),
+    ONLP_FAN_CAPS_GET_PERCENTAGE = (1 << 5),
 } onlp_fan_caps_t;
 /* <auto.end.enum(onlp_fan_caps).define> */
 

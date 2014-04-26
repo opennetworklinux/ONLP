@@ -479,6 +479,8 @@ aim_map_si_t onlp_fan_caps_map[] =
     { "F2B", ONLP_FAN_CAPS_F2B },
     { "SET_RPM", ONLP_FAN_CAPS_SET_RPM },
     { "SET_PERCENTAGE", ONLP_FAN_CAPS_SET_PERCENTAGE },
+    { "GET_RPM", ONLP_FAN_CAPS_GET_RPM },
+    { "GET_PERCENTAGE", ONLP_FAN_CAPS_GET_PERCENTAGE },
     { NULL, 0 }
 };
 
@@ -488,6 +490,8 @@ aim_map_si_t onlp_fan_caps_desc_map[] =
     { "None", ONLP_FAN_CAPS_F2B },
     { "None", ONLP_FAN_CAPS_SET_RPM },
     { "None", ONLP_FAN_CAPS_SET_PERCENTAGE },
+    { "None", ONLP_FAN_CAPS_GET_RPM },
+    { "None", ONLP_FAN_CAPS_GET_PERCENTAGE },
     { NULL, 0 }
 };
 

@@ -77,6 +77,9 @@ typedef char onlp_oid_desc_t[ONLP_OID_DESC_SIZE];
 /* fixme */
 #define ONLP_OID_TABLE_SIZE 32
 typedef onlp_oid_t onlp_oid_table_t[ONLP_OID_TABLE_SIZE];
+#define ONLP_OID_TABLE_SIZE_BYTES (sizeof(onlp_oid_t)*ONLP_OID_TABLE_SIZE)
+#define ONLP_OID_TABLE_COPY(_dst, _src) memcpy(_dst, _src, ONLP_OID_TABLE_SIZE_BYTES)
+#define ONLP_OID_TABLE_CLEAR(_table) memset(_table, 0, ONLP_OID_TABLE_SIZE_BYTES)
 
 
 /**
@@ -154,5 +157,11 @@ typedef int (*onlp_oid_iterate_f)(onlp_oid_t oid, void* cookie);
 int onlp_oid_iterate(onlp_oid_t oid, onlp_oid_type_t type,
                      onlp_oid_iterate_f itf, void* cookie);
 
+/**
+ * @brief Get the OID header for a given OID.
+ * @param oid The oid
+ * @param hdr [out] Receives the header
+ */
+int onlp_oid_hdr_get(onlp_oid_t oid, onlp_oid_hdr_t* hdr);
 
 #endif /* __ONLP_OID_H__ */

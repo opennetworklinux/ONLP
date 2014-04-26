@@ -32,10 +32,17 @@ onlp_fan_init(void)
 }
 
 int
-onlp_fan_info_get(onlp_oid_t id, onlp_fan_info_t* rv)
+onlp_fan_info_get(onlp_oid_t id, onlp_fan_info_t* fip)
 {
     VALIDATE(id);
-    return onlp_fani_info_get(id, rv);
+    int rv = onlp_fani_info_get(id, fip);
+    if(rv >= 0) {
+        if(fip->percentage && fip->rpm == 0) {
+            /* Approximate RPM based on a 10,000 RPM Maximum */
+            fip->rpm = fip->percentage * 100;
+        }
+    }
+    return rv;
 }
 
 static int

@@ -79,6 +79,8 @@ fan_caps: &fan_caps
 - F2B : (1 << 1)
 - SET_RPM : (1 << 2)
 - SET_PERCENTAGE : (1 << 3)
+- GET_RPM : (1 << 4)
+- GET_PERCENTAGE : (1 << 5)
 
 # Fan Direction
 fan_dirs: &fan_dirs
