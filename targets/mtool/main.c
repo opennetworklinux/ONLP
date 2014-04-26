@@ -22,8 +22,8 @@
  * Physical Memory Tool
  *
  ***********************************************************/
-#include <onlp/lib/mmap.h>
-#include <onlp/lib/onie.h>
+#include <onlplib/mmap.h>
+#include <onlplib/onie.h>
 
 int
 aim_main(int argc, char* argv[])
