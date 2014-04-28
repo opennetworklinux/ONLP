@@ -17,6 +17,7 @@
 typedef enum onlp_psu_status_e {
     ONLP_PSU_STATUS_PRESENT = (1 << 0),
     ONLP_PSU_STATUS_FAILED = (1 << 1),
+    ONLP_PSU_STATUS_UNPLUGGED = (1 << 2),
 } onlp_psu_status_t;
 /* <auto.end.enum(onlp_psu_status).define> */
 

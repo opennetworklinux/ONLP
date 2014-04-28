@@ -142,8 +142,9 @@ led_mode: &led_mode
 
 # PSU Status
 psu_status: &psu_status
-- PRESENT : (1 << 0)
-- FAILED : (1 << 1)
+- PRESENT   : (1 << 0)
+- FAILED    : (1 << 1)
+- UNPLUGGED : (1 << 2)
 
 # PSU caps
 psu_caps: &psu_caps

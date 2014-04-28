@@ -143,6 +143,7 @@ aim_map_si_t onlp_psu_status_map[] =
 {
     { "PRESENT", ONLP_PSU_STATUS_PRESENT },
     { "FAILED", ONLP_PSU_STATUS_FAILED },
+    { "UNPLUGGED", ONLP_PSU_STATUS_UNPLUGGED },
     { NULL, 0 }
 };
 
@@ -150,6 +151,7 @@ aim_map_si_t onlp_psu_status_desc_map[] =
 {
     { "None", ONLP_PSU_STATUS_PRESENT },
     { "None", ONLP_PSU_STATUS_FAILED },
+    { "None", ONLP_PSU_STATUS_UNPLUGGED },
     { NULL, 0 }
 };
 
