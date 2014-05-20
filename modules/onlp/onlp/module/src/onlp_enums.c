@@ -216,6 +216,7 @@ aim_map_si_t onlp_led_caps_map[] =
     { "BLUE_BLINKING", ONLP_LED_CAPS_BLUE_BLINKING },
     { "PURPLE", ONLP_LED_CAPS_PURPLE },
     { "PURPLE_BLINKING", ONLP_LED_CAPS_PURPLE_BLINKING },
+    { "AUTO", ONLP_LED_CAPS_AUTO },
     { NULL, 0 }
 };
 
@@ -234,6 +235,7 @@ aim_map_si_t onlp_led_caps_desc_map[] =
     { "None", ONLP_LED_CAPS_BLUE_BLINKING },
     { "None", ONLP_LED_CAPS_PURPLE },
     { "None", ONLP_LED_CAPS_PURPLE_BLINKING },
+    { "None", ONLP_LED_CAPS_AUTO },
     { NULL, 0 }
 };
 
@@ -812,6 +814,7 @@ aim_map_si_t onlp_led_mode_map[] =
     { "BLUE_BLINKING", ONLP_LED_MODE_BLUE_BLINKING },
     { "PURPLE", ONLP_LED_MODE_PURPLE },
     { "PURPLE_BLINKING", ONLP_LED_MODE_PURPLE_BLINKING },
+    { "AUTO", ONLP_LED_MODE_AUTO },
     { NULL, 0 }
 };
 
@@ -832,6 +835,7 @@ aim_map_si_t onlp_led_mode_desc_map[] =
     { "None", ONLP_LED_MODE_BLUE_BLINKING },
     { "None", ONLP_LED_MODE_PURPLE },
     { "None", ONLP_LED_MODE_PURPLE_BLINKING },
+    { "None", ONLP_LED_MODE_AUTO },
     { NULL, 0 }
 };
 

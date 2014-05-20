@@ -114,6 +114,7 @@ led_caps: &led_caps
 - BLUE_BLINKING : (1 << 19)
 - PURPLE: (1 << 20)
 - PURPLE_BLINKING : (1 << 21)
+- AUTO : (1 << 22)
 
 # LED status
 led_status: &led_status
@@ -139,6 +140,7 @@ led_mode: &led_mode
 - 'BLUE_BLINKING' : 19
 - 'PURPLE' : 20
 - 'PURPLE_BLINKING' : 21
+- 'AUTO' : 22
 
 # PSU Status
 psu_status: &psu_status
