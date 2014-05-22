@@ -70,7 +70,7 @@ aim_main(int argc, char* argv[])
                     onlp_onie_show_json(&info, &aim_pvs_stdout);
                 }
                 else {
-                    onlp_onie_show(&info, &aim_pvs_stdout, "");
+                    onlp_onie_show(&info, &aim_pvs_stdout);
                 }
                 onlp_onie_info_free(&info);
             }

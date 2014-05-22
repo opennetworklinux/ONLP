@@ -33,7 +33,7 @@ LIBRARY := mtoolmain
 $(LIBRARY)_SUBDIR := $(dir $(lastword $(MAKEFILE_LIST)))
 include $(BUILDER)/lib.mk
 
-DEPENDMODULES := AIM onlplib
+DEPENDMODULES := AIM onlplib IOF
 
 include $(BUILDER)/dependmodules.mk
 
