@@ -9,6 +9,7 @@
 #include <onlp/fan.h>
 #include <onlp/platformi/fani.h>
 #include <onlp/oids.h>
+#include "onlp_int.h"
 
 #define VALIDATE(_id)                           \
     do {                                        \
@@ -118,36 +119,89 @@ onlp_fan_dir_set(onlp_oid_t id, onlp_fan_dir_t dir)
     }
 }
 
+
+
+/************************************************************
+ *
+ * Debug and Show Functions
+ *
+ ***********************************************************/
+
 void
-onlp_fan_show(onlp_oid_t id, aim_pvs_t* pvs, uint32_t flags)
+onlp_fan_dump(onlp_oid_t id, aim_pvs_t* pvs, uint32_t flags)
 {
     int rv;
+    iof_t iof;
     onlp_fan_info_t info;
 
     VALIDATENR(id);
 
+    onlp_oid_dump_iof_init_default(&iof, pvs);
+    iof_push(&iof, "fan @ %d", ONLP_OID_ID_GET(id));
     rv = onlp_fan_info_get(id, &info);
     if(rv < 0) {
-        aim_printf(pvs, "Error retrieving fan id %d: %{onlp_status}\n",
-                   ONLP_OID_ID_GET(id), rv);
-        return;
+        onlp_oid_info_get_error(&iof, rv);
     }
-
-    if(info.status & 1) {
-        /* Present */
-        aim_printf(pvs, "Fan: %s\n", info.hdr.description);
-        aim_printf(pvs, "  Status: %{onlp_fan_status_flags}\n", info.status);
-        aim_printf(pvs, "  Caps:   %{onlp_fan_caps_flags}\n", info.caps);
-        aim_printf(pvs, "  RPM:  %d\n", info.rpm);
-        aim_printf(pvs, "  Per:  %d\n", info.percentage);
+    else {
+        onlp_oid_show_description(&iof, &info.hdr);
+        if(info.status & 1) {
+            /* Present */
+            iof_iprintf(&iof, "Status: %{onlp_fan_status_flags}", info.status);
+            iof_iprintf(&iof, "Caps:   %{onlp_fan_caps_flags}", info.caps);
+            iof_iprintf(&iof, "RPM:    %d", info.rpm);
+            iof_iprintf(&iof, "Per:    %d", info.percentage);
+        }
+        else {
+            iof_iprintf(&iof, "Not present.");
+        }
     }
-    else if(flags & ONLP_OID_SHOW_F_EVEN_IF_ABSENT) {
-        aim_printf(pvs, "Fan: %s (Not present)\n", info.hdr.description);
-    }
-    aim_printf(pvs, "\n");
+    iof_pop(&iof);
 }
 
+void
+onlp_fan_show(onlp_oid_t oid, aim_pvs_t* pvs, uint32_t flags)
+{
+    int rv;
+    iof_t iof;
+    onlp_fan_info_t fi;
 
+    onlp_oid_show_iof_init_default(&iof, pvs);
 
+    rv = onlp_fan_info_get(oid, &fi);
 
+    iof_push(&iof, "Fan %d", ONLP_OID_ID_GET(oid));
+    if(rv < 0) {
+        onlp_oid_info_get_error(&iof, rv);
+    }
+    else {
+        onlp_oid_show_description(&iof, &fi.hdr);
+        if(fi.status & 0x1) {
+            /* Present */
+            iof_iprintf(&iof, "State: Present");
+            if(fi.status & ONLP_FAN_STATUS_FAILED) {
+                iof_iprintf(&iof, "Status: FAILED");
+            }
+            else {
+                iof_iprintf(&iof, "Status: Running.");
+                if(fi.rpm) {
+                    iof_iprintf(&iof, "RPM: %d.", fi.rpm);
+                }
+                if(fi.percentage) {
+                    iof_iprintf(&iof, "Speed: %d%%.", fi.percentage);
+                }
+                if(fi.status & ONLP_FAN_STATUS_B2F) {
+                    iof_iprintf(&iof, "Airflow: Back-to-Front.");
+                }
+                if(fi.status & ONLP_FAN_STATUS_F2B) {
+                    iof_iprintf(&iof, "Airflow: Front-to-Back.");
+                }
+            }
+        }
+        else {
+            /* Not present */
+            onlp_oid_show_state_missing(&iof);
+        }
+    }
+    iof_pop(&iof);
+}
 

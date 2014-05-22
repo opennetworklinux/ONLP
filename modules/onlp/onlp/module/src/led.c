@@ -10,6 +10,7 @@
 #include <onlp/oids.h>
 #include <onlp/led.h>
 #include <onlp/platformi/ledi.h>
+#include "onlp_int.h"
 
 #define VALIDATE(_id)                           \
     do {                                        \
@@ -95,30 +96,66 @@ onlp_led_mode_set(onlp_oid_t id, onlp_led_mode_t mode)
     }
 }
 
+
+/************************************************************
+ *
+ * Debug and Show Functions
+ *
+ ***********************************************************/
+
+void
+onlp_led_dump(onlp_oid_t id, aim_pvs_t* pvs, uint32_t flags)
+{
+    int rv;
+    iof_t iof;
+    onlp_led_info_t info;
+
+    VALIDATENR(id);
+    onlp_oid_dump_iof_init_default(&iof, pvs);
+    iof_push(&iof, "led @ %d", ONLP_OID_ID_GET(id));
+    rv = onlp_led_info_get(id, &info);
+    if(rv < 0) {
+        onlp_oid_info_get_error(&iof, rv);
+    }
+    else {
+        onlp_oid_show_description(&iof, &info.hdr);
+        if(info.status & 1) {
+            /* Present */
+            iof_iprintf(&iof, "Status: %{onlp_led_status_flags}", info.status);
+            iof_iprintf(&iof, "Mode: %{onlp_led_mode}", info.mode);
+        }
+        else {
+            iof_iprintf(&iof, "Not present.");
+        }
+    }
+    iof_pop(&iof);
+}
+
 void
 onlp_led_show(onlp_oid_t id, aim_pvs_t* pvs, uint32_t flags)
 {
     int rv;
+    iof_t iof;
     onlp_led_info_t info;
 
     VALIDATENR(id);
-
+    onlp_oid_show_iof_init_default(&iof, pvs);
+    iof_push(&iof, "LED %d", ONLP_OID_ID_GET(id));
     rv = onlp_led_info_get(id, &info);
     if(rv < 0) {
-        aim_printf(pvs, "Error retrieving LED id %d: %{onlp_status}\n",
-                   ONLP_OID_ID_GET(id), rv);
-        return;
+        onlp_oid_info_get_error(&iof, rv);
     }
+    else {
+        onlp_oid_show_description(&iof, &info.hdr);
+        if(info.status & 1) {
+            /* Present */
+            iof_iprintf(&iof, "Mode: %{onlp_led_mode}", info.mode);
+        }
+        else {
+            onlp_oid_show_state_missing(&iof);
+        }
+    }
+    iof_pop(&iof);
 
-    if(info.status & 1) {
-        /* Present */
-        aim_printf(pvs, "LED: %s\n", info.hdr.description);
-        aim_printf(pvs, "  Status: %{onlp_led_status_flags}\n", info.status);
-        aim_printf(pvs, "  Mode: %{onlp_led_mode}\n", info.mode);
-    }
-    else if(flags & ONLP_OID_SHOW_F_EVEN_IF_ABSENT) {
-        aim_printf(pvs, "LED: %s (Not present)\n", info.hdr.description);
-    }
-    aim_printf(pvs, "\n");
 }
 

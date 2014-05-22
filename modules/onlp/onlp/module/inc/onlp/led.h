@@ -112,11 +112,19 @@ int onlp_led_set(onlp_oid_t id, int on_or_off);
 int onlp_led_mode_set(onlp_oid_t id, onlp_led_mode_t color);
 
 /**
- * @brief Show an LED.
+ * @brief LED OID debug dump
  * @param id The LED OID
  * @param pvs The output pvs
  * @param flags The output flags
  */
-void onlp_led_show(onlp_oid_t oid, aim_pvs_t* pvs, uint32_t flags);
+void onlp_led_dump(onlp_oid_t oid, aim_pvs_t* pvs, uint32_t flags);
+
+/**
+ * @brief Show the given LED OID.
+ * @param id The LED OID
+ * @param pvs The output pvs
+ * @param flags The output flags
+ */
+void onlp_led_show(onlp_oid_t id, aim_pvs_t* pvs, uint32_t flags);
 
 #endif /* __ONLP_LED_H__ */

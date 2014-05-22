@@ -24,6 +24,8 @@
 
 #include "onlplib_log.h"
 
+#include <IOF/iof.h>
+
 /**
  * Header Field Constants
  */
@@ -287,25 +289,26 @@ onlp_onie_info_free(onlp_onie_info_t* info)
 }
 
 void
-onlp_onie_show(onlp_onie_info_t* info, aim_pvs_t* pvs, const char* indent)
+onlp_onie_show(onlp_onie_info_t* info, aim_pvs_t* pvs)
 {
-    const char* i = indent ? indent : "";
-    aim_printf(pvs, "%sProduct Name: %s\n", i, info->product_name);
-    aim_printf(pvs, "%sPart Number: %s\n", i, info->part_number);
-    aim_printf(pvs, "%sSerial Number: %s\n", i, info->serial_number);
-    aim_printf(pvs, "%sMAC: %{mac}\n", i, info->mac);
-    aim_printf(pvs, "%sMAC Range: %d\n", i, info->mac_range);
-    aim_printf(pvs, "%sManufacturer: %s\n", i, info->device_version);
-    aim_printf(pvs, "%sManufacture Date: %s\n", i, info->manufacture_date);
-    aim_printf(pvs, "%sVendor: %s\n", i, info->vendor);
-    aim_printf(pvs, "%sPlatform Name: %s\n", i, info->platform_name);
-    aim_printf(pvs, "%sDevice Version: %s\n", i, info->device_version);
-    aim_printf(pvs, "%sLabel Revision: %s\n", i, info->label_revision);
-    aim_printf(pvs, "%sCountry Code: %s\n", i, info->country_code);
-    aim_printf(pvs, "%sDiag Version: %s\n", i, info->diag_version);
-    aim_printf(pvs, "%sService Tag: %s\n", i, info->service_tag);
-    aim_printf(pvs, "%sONIE Version: %s\n", i, info->onie_version);
-    aim_printf(pvs, "%sCRC: 0x%x\n", i, info->crc);
+    iof_t iof;
+    iof_init(&iof, pvs);
+    iof_iprintf(&iof, "Product Name: %s", info->product_name);
+    iof_iprintf(&iof, "Part Number: %s", info->part_number);
+    iof_iprintf(&iof, "Serial Number: %s", info->serial_number);
+    iof_iprintf(&iof, "MAC: %{mac}", info->mac);
+    iof_iprintf(&iof, "MAC Range: %d", info->mac_range);
+    iof_iprintf(&iof, "Manufacturer: %s", info->device_version);
+    iof_iprintf(&iof, "Manufacture Date: %s", info->manufacture_date);
+    iof_iprintf(&iof, "Vendor: %s", info->vendor);
+    iof_iprintf(&iof, "Platform Name: %s", info->platform_name);
+    iof_iprintf(&iof, "Device Version: %s", info->device_version);
+    iof_iprintf(&iof, "Label Revision: %s", info->label_revision);
+    iof_iprintf(&iof, "Country Code: %s", info->country_code);
+    iof_iprintf(&iof, "Diag Version: %s", info->diag_version);
+    iof_iprintf(&iof, "Service Tag: %s", info->service_tag);
+    iof_iprintf(&iof, "ONIE Version: %s", info->onie_version);
+    iof_iprintf(&iof, "CRC: 0x%x", info->crc);
 }
 
 void

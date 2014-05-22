@@ -36,5 +36,6 @@ int onlp_init(void);
  */
 
 void onlp_platform_dump(aim_pvs_t* pvs, uint32_t flags);
+void onlp_platform_show(aim_pvs_t* pvs, uint32_t flags);
 
 #endif /* __ONLP_ONLP_H__ */

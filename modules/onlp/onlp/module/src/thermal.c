@@ -9,6 +9,7 @@
 #include <onlp/thermal.h>
 #include <onlp/platformi/thermali.h>
 #include <onlp/oids.h>
+#include "onlp_int.h"
 
 #define VALIDATE(_id)                           \
     do {                                        \
@@ -38,29 +39,71 @@ onlp_thermal_info_get(onlp_oid_t id, onlp_thermal_info_t* info)
     return onlp_thermali_info_get(id, info);
 }
 
+
+/************************************************************
+ *
+ * Debug and Show Functions
+ *
+ ***********************************************************/
+void
+onlp_thermal_dump(onlp_oid_t id, aim_pvs_t* pvs, uint32_t flags)
+{
+    int rv;
+    iof_t iof;
+    onlp_thermal_info_t info;
+
+    VALIDATENR(id);
+    onlp_oid_dump_iof_init_default(&iof, pvs);
+
+    iof_push(&iof, "thermal @ %d", ONLP_OID_ID_GET(id));
+    rv = onlp_thermal_info_get(id, &info);
+    if(rv < 0) {
+        onlp_oid_info_get_error(&iof, rv);
+    }
+    else {
+        onlp_oid_show_description(&iof, &info.hdr);
+        if(info.status & 1) {
+            /* Present */
+            iof_iprintf(&iof, "Status: %{onlp_thermal_status_flags}", info.status);
+            iof_iprintf(&iof, "Temperature: %f", info.temperature);
+        }
+        else {
+            iof_iprintf(&iof, "Not present.");
+        }
+    }
+    iof_pop(&iof);
+}
+
 void
 onlp_thermal_show(onlp_oid_t id, aim_pvs_t* pvs, uint32_t flags)
 {
     int rv;
-    onlp_thermal_info_t info;
-
+    iof_t iof;
+    onlp_thermal_info_t ti;
     VALIDATENR(id);
+    onlp_oid_show_iof_init_default(&iof, pvs);
 
-    rv = onlp_thermal_info_get(id, &info);
+    rv = onlp_thermal_info_get(id, &ti);
+    iof_push(&iof, "Thermal %d", ONLP_OID_ID_GET(id));
     if(rv < 0) {
-        aim_printf(pvs, "Error retrieving thermal id %d: %{onlp_status}\n",
-                   ONLP_OID_ID_GET(id), rv);
-        return;
+        onlp_oid_info_get_error(&iof, rv);
     }
-
-    if(info.status & 1) {
-        /* Present */
-        aim_printf(pvs, "Thermal: %s\n", info.hdr.description);
-        aim_printf(pvs, "  Status: %{onlp_thermal_status_flags}\n", info.status);
-        aim_printf(pvs, "  Temperature: %f\n", info.temperature);
+    else {
+        onlp_oid_show_description(&iof, &ti.hdr);
+        if(ti.status & 0x1) {
+            /* Present */
+            if(ti.status & ONLP_THERMAL_STATUS_FAILED) {
+                iof_iprintf(&iof, "Status: FAILED");
+            }
+            else {
+                iof_iprintf(&iof, "Temperature: %.1f C.",
+                            onlp_float_normal(ti.temperature));
+            }
+        }
+        else {
+            /* Not present */
+            iof_iprintf(&iof, "State: Missing.");
+        }
     }
-    else if(flags & ONLP_OID_SHOW_F_EVEN_IF_ABSENT) {
-        aim_printf(pvs, "Thermal: %s (Not present)\n", info.hdr.description);
-    }
-    aim_printf(pvs, "\n");
+    iof_pop(&iof);
 }

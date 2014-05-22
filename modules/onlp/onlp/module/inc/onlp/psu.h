@@ -75,11 +75,21 @@ int onlp_psu_init(void);
 int onlp_psu_info_get(onlp_oid_t id, onlp_psu_info_t* rv);
 
 /**
- * @brief Show PSU information.
+ * @brief PSU OID debug dump
+ * @param id The PSU OID
+ * @param pvs The output pvs
+ * @param flags The output flags
+ */
+void onlp_psu_dump(onlp_oid_t id, aim_pvs_t* pvs, uint32_t flags);
+
+
+/**
+ * @brief Show the given PSU OID.
  * @param id The PSU OID
  * @param pvs The output pvs
  * @param flags The output flags
  */
 void onlp_psu_show(onlp_oid_t id, aim_pvs_t* pvs, uint32_t flags);
+
 
 #endif /* __ONLP_PSU_H__ */

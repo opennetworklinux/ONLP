@@ -84,6 +84,9 @@ iter__(onlp_oid_t oid, void* cookie)
     return 0;
 }
 
+#include <onlp/fan.h>
+#include <onlp/thermal.h>
+#include <onlp/oids.h>
 int
 aim_main(int argc, char* argv[])
 {
@@ -91,8 +94,9 @@ aim_main(int argc, char* argv[])
 
     /* Example Platform Dump */
     onlp_init();
-    onlp_platform_dump(&aim_pvs_stdout, ONLP_OID_SHOW_F_RECURSE);
+    onlp_platform_dump(&aim_pvs_stdout, ONLP_OID_DUMP_F_RECURSE);
     onlp_oid_iterate(0, 0, iter__, NULL);
+    onlp_platform_show(&aim_pvs_stdout, ONLP_OID_SHOW_F_RECURSE|ONLP_OID_SHOW_F_EXTENDED);
     return 0;
 }
 

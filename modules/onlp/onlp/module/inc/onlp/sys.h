@@ -38,10 +38,19 @@ int onlp_sys_info_get(onlp_sys_info_t* rv);
 void onlp_sys_info_free(onlp_sys_info_t* info);
 
 /**
- * @brief Show the current information about the given sys id.
+ * @brief SYS OID debug dump.
  * @param id The SYS OID.
  * @param pvs The output pvs.
  * @param flags The output flags.
+ * @note This output is designed for debugging.
+ */
+void onlp_sys_dump(onlp_oid_t id, aim_pvs_t* pvs, uint32_t flags);
+
+/**
+ * @brief Show the status of the given OID.
+ * @param id the SYS OID.
+ * @param pvs The output pvs.
+ * @param flags The output flags
  */
 void onlp_sys_show(onlp_oid_t id, aim_pvs_t* pvs, uint32_t flags);
 

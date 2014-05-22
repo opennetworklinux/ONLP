@@ -11,6 +11,7 @@
 
 #include <stdint.h>
 #include <AIM/aim_pvs.h>
+#include <IOF/iof.h>
 
 /**
  * The ONIE specification defines the format of the system
@@ -65,7 +66,7 @@ void onlp_onie_info_free(onlp_onie_info_t* info);
 /**
  * Show the contents of an ONIE info structure.
  */
-void onlp_onie_show(onlp_onie_info_t* info, aim_pvs_t* pvs, const char* indent);
+void onlp_onie_show(onlp_onie_info_t* info, aim_pvs_t* pvs);
 
 /**
  * Dump the contents of an ONIE info structure as JSON

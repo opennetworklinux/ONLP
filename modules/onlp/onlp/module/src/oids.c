@@ -9,6 +9,7 @@
 #include <onlp/onlp_config.h>
 #include <onlp/oids.h>
 #include "onlp_log.h"
+#include "onlp_int.h"
 #include <AIM/aim.h>
 #include <AIM/aim_printf.h>
 
@@ -18,55 +19,46 @@
 #include <onlp/psu.h>
 #include <onlp/sys.h>
 
-static void
-oid_type_SYS_show__(onlp_oid_t oid, aim_pvs_t* pvs,
-                    uint32_t flags)
-{
-    onlp_sys_show(oid, pvs, flags);
-}
+#define OID_TYPE_SHOWDUMP_DEFINE(_TYPE, _type)                          \
+    static void                                                         \
+    oid_type_##_TYPE##_dump__(onlp_oid_t oid, aim_pvs_t* pvs, uint32_t flags) \
+    {                                                                   \
+        onlp_##_type##_dump(oid, pvs, flags);                           \
+    }                                                                   \
+    static void                                                         \
+    oid_type_##_TYPE##_show__(onlp_oid_t oid, aim_pvs_t* pvs, uint32_t flags) \
+    {                                                                   \
+        onlp_##_type##_show(oid, pvs, flags);                           \
+    }
+
+#define OID_TYPE_SHOWDUMP_DEFINE_EMPTY(_TYPE, _type)                    \
+    static void                                                         \
+    oid_type_##_TYPE##_dump__(onlp_oid_t oid, aim_pvs_t* pvs, uint32_t flags) \
+    {                                                                   \
+    }                                                                   \
+    static void                                                         \
+    oid_type_##_TYPE##_show__(onlp_oid_t oid, aim_pvs_t* pvs, uint32_t flags) \
+    {                                                                   \
+    }
+
+
+OID_TYPE_SHOWDUMP_DEFINE(SYS, sys);
+OID_TYPE_SHOWDUMP_DEFINE(THERMAL, thermal);
+OID_TYPE_SHOWDUMP_DEFINE(FAN, fan);
+OID_TYPE_SHOWDUMP_DEFINE(PSU, psu);
+OID_TYPE_SHOWDUMP_DEFINE(LED, led);
+OID_TYPE_SHOWDUMP_DEFINE_EMPTY(MODULE, module);
+OID_TYPE_SHOWDUMP_DEFINE_EMPTY(RTC, rtc);
 
 static void
-oid_type_RTC_show__(onlp_oid_t oid, aim_pvs_t* pvs,
-                    uint32_t flags)
+oid_type_unknown_dump__(onlp_oid_t oid, aim_pvs_t* pvs, uint32_t flags)
 {
-    /* Not implemented yet. */
-    AIM_LOG_MSG("RTC_show: 0x%x", oid);
-}
-
-static void
-oid_type_THERMAL_show__(onlp_oid_t oid, aim_pvs_t* pvs,
-                        uint32_t flags)
-{
-    onlp_thermal_show(oid, pvs, flags);
-}
-
-static void
-oid_type_FAN_show__(onlp_oid_t oid, aim_pvs_t* pvs,
-                    uint32_t flags)
-
-{
-    onlp_fan_show(oid, pvs, flags);
-}
-
-static void
-oid_type_PSU_show__(onlp_oid_t oid, aim_pvs_t* pvs,
-                    uint32_t flags)
-{
-    onlp_psu_show(oid, pvs, flags);
-}
-static void
-oid_type_LED_show__(onlp_oid_t oid, aim_pvs_t* pvs,
-                    uint32_t flags)
-{
-    onlp_led_show(oid, pvs, flags);
-}
-
-static void
-oid_type_MODULE_show__(onlp_oid_t oid, aim_pvs_t* pvs,
-                       uint32_t flags)
-
-{
-    AIM_LOG_MSG("MODULE_show: 0x%x", oid);
+    iof_t iof;
+    onlp_oid_dump_iof_init_default(&iof, pvs);
+    iof_push(&iof, "invalid oid @ 0x%x", oid);
+    iof_iprintf(&iof, "type = %d", ONLP_OID_TYPE_GET(oid));
+    iof_iprintf(&iof, "  id = %d", ONLP_OID_ID_GET(oid));
+    iof_pop(&iof);
 }
 
 static int
@@ -136,45 +128,65 @@ oid_type_MODULE_hdr_get__(onlp_oid_t oid, onlp_oid_hdr_t* hdr)
     return ONLP_STATUS_E_INVALID;
 }
 
-
-void
-onlp_oid_show(onlp_oid_t oid, aim_pvs_t* pvs, uint32_t flags)
+static void
+onlp_oid_showdump__(onlp_oid_t oid,
+                    /* show=1, dump=0 */
+                    int show,
+                    aim_pvs_t* pvs,
+                    uint32_t flags)
 {
-    int otype;
-
     if(oid == 0) {
         oid = ONLP_OID_SYS;
     }
 
-    otype = ONLP_OID_TYPE_GET(oid);
-
     switch(ONLP_OID_TYPE_GET(oid)) {
+        /* {dump || show} */
 #define ONLP_OID_TYPE_ENTRY(_name, _value)                              \
         case ONLP_OID_TYPE_##_name:                                     \
-            oid_type_##_name##_show__(oid, pvs, flags);                 \
+            if(show) {                                                  \
+                oid_type_##_name##_show__(oid, pvs, flags);             \
+            }                                                           \
+            else {                                                      \
+                oid_type_##_name##_dump__(oid, pvs, flags);             \
+            }                                                           \
             return;
+
 #include <onlp/onlp.x>
 
         /* Intentional compile time error if an OID decode is missing. */
     }
-
-
-    AIM_LOG_WARN("OID TYPE %d is unknown.", otype);
-    aim_printf(pvs, "OID 0x%x type=%d (unrecognized)\n", oid, otype);
+    oid_type_unknown_dump__(oid, pvs, flags);
 }
 
 void
-onlp_oids_show(onlp_oid_t* oids, int count, aim_pvs_t* pvs,
-               uint32_t flags)
+onlp_oid_dump(onlp_oid_t oid, aim_pvs_t* pvs, uint32_t flags)
 {
-    int i;
-    for(i = 0; i < count; i++) {
-        if(oids[i]) {
-            onlp_oid_show(oids[i], pvs, flags);
-        }
+    onlp_oid_showdump__(oid, 0, pvs, flags);
+}
+
+void
+onlp_oid_table_dump(onlp_oid_table_t table, aim_pvs_t* pvs, uint32_t flags)
+{
+    onlp_oid_t* oidp;
+    ONLP_OID_TABLE_ITER(table, oidp) {
+        onlp_oid_dump(*oidp, pvs, flags);
     }
 }
 
+void
+onlp_oid_show(onlp_oid_t oid, aim_pvs_t* pvs, uint32_t flags)
+{
+    onlp_oid_showdump__(oid, 1, pvs, flags);
+}
+
+void
+onlp_oid_table_show(onlp_oid_table_t table, aim_pvs_t* pvs, uint32_t flags)
+{
+    onlp_oid_t* oidp;
+    ONLP_OID_TABLE_ITER(table, oidp) {
+        onlp_oid_show(*oidp, pvs, flags);
+    }
+}
 
 int
 onlp_oid_hdr_get(onlp_oid_t oid, onlp_oid_hdr_t* hdr)

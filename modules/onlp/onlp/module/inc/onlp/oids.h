@@ -13,6 +13,7 @@
 
 #include <stdint.h>
 #include <AIM/aim_pvs.h>
+#include <IOF/iof.h>
 
 /**
  * System peripherals are identified by a 32bit OID.
@@ -103,15 +104,19 @@ typedef struct onlp_oid_hdr_s {
 } onlp_oid_hdr_t;
 
 
-#define ONLP_OID_SHOW_F_RECURSE 0x1
-#define ONLP_OID_SHOW_F_EVEN_IF_ABSENT 0x2
+#define ONLP_OID_DUMP_F_RECURSE 0x1
+#define ONLP_OID_DUMP_F_EVEN_IF_ABSENT 0x2
 
-/**
- * All OIDs can be dumped.
- */
+#define ONLP_OID_SHOW_F_RECURSE 0x1
+#define ONLP_OID_SHOW_F_EXTENDED 0x2
+
+void onlp_oid_dump(onlp_oid_t oid, aim_pvs_t* pvs, uint32_t flags);
+void onlp_oid_table_dump(onlp_oid_table_t table, aim_pvs_t* pvs,
+                         uint32_t flags);
+
 void onlp_oid_show(onlp_oid_t oid, aim_pvs_t* pvs, uint32_t flags);
-void onlp_oids_show(onlp_oid_t* oids, int count, aim_pvs_t* pvs,
-                    uint32_t flags);
+void onlp_oid_table_show(onlp_oid_table_t table, aim_pvs_t* pvs,
+                         uint32_t flags);
 
 
 /**

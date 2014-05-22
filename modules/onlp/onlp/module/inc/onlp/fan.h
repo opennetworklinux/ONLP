@@ -132,10 +132,18 @@ int onlp_fan_mode_set(onlp_oid_t id, onlp_fan_mode_t mode);
 int onlp_fan_dir_set(onlp_oid_t id, onlp_fan_dir_t dir);
 
 /**
- * @brief Show the current information about the given fan id.
+ * @brief Fan OID debug dump.
  * @param id The fan OID.
  * @param pvs The output pvs.
  * @param flags The output flags.
+ */
+void onlp_fan_dump(onlp_oid_t id, aim_pvs_t* pvs, uint32_t flags);
+
+/**
+ * @brief Show the given Fan OID.
+ * @param id The Fan OID
+ * @param pvs The output pvs
+ * @param flags The output flags. 
  */
 void onlp_fan_show(onlp_oid_t id, aim_pvs_t* pvs, uint32_t flags);
 
