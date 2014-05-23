@@ -1,7 +1,8 @@
 #!/usr/bin/env python
-################################################################
-#
-#        Copyright 2013, Big Switch Networks, Inc. 
+############################################################
+# <bsn.cl fy=2014 v=onl>
+# 
+#           Copyright 2014 Big Switch Networks, Inc.          
 # 
 # Licensed under the Eclipse Public License, Version 1.0 (the
 # "License"); you may not use this file except in compliance
@@ -15,11 +16,12 @@
 # either express or implied. See the License for the specific
 # language governing permissions and limitations under the
 # License.
-#
-################################################################
+# 
+# </bsn.cl>
+############################################################
 #
 # This script generates a new code module and unit test build
-# for this repository. 
+# for this repository.
 #
 ################################################################
 
@@ -63,7 +65,7 @@ if __name__ == "__main__":
     ModuleGenerator.modulesBaseDir = "%s/modules" % ROOT
 
     #
-    # Make it happen. 
+    # Make it happen.
     #
     ModuleGenerator.main(globals().copy())
 
@@ -75,4 +77,4 @@ if __name__ == "__main__":
 
 
 
-  
+
