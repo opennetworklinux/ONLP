@@ -49,8 +49,11 @@ typedef struct onlp_thermal_info_s {
     /** Status */
     uint32_t status;
 
-    /* Current temperature. */
+    /* Current temperature - deprecated. */
     float temperature;
+
+    /* Current temperature in milli-celsius */
+    int mcelsius;
 
 } onlp_thermal_info_t;
 
