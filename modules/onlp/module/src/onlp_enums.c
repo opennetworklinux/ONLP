@@ -100,6 +100,7 @@ aim_map_si_t onlp_status_map[] =
     { "E_MISSING", ONLP_STATUS_E_MISSING },
     { "E_INVALID", ONLP_STATUS_E_INVALID },
     { "E_INTERNAL", ONLP_STATUS_E_INTERNAL },
+    { "E_PARAM", ONLP_STATUS_E_PARAM },
     { NULL, 0 }
 };
 
@@ -110,6 +111,7 @@ aim_map_si_t onlp_status_desc_map[] =
     { "None", ONLP_STATUS_E_MISSING },
     { "None", ONLP_STATUS_E_INVALID },
     { "None", ONLP_STATUS_E_INTERNAL },
+    { "None", ONLP_STATUS_E_PARAM },
     { NULL, 0 }
 };
 

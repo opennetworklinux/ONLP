@@ -1,21 +1,21 @@
 /************************************************************
  * <bsn.cl fy=2014 v=onl>
- * 
- *           Copyright 2014 Big Switch Networks, Inc.          
- * 
+ *
+ *           Copyright 2014 Big Switch Networks, Inc.
+ *
  * Licensed under the Eclipse Public License, Version 1.0 (the
  * "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
- * 
+ *
  *        http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the
  * License.
- * 
+ *
  * </bsn.cl>
  ************************************************************
  *
@@ -48,11 +48,49 @@ onlp_thermal_init(void)
     return onlp_thermali_init();
 }
 
-int
-onlp_thermal_info_get(onlp_oid_t id, onlp_thermal_info_t* info)
+#if ONLP_CONFIG_INCLUDE_PLATFORM_OVERRIDES == 1
+
+static int
+onlp_thermali_info_from_json__(cJSON* data, onlp_thermal_info_t* info, int errorcheck)
 {
-    VALIDATE(id);
-    return onlp_thermali_info_get(id, info);
+    int rv;
+    double t;
+
+    if(data == NULL) {
+        return (errorcheck) ? ONLP_STATUS_E_PARAM : 0;
+    }
+
+    rv = cjson_util_lookup_int(data, (int*) &info->status, "status");
+    if(rv < 0 && errorcheck) return rv;
+
+    rv = cjson_util_lookup_double(data, &t, "temperature");
+    if(rv < 0 && errorcheck) return rv;
+    info->temperature = t;
+
+    return 0;
+}
+
+#endif
+
+int
+onlp_thermal_info_get(onlp_oid_t oid, onlp_thermal_info_t* info)
+{
+    int rv;
+    VALIDATE(oid);
+
+    rv = onlp_thermali_info_get(oid, info);
+    if(rv >= 0) {
+
+#if ONLP_CONFIG_INCLUDE_PLATFORM_OVERRIDES == 1
+        int id = ONLP_OID_ID_GET(oid);
+        cJSON* entry = NULL;
+
+        cjson_util_lookup(onlp_json_get(0), &entry, "overrides.thermal.%d", id);
+        onlp_thermali_info_from_json__(entry, info, 0);
+#endif
+
+    }
+    return rv;
 }
 
 

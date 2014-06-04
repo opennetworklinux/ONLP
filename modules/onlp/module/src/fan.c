@@ -1,21 +1,21 @@
 /************************************************************
  * <bsn.cl fy=2014 v=onl>
- * 
- *           Copyright 2014 Big Switch Networks, Inc.          
- * 
+ *
+ *           Copyright 2014 Big Switch Networks, Inc.
+ *
  * Licensed under the Eclipse Public License, Version 1.0 (the
  * "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
- * 
+ *
  *        http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the
  * License.
- * 
+ *
  * </bsn.cl>
  ************************************************************
  *
@@ -26,6 +26,8 @@
 #include <onlp/platformi/fani.h>
 #include <onlp/oids.h>
 #include "onlp_int.h"
+#include "onlp_log.h"
+#include "onlp_json.h"
 
 #define VALIDATE(_id)                           \
     do {                                        \
@@ -48,17 +50,69 @@ onlp_fan_init(void)
     return onlp_fani_init();
 }
 
-int
-onlp_fan_info_get(onlp_oid_t id, onlp_fan_info_t* fip)
+
+#if ONLP_CONFIG_INCLUDE_PLATFORM_OVERRIDES == 1
+
+static int
+onlp_fani_info_from_json__(cJSON* data, onlp_fan_info_t* fip, int errorcheck)
 {
-    VALIDATE(id);
-    int rv = onlp_fani_info_get(id, fip);
+    int rv;
+
+    if(data == NULL) {
+        return (errorcheck) ? ONLP_STATUS_E_PARAM : 0;
+    }
+
+    rv = cjson_util_lookup_int(data, (int*) &fip->status, "status");
+    if(rv < 0 && errorcheck) return rv;
+
+    rv = cjson_util_lookup_int(data, (int*) &fip->caps, "caps");
+    if(rv < 0 && errorcheck) return rv;
+
+    rv = cjson_util_lookup_int(data, (int*) &fip->rpm, "rpm");
+    if(rv < 0 && errorcheck) return rv;
+
+    rv = cjson_util_lookup_int(data, (int*) &fip->percentage, "percentage");
+    if(rv < 0 && errorcheck) return rv;
+
+    rv = cjson_util_lookup_int(data, (int*) &fip->mode, "mode");
+    if(rv < 0 && errorcheck) return rv;
+
+    return 0;
+}
+
+#endif
+
+int
+onlp_fan_info_get(onlp_oid_t oid, onlp_fan_info_t* fip)
+{
+    int rv;
+
+    VALIDATE(oid);
+
+    /* Get the information struct from the platform */
+    rv = onlp_fani_info_get(oid, fip);
+
     if(rv >= 0) {
+
+#if ONLP_CONFIG_INCLUDE_PLATFORM_OVERRIDES == 1
+        /*
+         * Optional override from the config file.
+         * This is usually just for testing.
+         */
+        int id = ONLP_OID_ID_GET(oid);
+        cJSON* entry = NULL;
+
+
+        cjson_util_lookup(onlp_json_get(0), &entry, "overrides.fan.%d", id);
+        onlp_fani_info_from_json__(entry, fip, 0);
+#endif
+
         if(fip->percentage && fip->rpm == 0) {
             /* Approximate RPM based on a 10,000 RPM Maximum */
             fip->rpm = fip->percentage * 100;
         }
     }
+
     return rv;
 }
 

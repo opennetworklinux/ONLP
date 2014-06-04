@@ -164,6 +164,36 @@
 #define ONLP_CONFIG_PLATFORM_FILENAME "/etc/onl_platform"
 #endif
 
+/**
+ * ONLP_CONFIG_INCLUDE_PLATFORM_OVERRIDES
+ *
+ * Allow support for local overrides of all platform OID values (testing). */
+
+
+#ifndef ONLP_CONFIG_INCLUDE_PLATFORM_OVERRIDES
+#define ONLP_CONFIG_INCLUDE_PLATFORM_OVERRIDES 1
+#endif
+
+/**
+ * ONLP_CONFIG_CONFIGURATION_FILENAME
+ *
+ * The filename for the (optional) ONLP JSON configuration file. */
+
+
+#ifndef ONLP_CONFIG_CONFIGURATION_FILENAME
+#define ONLP_CONFIG_CONFIGURATION_FILENAME "/etc/onlp.conf"
+#endif
+
+/**
+ * ONLP_CONFIG_CONFIGURATION_ENV
+ *
+ * Environment variable to check for configuration filenames. Overrides default. */
+
+
+#ifndef ONLP_CONFIG_CONFIGURATION_ENV
+#define ONLP_CONFIG_CONFIGURATION_ENV "ONLP_CONF"
+#endif
+
 
 
 /**

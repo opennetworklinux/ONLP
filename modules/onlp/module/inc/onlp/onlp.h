@@ -35,6 +35,7 @@ typedef enum onlp_status_e {
     ONLP_STATUS_E_MISSING = -2,
     ONLP_STATUS_E_INVALID = -3,
     ONLP_STATUS_E_INTERNAL = -4,
+    ONLP_STATUS_E_PARAM = -5,
 } onlp_status_t;
 /* <auto.end.enum(onlp_status).define> */
 
