@@ -29,8 +29,10 @@ cdefs: &cdefs
 
 
 sff_media_types: &sff_media_types
-- COPPER
-- FIBER
+- COPPER:
+    desc: "Copper"
+- FIBER:
+    desc: "Fiber"
 
 sff_module_types: &sff_module_types
 - 40G_BASE_CR4:
@@ -101,7 +103,7 @@ definitions:
         - strncmp
         - strlen
 
-  enum:
+  enum: &enums
     sff_sfp_type:
       members: *sff_sfp_types
     sff_module_type:
@@ -110,3 +112,7 @@ definitions:
       members: *sff_module_caps
     sff_media_type:
       members: *sff_media_types
+
+  xenum:
+      SFF_ENUMERATION_ENTRY:
+        members: *enums

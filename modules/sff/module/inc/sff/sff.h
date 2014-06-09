@@ -225,6 +225,13 @@ typedef struct sff_info_s {
     /** Raw eeprom data */
     uint8_t eeprom[256];
 
+    /** Vendor Name */
+    char vendor[17];
+    /** Model Number */
+    char model[17];
+    /** Serial Number */
+    char serial[17];
+
     /** SFP Type */
     sff_sfp_type_t sfp_type;
     /** SFP Type Name */

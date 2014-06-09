@@ -223,6 +223,29 @@ sff_info_init(sff_info_t* rv, uint8_t* eeprom)
                 break;
             }
     }
+
+    const uint8_t *vendor, *model, *serial;
+
+    switch(rv->sfp_type)
+        {
+        case SFF_SFP_TYPE_QSFP_PLUS:
+            vendor=rv->eeprom+148;
+            model=rv->eeprom+168;
+            serial=rv->eeprom+196;
+            break;
+
+        case SFF_SFP_TYPE_SFP:
+        default:
+            vendor=rv->eeprom+20;
+            model=rv->eeprom+40;
+            serial=rv->eeprom+68;
+            break;
+        }
+
+    aim_strlcpy(rv->vendor, (char*)vendor, sizeof(rv->vendor));
+    aim_strlcpy(rv->model, (char*)model, sizeof(rv->model));
+    aim_strlcpy(rv->serial, (char*)serial, sizeof(rv->serial));
+
     return 0;
 }
 

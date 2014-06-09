@@ -16,8 +16,8 @@ aim_map_si_t sff_media_type_map[] =
 
 aim_map_si_t sff_media_type_desc_map[] =
 {
-    { "None", SFF_MEDIA_TYPE_COPPER },
-    { "None", SFF_MEDIA_TYPE_FIBER },
+    { "Copper", SFF_MEDIA_TYPE_COPPER },
+    { "Fiber", SFF_MEDIA_TYPE_FIBER },
     { NULL, 0 }
 };
 
