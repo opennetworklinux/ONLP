@@ -158,3 +158,14 @@ onlp_sfp_post_insert(int port, sff_info_t* info)
 {
     return onlp_sfpi_post_insert(port, info);
 }
+
+int
+onlp_sfp_enable_set(int port, int enable)
+{
+    return onlp_sfpi_enable_set(port, enable);
+}
+int
+onlp_sfp_enable_get(int port, int* enable)
+{
+    return onlp_sfpi_enable_get(port, enable);
+}
