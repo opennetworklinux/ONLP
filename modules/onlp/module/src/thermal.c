@@ -54,7 +54,7 @@ static int
 onlp_thermali_info_from_json__(cJSON* data, onlp_thermal_info_t* info, int errorcheck)
 {
     int rv;
-    double t;
+    int t;
 
     if(data == NULL) {
         return (errorcheck) ? ONLP_STATUS_E_PARAM : 0;
@@ -63,9 +63,9 @@ onlp_thermali_info_from_json__(cJSON* data, onlp_thermal_info_t* info, int error
     rv = cjson_util_lookup_int(data, (int*) &info->status, "status");
     if(rv < 0 && errorcheck) return rv;
 
-    rv = cjson_util_lookup_double(data, &t, "temperature");
+    rv = cjson_util_lookup_int(data, &t, "mcelsius");
     if(rv < 0 && errorcheck) return rv;
-    info->temperature = t;
+    info->mcelsius = t;
 
     return 0;
 }
@@ -119,7 +119,7 @@ onlp_thermal_dump(onlp_oid_t id, aim_pvs_t* pvs, uint32_t flags)
         if(info.status & 1) {
             /* Present */
             iof_iprintf(&iof, "Status: %{onlp_thermal_status_flags}", info.status);
-            iof_iprintf(&iof, "Temperature: %f", info.temperature);
+            iof_iprintf(&iof, "Temperature: %d", info.mcelsius);
         }
         else {
             iof_iprintf(&iof, "Not present.");
@@ -150,8 +150,8 @@ onlp_thermal_show(onlp_oid_t id, aim_pvs_t* pvs, uint32_t flags)
                 iof_iprintf(&iof, "Status: FAILED");
             }
             else {
-                iof_iprintf(&iof, "Temperature: %.1f C.",
-                            onlp_float_normal(ti.temperature));
+                iof_iprintf(&iof, "Temperature: %d.%d C.",
+                            ONLP_MILLI_NORMAL_INTEGER_TENTHS(ti.mcelsius));
             }
         }
         else {

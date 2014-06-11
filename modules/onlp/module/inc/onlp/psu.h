@@ -69,14 +69,6 @@ typedef struct onlp_psu_info_t {
     /* Capabilities */
     uint32_t caps;
 
-    /* Float values are deprecated */
-    float vin;
-    float vout;
-    float iin;
-    float iout;
-    float pin;
-    float pout;
-
     /* millivolts */
     int mvin;
     int mvout;

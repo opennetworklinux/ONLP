@@ -70,18 +70,3 @@ onlp_oid_show_state_missing(iof_t* iof)
     iof_iprintf(iof, "State: Missing");
 }
 
-int
-onlp_float_tenths(float f)
-{
-    f*=10;
-    return (int) f;
-}
-
-float
-onlp_float_normal(float f)
-{
-    int r = onlp_float_tenths(f);
-    float rv = (float)r;
-    return rv/10;
-}
-
