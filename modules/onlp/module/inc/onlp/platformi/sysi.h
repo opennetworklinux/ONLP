@@ -108,15 +108,6 @@ int onlp_sysi_oids_get(onlp_oid_t* table, int max);
 
 
 /**
- * @brief Perform necessary platform management.
- * @note This function will be called periodically by the upper-layer
- * software to give the platform an opportunity to perform any
- * platform management required for correct operation. This includes
- * adjusting fan speeds in response to thermal events.
- */
-void onlp_sysi_platform_manage(void);
-
-/**
  * @brief This function provides a generic ioctl interface.
  * @param id context dependent.
  * @param vargs The variable argument list for the ioctl call.
@@ -126,5 +117,23 @@ void onlp_sysi_platform_manage(void);
  * @notes Optional
  */
 int onlp_sysi_ioctl(int id, va_list vargs);
+
+
+/**
+ * @brief Perform necessary platform fan management.
+ * @note This function should automatically adjust the FAN speeds
+ * according to the platform conditions.
+ */
+int onlp_sysi_platform_manage_fans(void);
+
+/**
+ * @brief Perform necessary platform LED management.
+ * @note This function should automatically adjust the LED indicators
+ * according to the platform conditions.
+ */
+int onlp_sysi_platform_manage_leds(void);
+
+
+
 
 #endif /* __ONLP_SYSI_H__ */
