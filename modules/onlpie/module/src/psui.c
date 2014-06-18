@@ -1,21 +1,21 @@
 /************************************************************
  * <bsn.cl fy=2014 v=onl>
- * 
- *           Copyright 2014 Big Switch Networks, Inc.          
- * 
+ *
+ *           Copyright 2014 Big Switch Networks, Inc.
+ *
  * Licensed under the Eclipse Public License, Version 1.0 (the
  * "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
- * 
+ *
  *        http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the
  * License.
- * 
+ *
  * </bsn.cl>
  ************************************************************
  *
@@ -49,10 +49,10 @@ static onlp_psu_info_t pinfo[] =
             "ONLPIE PSU MODEL (AC)",
             0x1,
             ONLP_PSU_CAPS_AC | ONLP_PSU_CAPS_VIN | ONLP_PSU_CAPS_VOUT | ONLP_PSU_CAPS_IIN,
-            240.0,
-            12.0,
-            2.0,
-            3.0,
+            241100,
+            122200,
+            23300,
+            3440,
             0,
             0,
         },
@@ -66,9 +66,9 @@ static onlp_psu_info_t pinfo[] =
             "ONLPIE PSU MODEL (DC)",
             0x1,
             ONLP_PSU_CAPS_DC48,
-            48,
-            12,
-            2.0
+            48100,
+            12200,
+            2300
         },
     };
 

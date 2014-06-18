@@ -1,21 +1,21 @@
 /************************************************************
  * <bsn.cl fy=2014 v=onl>
- * 
- *           Copyright 2014 Big Switch Networks, Inc.          
- * 
+ *
+ *           Copyright 2014 Big Switch Networks, Inc.
+ *
  * Licensed under the Eclipse Public License, Version 1.0 (the
  * "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
- * 
+ *
  *        http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the
  * License.
- * 
+ *
  * </bsn.cl>
  ************************************************************
  *
@@ -127,12 +127,12 @@ onlp_psu_dump(onlp_oid_t id, aim_pvs_t* pvs, uint32_t flags)
             iof_iprintf(&iof, "Model:  %s", info.model[0] ? info.model : "Unknown.");
             iof_iprintf(&iof, "Status: %{onlp_psu_status_flags}", info.status);
             iof_iprintf(&iof, "Caps:   %{onlp_psu_caps_flags}", info.caps);
-            iof_iprintf(&iof, "Vin:    %f", info.vin);
-            iof_iprintf(&iof, "Vout:   %f", info.vout);
-            iof_iprintf(&iof, "Iin:    %f", info.iin);
-            iof_iprintf(&iof, "Iout:   %f", info.iout);
-            iof_iprintf(&iof, "Pin:    %f", info.pin);
-            iof_iprintf(&iof, "Pout:   %f", info.pout);
+            iof_iprintf(&iof, "Vin:    %d", info.mvin);
+            iof_iprintf(&iof, "Vout:   %d", info.mvout);
+            iof_iprintf(&iof, "Iin:    %d", info.miin);
+            iof_iprintf(&iof, "Iout:   %d", info.miout);
+            iof_iprintf(&iof, "Pin:    %d", info.mpin);
+            iof_iprintf(&iof, "Pout:   %d", info.mpout);
             if(flags & ONLP_OID_DUMP_F_RECURSE) {
                 onlp_oid_table_dump(info.hdr.coids, &iof.inherit, flags);
             }
@@ -185,23 +185,28 @@ onlp_psu_show(onlp_oid_t id, aim_pvs_t* pvs, uint32_t flags)
                     iof_iprintf(&iof, "Type: Unknown.");
                 }
                 if(pi.caps & ONLP_PSU_CAPS_VIN) {
-                    iof_iprintf(&iof, "Vin: %.1f",
-                                onlp_float_normal(pi.vin));
+                    iof_iprintf(&iof, "Vin: %d.%d",
+                                ONLP_MILLI_NORMAL_INTEGER_TENTHS(pi.mvin));
                 }
                 if(pi.caps & ONLP_PSU_CAPS_VOUT) {
-                    iof_iprintf(&iof, "Vout: %.1f", onlp_float_normal(pi.vout));
+                    iof_iprintf(&iof, "Vout: %d.%d",
+                                ONLP_MILLI_NORMAL_INTEGER_TENTHS(pi.mvout));
                 }
                 if(pi.caps & ONLP_PSU_CAPS_IIN) {
-                    iof_iprintf(&iof, "Iin: %.1f", onlp_float_normal(pi.iin));
+                    iof_iprintf(&iof, "Iin: %d.%d",
+                                ONLP_MILLI_NORMAL_INTEGER_TENTHS(pi.miin));
                 }
                 if(pi.caps & ONLP_PSU_CAPS_IOUT) {
-                    iof_iprintf(&iof, "Iout: %.1f", onlp_float_normal(pi.iout));
+                    iof_iprintf(&iof, "Iout: %d.%d",
+                                ONLP_MILLI_NORMAL_INTEGER_TENTHS(pi.miout));
                 }
                 if(pi.caps & ONLP_PSU_CAPS_PIN) {
-                    iof_iprintf(&iof, "Pin: %.1f", onlp_float_normal(pi.pin));
+                    iof_iprintf(&iof, "Pin: %d.%d",
+                                ONLP_MILLI_NORMAL_INTEGER_TENTHS(pi.mpin));
                 }
                 if(pi.caps & ONLP_PSU_CAPS_POUT) {
-                    iof_iprintf(&iof, "Pout: %.1f", onlp_float_normal(pi.pout));
+                    iof_iprintf(&iof, "Pout: %d.%d",
+                                ONLP_MILLI_NORMAL_INTEGER_TENTHS(pi.mpout));
                 }
 
                 if(flags & ONLP_OID_SHOW_F_RECURSE) {
