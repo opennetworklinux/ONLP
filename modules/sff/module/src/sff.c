@@ -9,7 +9,7 @@
 #include <sff/sff.h>
 #include <sff/8472.h>
 #include <sff/8436.h>
-
+#include "sff_log.h"
 
 sff_sfp_type_t
 sff_sfp_type_get(const uint8_t* idprom)
@@ -249,4 +249,38 @@ sff_info_init(sff_info_t* rv, uint8_t* eeprom)
     return 0;
 }
 
+void
+sff_info_show(sff_info_t* info, aim_pvs_t* pvs)
+{
+    aim_printf(pvs, "Vendor: %s Model: %s SN: %s Type: %s Module: %s Media: %s Length: %d\n",
+               info->vendor, info->model, info->serial, info->sfp_type_name,
+               info->module_type_name, info->media_type_name, info->length);
+}
+
+int
+sff_info_init_file(sff_info_t* info, const char* fname)
+{
+    int rv;
+    FILE* fp;
+
+    SFF_MEMSET(info, 0, sizeof(*info));
+
+    if( (fp = fopen(fname, "r")) == NULL) {
+        AIM_LOG_ERROR("Failed to open eeprom file %s: %{errno}");
+        return -1;
+    }
+
+    if( (rv = fread(info->eeprom, 1, 256, fp)) > 0) {
+        if( (rv=sff_info_init(info, NULL)) < 0) {
+            AIM_LOG_ERROR("sff_init() failed on data from file %s: %d\n", fname, rv);
+            rv = -1;
+        }
+        rv = 0;
+    }
+    else {
+        rv = -1;
+    }
+    fclose(fp);
+    return rv;
+}
 

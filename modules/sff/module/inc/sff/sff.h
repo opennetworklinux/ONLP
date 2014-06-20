@@ -266,4 +266,18 @@ typedef struct sff_info_s {
  */
 int sff_info_init(sff_info_t* rv, uint8_t* eeprom);
 
+/**
+ * @brief Initialize an SFF module information structure from a file.
+ * @param rv [out] Receives thh data.
+ * @param fname The filename.
+ */
+int sff_info_init_file(sff_info_t* rv, const char* fname);
+
+/**
+ * @brief Show an sff info structure.
+ * @param info The info structure.
+ * @param pvs The output pvs.
+ */
+void sff_info_show(sff_info_t* info, aim_pvs_t* pvs);
+
 #endif /* __SFF_SFF_H__ */
