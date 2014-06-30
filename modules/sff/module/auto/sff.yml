@@ -26,7 +26,9 @@ cdefs: &cdefs
 - SFF_CONFIG_INCLUDE_UCLI:
     doc: "Include generic uCli support."
     default: 0
-
+- SFF_CONFIG_INCLUDE_SFF_TOOL:
+    doc: "Include the SFF tool main entry point."
+    default: 0
 
 sff_media_types: &sff_media_types
 - COPPER:

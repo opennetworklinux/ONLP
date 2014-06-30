@@ -6,6 +6,10 @@
  * SFF Utility for eeprom files.
  *
  ***********************************************************/
+#include <sff/sff_config.h>
+
+#if SFF_CONFIG_INCLUDE_SFF_TOOL == 1
+
 #include <sff/sff.h>
 #include <unistd.h>
 #include <BigList/biglist.h>
@@ -90,7 +94,9 @@ sff_tool(int argc, char* argv[])
     return 0;
 }
 
-
+#else
+int __not_empty__;
+#endif
 
 
 

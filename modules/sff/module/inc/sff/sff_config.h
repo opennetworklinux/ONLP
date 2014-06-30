@@ -89,6 +89,16 @@
 #define SFF_CONFIG_INCLUDE_UCLI 0
 #endif
 
+/**
+ * SFF_CONFIG_INCLUDE_SFF_TOOL
+ *
+ * Include the SFF tool main entry point. */
+
+
+#ifndef SFF_CONFIG_INCLUDE_SFF_TOOL
+#define SFF_CONFIG_INCLUDE_SFF_TOOL 0
+#endif
+
 
 
 /**
