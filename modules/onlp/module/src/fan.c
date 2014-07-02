@@ -253,10 +253,10 @@ onlp_fan_show(onlp_oid_t oid, aim_pvs_t* pvs, uint32_t flags)
             }
             else {
                 iof_iprintf(&iof, "Status: Running.");
-                if(fi.rpm) {
+                if(fi.caps & ONLP_FAN_CAPS_GET_RPM) {
                     iof_iprintf(&iof, "RPM: %d.", fi.rpm);
                 }
-                if(fi.percentage) {
+                if(fi.caps & ONLP_FAN_CAPS_GET_PERCENTAGE) {
                     iof_iprintf(&iof, "Speed: %d%%.", fi.percentage);
                 }
                 if(fi.status & ONLP_FAN_STATUS_B2F) {
