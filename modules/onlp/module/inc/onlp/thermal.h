@@ -37,6 +37,13 @@ typedef enum onlp_thermal_status_e {
 } onlp_thermal_status_t;
 /* <auto.end.enum(onlp_thermal_status).define> */
 
+/* <auto.start.enum(onlp_thermal_caps).define> */
+/** onlp_thermal_caps */
+typedef enum onlp_thermal_caps_e {
+    ONLP_THERMAL_CAPS_GET_TEMPERATURE = (1 << 0),
+} onlp_thermal_caps_t;
+/* <auto.end.enum(onlp_thermal_caps).define> */
+
 
 /**
  * Thermal sensor information structure.
@@ -48,6 +55,9 @@ typedef struct onlp_thermal_info_s {
 
     /** Status */
     uint32_t status;
+
+    /** Capabilities */
+    uint32_t caps;
 
     /* Current temperature in milli-celsius */
     int mcelsius;

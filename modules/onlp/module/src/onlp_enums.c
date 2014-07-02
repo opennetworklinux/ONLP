@@ -567,6 +567,94 @@ onlp_fan_caps_valid(onlp_fan_caps_t e)
 }
 
 
+aim_map_si_t onlp_led_mode_map[] =
+{
+    { "OFF", ONLP_LED_MODE_OFF },
+    { "ON", ONLP_LED_MODE_ON },
+    { "BLINKING", ONLP_LED_MODE_BLINKING },
+    { "RED", ONLP_LED_MODE_RED },
+    { "RED_BLINKING", ONLP_LED_MODE_RED_BLINKING },
+    { "ORANGE", ONLP_LED_MODE_ORANGE },
+    { "ORANGE_BLINKING", ONLP_LED_MODE_ORANGE_BLINKING },
+    { "YELLOW", ONLP_LED_MODE_YELLOW },
+    { "YELLOW_BLINKING", ONLP_LED_MODE_YELLOW_BLINKING },
+    { "GREEN", ONLP_LED_MODE_GREEN },
+    { "GREEN_BLINKING", ONLP_LED_MODE_GREEN_BLINKING },
+    { "BLUE", ONLP_LED_MODE_BLUE },
+    { "BLUE_BLINKING", ONLP_LED_MODE_BLUE_BLINKING },
+    { "PURPLE", ONLP_LED_MODE_PURPLE },
+    { "PURPLE_BLINKING", ONLP_LED_MODE_PURPLE_BLINKING },
+    { "AUTO", ONLP_LED_MODE_AUTO },
+    { NULL, 0 }
+};
+
+aim_map_si_t onlp_led_mode_desc_map[] =
+{
+    { "None", ONLP_LED_MODE_OFF },
+    { "None", ONLP_LED_MODE_ON },
+    { "None", ONLP_LED_MODE_BLINKING },
+    { "None", ONLP_LED_MODE_RED },
+    { "None", ONLP_LED_MODE_RED_BLINKING },
+    { "None", ONLP_LED_MODE_ORANGE },
+    { "None", ONLP_LED_MODE_ORANGE_BLINKING },
+    { "None", ONLP_LED_MODE_YELLOW },
+    { "None", ONLP_LED_MODE_YELLOW_BLINKING },
+    { "None", ONLP_LED_MODE_GREEN },
+    { "None", ONLP_LED_MODE_GREEN_BLINKING },
+    { "None", ONLP_LED_MODE_BLUE },
+    { "None", ONLP_LED_MODE_BLUE_BLINKING },
+    { "None", ONLP_LED_MODE_PURPLE },
+    { "None", ONLP_LED_MODE_PURPLE_BLINKING },
+    { "None", ONLP_LED_MODE_AUTO },
+    { NULL, 0 }
+};
+
+const char*
+onlp_led_mode_name(onlp_led_mode_t e)
+{
+    const char* name;
+    if(aim_map_si_i(&name, e, onlp_led_mode_map, 0)) {
+        return name;
+    }
+    else {
+        return "-invalid value for enum type 'onlp_led_mode'";
+    }
+}
+
+int
+onlp_led_mode_value(const char* str, onlp_led_mode_t* e, int substr)
+{
+    int i;
+    AIM_REFERENCE(substr);
+    if(aim_map_si_s(&i, str, onlp_led_mode_map, 0)) {
+        /* Enum Found */
+        *e = i;
+        return 0;
+    }
+    else {
+        return -1;
+    }
+}
+
+const char*
+onlp_led_mode_desc(onlp_led_mode_t e)
+{
+    const char* name;
+    if(aim_map_si_i(&name, e, onlp_led_mode_desc_map, 0)) {
+        return name;
+    }
+    else {
+        return "-invalid value for enum type 'onlp_led_mode'";
+    }
+}
+
+int
+onlp_led_mode_valid(onlp_led_mode_t e)
+{
+    return aim_map_si_i(NULL, e, onlp_led_mode_map, 0) ? 1 : 0;
+}
+
+
 aim_map_si_t onlp_fan_status_map[] =
 {
     { "PRESENT", ONLP_FAN_STATUS_PRESENT },
@@ -819,66 +907,36 @@ onlp_psu_caps_valid(onlp_psu_caps_t e)
 }
 
 
-aim_map_si_t onlp_led_mode_map[] =
+aim_map_si_t onlp_thermal_caps_map[] =
 {
-    { "OFF", ONLP_LED_MODE_OFF },
-    { "ON", ONLP_LED_MODE_ON },
-    { "BLINKING", ONLP_LED_MODE_BLINKING },
-    { "RED", ONLP_LED_MODE_RED },
-    { "RED_BLINKING", ONLP_LED_MODE_RED_BLINKING },
-    { "ORANGE", ONLP_LED_MODE_ORANGE },
-    { "ORANGE_BLINKING", ONLP_LED_MODE_ORANGE_BLINKING },
-    { "YELLOW", ONLP_LED_MODE_YELLOW },
-    { "YELLOW_BLINKING", ONLP_LED_MODE_YELLOW_BLINKING },
-    { "GREEN", ONLP_LED_MODE_GREEN },
-    { "GREEN_BLINKING", ONLP_LED_MODE_GREEN_BLINKING },
-    { "BLUE", ONLP_LED_MODE_BLUE },
-    { "BLUE_BLINKING", ONLP_LED_MODE_BLUE_BLINKING },
-    { "PURPLE", ONLP_LED_MODE_PURPLE },
-    { "PURPLE_BLINKING", ONLP_LED_MODE_PURPLE_BLINKING },
-    { "AUTO", ONLP_LED_MODE_AUTO },
+    { "GET_TEMPERATURE", ONLP_THERMAL_CAPS_GET_TEMPERATURE },
     { NULL, 0 }
 };
 
-aim_map_si_t onlp_led_mode_desc_map[] =
+aim_map_si_t onlp_thermal_caps_desc_map[] =
 {
-    { "None", ONLP_LED_MODE_OFF },
-    { "None", ONLP_LED_MODE_ON },
-    { "None", ONLP_LED_MODE_BLINKING },
-    { "None", ONLP_LED_MODE_RED },
-    { "None", ONLP_LED_MODE_RED_BLINKING },
-    { "None", ONLP_LED_MODE_ORANGE },
-    { "None", ONLP_LED_MODE_ORANGE_BLINKING },
-    { "None", ONLP_LED_MODE_YELLOW },
-    { "None", ONLP_LED_MODE_YELLOW_BLINKING },
-    { "None", ONLP_LED_MODE_GREEN },
-    { "None", ONLP_LED_MODE_GREEN_BLINKING },
-    { "None", ONLP_LED_MODE_BLUE },
-    { "None", ONLP_LED_MODE_BLUE_BLINKING },
-    { "None", ONLP_LED_MODE_PURPLE },
-    { "None", ONLP_LED_MODE_PURPLE_BLINKING },
-    { "None", ONLP_LED_MODE_AUTO },
+    { "None", ONLP_THERMAL_CAPS_GET_TEMPERATURE },
     { NULL, 0 }
 };
 
 const char*
-onlp_led_mode_name(onlp_led_mode_t e)
+onlp_thermal_caps_name(onlp_thermal_caps_t e)
 {
     const char* name;
-    if(aim_map_si_i(&name, e, onlp_led_mode_map, 0)) {
+    if(aim_map_si_i(&name, e, onlp_thermal_caps_map, 0)) {
         return name;
     }
     else {
-        return "-invalid value for enum type 'onlp_led_mode'";
+        return "-invalid value for enum type 'onlp_thermal_caps'";
     }
 }
 
 int
-onlp_led_mode_value(const char* str, onlp_led_mode_t* e, int substr)
+onlp_thermal_caps_value(const char* str, onlp_thermal_caps_t* e, int substr)
 {
     int i;
     AIM_REFERENCE(substr);
-    if(aim_map_si_s(&i, str, onlp_led_mode_map, 0)) {
+    if(aim_map_si_s(&i, str, onlp_thermal_caps_map, 0)) {
         /* Enum Found */
         *e = i;
         return 0;
@@ -889,21 +947,21 @@ onlp_led_mode_value(const char* str, onlp_led_mode_t* e, int substr)
 }
 
 const char*
-onlp_led_mode_desc(onlp_led_mode_t e)
+onlp_thermal_caps_desc(onlp_thermal_caps_t e)
 {
     const char* name;
-    if(aim_map_si_i(&name, e, onlp_led_mode_desc_map, 0)) {
+    if(aim_map_si_i(&name, e, onlp_thermal_caps_desc_map, 0)) {
         return name;
     }
     else {
-        return "-invalid value for enum type 'onlp_led_mode'";
+        return "-invalid value for enum type 'onlp_thermal_caps'";
     }
 }
 
 int
-onlp_led_mode_valid(onlp_led_mode_t e)
+onlp_thermal_caps_valid(onlp_thermal_caps_t e)
 {
-    return aim_map_si_i(NULL, e, onlp_led_mode_map, 0) ? 1 : 0;
+    return aim_map_si_i(NULL, e, onlp_thermal_caps_map, 0) ? 1 : 0;
 }
 
 /* <auto.end.enum(ALL).source> */
