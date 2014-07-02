@@ -46,26 +46,6 @@
 #include <memory.h>
 #endif
 
-#ifndef ONLPLIB_MALLOC
-    #if defined(GLOBAL_MALLOC)
-        #define ONLPLIB_MALLOC GLOBAL_MALLOC
-    #elif ONLPLIB_CONFIG_PORTING_STDLIB == 1
-        #define ONLPLIB_MALLOC malloc
-    #else
-        #error The macro ONLPLIB_MALLOC is required but cannot be defined.
-    #endif
-#endif
-
-#ifndef ONLPLIB_FREE
-    #if defined(GLOBAL_FREE)
-        #define ONLPLIB_FREE GLOBAL_FREE
-    #elif ONLPLIB_CONFIG_PORTING_STDLIB == 1
-        #define ONLPLIB_FREE free
-    #else
-        #error The macro ONLPLIB_FREE is required but cannot be defined.
-    #endif
-#endif
-
 #ifndef ONLPLIB_MEMSET
     #if defined(GLOBAL_MEMSET)
         #define ONLPLIB_MEMSET GLOBAL_MEMSET
@@ -123,6 +103,16 @@
         #define ONLPLIB_STRLEN strlen
     #else
         #error The macro ONLPLIB_STRLEN is required but cannot be defined.
+    #endif
+#endif
+
+#ifndef ONLPLIB_ATOI
+    #if defined(GLOBAL_ATOI)
+        #define ONLPLIB_ATOI GLOBAL_ATOI
+    #elif ONLPLIB_CONFIG_PORTING_STDLIB == 1
+        #define ONLPLIB_ATOI atoi
+    #else
+        #error The macro ONLPLIB_ATOI is required but cannot be defined.
     #endif
 #endif
 
