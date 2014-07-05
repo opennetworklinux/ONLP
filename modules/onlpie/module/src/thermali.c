@@ -52,7 +52,7 @@ onlp_thermali_info_get(onlp_oid_t id, onlp_thermal_info_t* rv)
     /* Static values */
     onlp_thermal_info_t info[] = {
         { }, /* Not used */
-        { { ONLP_THERMAL_ID_CREATE(1), "Chassis Thermal Sensor 1", 0}, 0x1, 23100 },
+        { { ONLP_THERMAL_ID_CREATE(1), "Chassis Thermal Sensor 1", 0}, 0x1, ONLP_THERMAL_CAPS_GET_TEMPERATURE, 23100 },
         { { ONLP_THERMAL_ID_CREATE(2), "Chassis Thermal Sensor 2", 0}, 0x0, 0 }
     };
     *rv = info[ONLP_OID_ID_GET(id)];
