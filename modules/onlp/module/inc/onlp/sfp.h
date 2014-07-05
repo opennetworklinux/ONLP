@@ -137,6 +137,13 @@ int onlp_sfp_events_enable_get(int* enable);
 void onlp_sfp_dump(aim_pvs_t* pvs);
 
 /**
+ * @brief Issue an ioctl to the SFP interface.
+ * @param port The port.
+ * @param ... Ioctl arguments.
+ */
+int onlp_sfp_ioctl(int port, ...);
+
+/**
  * @brief Call the SFP post-insertion handler.
  *
  */

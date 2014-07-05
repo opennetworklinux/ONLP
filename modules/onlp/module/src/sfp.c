@@ -169,3 +169,14 @@ onlp_sfp_enable_get(int port, int* enable)
 {
     return onlp_sfpi_enable_get(port, enable);
 }
+
+int
+onlp_sfp_ioctl(int port, ...)
+{
+    int rv;
+    va_list vargs;
+    va_start(vargs, port);
+    rv = onlp_sfpi_ioctl(port, vargs);
+    va_end(vargs);
+    return rv;
+}
