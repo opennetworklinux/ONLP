@@ -70,6 +70,16 @@
     #endif
 #endif
 
+#ifndef SFF_SNPRINTF
+    #if defined(GLOBAL_SNPRINTF)
+        #define SFF_SNPRINTF GLOBAL_SNPRINTF
+    #elif SFF_CONFIG_PORTING_STDLIB == 1
+        #define SFF_SNPRINTF snprintf
+    #else
+        #error The macro SFF_SNPRINTF is required but cannot be defined.
+    #endif
+#endif
+
 /* <auto.end.portingmacro(ALL).define> */
 
 

@@ -354,6 +354,19 @@ aim_main(int argc, char* argv[])
                     i, p->info.length, info.length);
         }
 
+        if(info.length == -1 && info.length_desc[0]) {
+            AIM_DIE("index=%d length_desc expected '%s' got '%s'",
+                    i, '\0', info.length_desc);
+        }
+        else if(info.length != -1) {
+            char tmp[32];
+            snprintf(tmp, sizeof(tmp), "%dm", info.length);
+            if(strcmp(tmp, info.length_desc)) {
+                AIM_DIE("index=%d length_desc expected '%s' got '%s'",
+                        i, tmp, info.length_desc);
+            }
+        }
+
         aim_printf(&aim_pvs_stdout, "Verifying entry %d: %s:%s:%s...PASSED\n",
                    i,
                    p->info.vendor,

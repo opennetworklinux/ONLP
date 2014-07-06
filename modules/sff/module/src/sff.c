@@ -246,6 +246,12 @@ sff_info_init(sff_info_t* rv, uint8_t* eeprom)
     aim_strlcpy(rv->model, (char*)model, sizeof(rv->model));
     aim_strlcpy(rv->serial, (char*)serial, sizeof(rv->serial));
 
+    if(rv->length == -1) {
+        rv->length_desc[0] = 0;
+    }
+    else {
+        SFF_SNPRINTF(rv->length_desc, sizeof(rv->length_desc), "%dm", rv->length);
+    }
     return 0;
 }
 

@@ -252,6 +252,7 @@ typedef struct sff_info_s {
 
     /** Cable length, if available */
     int length;
+    char length_desc[16];
 
 } sff_info_t;
 
