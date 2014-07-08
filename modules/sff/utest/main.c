@@ -291,16 +291,21 @@ static eeprom_verify_t data[] =
                 0x3,
             },
         },
-
     };
 
 
 int
 aim_main(int argc, char* argv[])
 {
-
     int i;
-    for(i = 0; i < AIM_ARRAYSIZE(data); i++) {
+
+    int first = 0;
+    int last = AIM_ARRAYSIZE(data)-1;
+    if(argv[1]) {
+        first = last = atoi(argv[1]);
+    }
+
+    for(i = first; i <= last; i++) {
         int rv;
         sff_info_t info;
         eeprom_verify_t* p = data+i;
