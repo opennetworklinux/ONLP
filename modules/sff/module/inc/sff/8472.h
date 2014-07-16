@@ -218,6 +218,37 @@ _sff8472_fc_media_tw(const uint8_t* idprom)
 }
 
 static inline int
+_sff8472_fc_media_sm(const uint8_t* idprom)
+{
+    if ((idprom[9] & SFF8472_CC9_FC_MEDIA_M5) != 0) return 0;
+    if ((idprom[9] & SFF8472_CC9_FC_MEDIA_M6) != 0) return 0;
+    if ((idprom[9] & SFF8472_CC9_FC_MEDIA_TV) != 0) return 0;
+    if ((idprom[9] & SFF8472_CC9_FC_MEDIA_MI) != 0) return 0;
+    if ((idprom[9] & SFF8472_CC9_FC_MEDIA_TP) != 0) return 0;
+    if ((idprom[9] & SFF8472_CC9_FC_MEDIA_TW) != 0) return 0;
+
+    if ((idprom[9] & SFF8472_CC9_FC_MEDIA_SM) != 0) return 1;
+    return 0;
+}
+
+static inline int
+_sff8472_fc_media_mm(const uint8_t* idprom)
+{
+    if ((idprom[9] & SFF8472_CC9_FC_MEDIA_SM) != 0) return 0;
+    if ((idprom[9] & SFF8472_CC9_FC_MEDIA_TV) != 0) return 0;
+    if ((idprom[9] & SFF8472_CC9_FC_MEDIA_MI) != 0) return 0;
+    if ((idprom[9] & SFF8472_CC9_FC_MEDIA_TP) != 0) return 0;
+    if ((idprom[9] & SFF8472_CC9_FC_MEDIA_TW) != 0) return 0;
+
+    if (((idprom[9] & SFF8472_CC9_FC_MEDIA_M5) != 0)
+        && ((idprom[9] & SFF8472_CC9_FC_MEDIA_M6) == 0)) return 1;
+    if (((idprom[9] & SFF8472_CC9_FC_MEDIA_M5) == 0)
+        && ((idprom[9] & SFF8472_CC9_FC_MEDIA_M6) != 0)) return 1;
+
+    return 0;
+}
+
+static inline int
 _sff8472_tech_fc(const uint8_t* idprom)
 {
     if ((idprom[7] & SFF8472_CC7_FC_TECH_EL) != 0) return 1;
@@ -250,7 +281,24 @@ _sff8472_tech_fc_el(const uint8_t* idprom)
     return 0;
 }
 
-/* do not specify an FC speed code unless you actually FC */
+static inline int
+_sff8472_tech_fc_ll(const uint8_t* idprom)
+{
+    /* non-LL types */
+    if ((idprom[7] & SFF8472_CC7_FC_TECH_EL) != 0) return 0;
+    if ((idprom[7] & SFF8472_CC7_FC_TECH_LC) != 0) return 0;
+    if ((idprom[7] & SFF8472_CC7_FC_TECH_SA) != 0) return 0;
+    if ((idprom[8] & SFF8472_CC8_FC_TECH_SL) != 0) return 0;
+    if ((idprom[8] & SFF8472_CC8_FC_TECH_SN) != 0) return 0;
+    if ((idprom[8] & SFF8472_CC8_FC_TECH_EL) != 0) return 0;
+
+    if (((idprom[8] & SFF8472_CC8_FC_TECH_LL) != 0))
+        return 1;
+
+    return 0;
+}
+
+/* do not specify an FC speed code unless you are actually FC */
 static inline int
 _sff8472_fc_speed_ok(const uint8_t* idprom)
 {
@@ -261,6 +309,43 @@ _sff8472_fc_speed_ok(const uint8_t* idprom)
         && (idprom[10] == 0))
         return 1;
     return 0;
+}
+
+/*
+ * for dual ethernet/fc modules, we can infer the ethernet
+ * speed from the max FC speed
+ * (like, if the module mi-identifies itself as 10G and 1G
+ */
+static inline int
+_sff8472_fc_speed_1g(const uint8_t *idprom)
+{
+     /* not FC, cannot infer speed */
+     if (!_sff8472_tech_fc(idprom))
+          return 0;
+
+     /* 100MByte and 200MByte should be sufficient to identify as 1G */
+     if (((idprom[10] & SFF8472_CC10_FC_SPEED_100) != 0)
+         || ((idprom[10] & SFF8472_CC10_FC_SPEED_200) != 0))
+          return 1;
+
+     return 0;
+}
+
+static inline int
+_sff8472_fc_speed_10g(const uint8_t *idprom)
+{
+     /* not FC, cannot infer speed */
+     if (!_sff8472_tech_fc(idprom))
+          return 0;
+
+     /* check for any speed close to 10G */
+     if (((idprom[10] & SFF8472_CC10_FC_SPEED_800) != 0)
+         || ((idprom[10] & SFF8472_CC10_FC_SPEED_1200) != 0)
+         || ((idprom[10] & SFF8472_CC10_FC_SPEED_1600) != 0)
+         || ((idprom[10] & SFF8472_CC10_FC_SPEED_3200) != 0))
+          return 1;
+
+     return 0;
 }
 
 /*
@@ -362,7 +447,13 @@ _sff8472_media_cr_passive(const uint8_t* idprom)
 
     if (idprom[4] != 0) return 0;
     if (idprom[5] != 0) return 0;
-    if (idprom[6] != 0) return 0;
+    /*
+     * XXX roth -- PAN-934 -- Tyco CR cable advertises 1000BASE-CX,
+     * presumably because it is a 2-wire cable
+     */
+    if ((idprom[6] != SFF8472_CC6_GBE_BASE_CX)
+        && (idprom[6] != 0))
+        return 0;
 
     if (_sff8472_sfp_plus_passive(idprom))
         maybe = 1;
@@ -373,6 +464,20 @@ _sff8472_media_cr_passive(const uint8_t* idprom)
         return 0;
 
     if (!_sff8472_fc_speed_ok(idprom))
+        return 0;
+
+    /*
+     * XXX roth -- PAN-934 -- once we relax the checks here
+     * for 1000BASE-CX, we need to make sure we don't accept any
+     * 1G cables... make sure the FC speed is specified,
+     * and is high enough.
+     */
+    if ((idprom[6] == SFF8472_CC6_GBE_BASE_CX)
+        && !_sff8472_tech_fc(idprom))
+        return 0;
+    if ((idprom[6] == SFF8472_CC6_GBE_BASE_CX)
+        && _sff8472_tech_fc(idprom)
+        && !_sff8472_fc_speed_10g(idprom))
         return 0;
 
     if (_sff8472_hack_cr(idprom))
@@ -443,5 +548,109 @@ _sff8472_media_cr_active(const uint8_t* idprom)
   ((idprom[6] & SFF8472_CC6_CBE_BASE_LX) != 0)
 #define SFF8472_MEDIA_CBE_FX(idprom)            \
   ((idprom[6] & SFF8472_CC6_CBE_BASE_FX) != 0)
+
+/*
+ * XXX roth
+ * ZR Finisar optics don't list any ethernet
+ * or FC compliance, but *do* identify as having a high bit rate
+ */
+
+static inline int
+_sff8472_bitrate_xge(const uint8_t *idprom)
+{
+    if (idprom[12] == 0)
+        return 0;
+    if (idprom[12] == 0xFF)
+        return 0;
+    long br = (long) idprom[12] * 100*1000000;
+    if (br > 10*1000*1000000L)
+        return 1;
+    return 0;
+}
+
+static inline int
+_sff8472_bitrate_gbe(const uint8_t *idprom)
+{
+    if (idprom[12] == 0)
+        return 0;
+    if (idprom[12] == 0xFF)
+        return 0;
+    long br = (long) idprom[12] * 100*1000000;
+    if (br > 1000*1000000L && br < 5*1000*1000000L)
+        return 1;
+    return 0;
+}
+
+static inline int
+_sff8472_media_zr(const uint8_t *idprom)
+{
+    if (!SFF8472_MODULE_SFP(idprom)) return 0;
+
+    /* should be LC connector */
+    if ((idprom[2] & SFF8472_CONN_LC) == 0) return 0;
+
+    /* do not advertise any other infiniband or ethernet features */
+    if (_sff8472_inf_1x(idprom)) return 0;
+    if (SFF8472_MEDIA_XGE_SR(idprom)) return 0;
+    if (SFF8472_MEDIA_XGE_LR(idprom)) return 0;
+    if (SFF8472_MEDIA_XGE_LRM(idprom)) return 0;
+    if (SFF8472_MEDIA_XGE_ER(idprom)) return 0;
+
+    /* advertise media and tech as per FC */
+    if (_sff8472_tech_fc_ll(idprom) == 0) return 0;
+    if (_sff8472_fc_media_sm(idprom) == 0) return 0;
+
+    /* at least 10GbE */
+    if (!_sff8472_bitrate_xge(idprom)) return 0;
+
+    /* at least 40km of single-mode */
+    if ((idprom[14] > 40) && (idprom[15] == 0xff))
+        return 1;
+
+    return 0;
+    
+}
+
+static inline int
+_sff8472_media_srlite(const uint8_t *idprom)
+{
+    if (!SFF8472_MODULE_SFP(idprom)) return 0;
+
+    /* should be LC connector */
+    if ((idprom[2] & SFF8472_CONN_LC) == 0) return 0;
+
+    /* do not advertise any other infiniband or ethernet features */
+    if (_sff8472_inf_1x(idprom)) return 0;
+    if (SFF8472_MEDIA_XGE_SR(idprom)) return 0;
+    if (SFF8472_MEDIA_XGE_LR(idprom)) return 0;
+    if (SFF8472_MEDIA_XGE_LRM(idprom)) return 0;
+    if (SFF8472_MEDIA_XGE_ER(idprom)) return 0;
+
+    /* do not advertise FC media */
+    if (_sff8472_fc_media(idprom)) return 0;
+    if (_sff8472_tech_fc(idprom)) return 0;
+
+    /* at least 10GbE */
+    if (!_sff8472_bitrate_xge(idprom)) return 0;
+
+    /* no single-mode fiber length */
+    if (idprom[14] != 0) return 0;
+    if (idprom[15] != 0) return 0;
+
+    /* some non-zero multi-mode fiber length */
+    int om_valid = 0;
+    if (idprom[16] == 0xff) return 0;
+    if (idprom[16] != 0) om_valid++;
+    if (idprom[17] == 0xff) return 0;
+    if (idprom[17] != 0) om_valid++;
+    if (idprom[18] == 0xff) return 0;
+    if (idprom[18] != 0) om_valid++;
+    if (idprom[19] == 0xff) return 0;
+    if (idprom[19] != 0) om_valid++;
+    if (om_valid) return 1;
+
+    return 0;
+    
+}
 
 #endif

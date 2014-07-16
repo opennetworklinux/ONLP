@@ -61,6 +61,8 @@ typedef enum sff_module_type_e {
     SFF_MODULE_TYPE_10G_BASE_CR,
     SFF_MODULE_TYPE_10G_BASE_SX,
     SFF_MODULE_TYPE_10G_BASE_LX,
+    SFF_MODULE_TYPE_10G_BASE_ZR,
+    SFF_MODULE_TYPE_10G_BASE_SRL,
     SFF_MODULE_TYPE_1G_BASE_SX,
     SFF_MODULE_TYPE_1G_BASE_LX,
     SFF_MODULE_TYPE_1G_BASE_CX,
@@ -87,6 +89,8 @@ typedef enum sff_module_type_e {
     "10G_BASE_CR", \
     "10G_BASE_SX", \
     "10G_BASE_LX", \
+    "10G_BASE_ZR", \
+    "10G_BASE_SRL", \
     "1G_BASE_SX", \
     "1G_BASE_LX", \
     "1G_BASE_CX", \

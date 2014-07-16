@@ -73,8 +73,16 @@ sff_module_type_get(const uint8_t* idprom)
         && SFF8472_MEDIA_XGE_LRM(idprom))
         return SFF_MODULE_TYPE_10G_BASE_LRM;
 
+    /*
+     * XXX roth -- PAN-934 -- DAC cable erroneously reports ER,
+     * so we need to disallow infiniband features when matching here.
+     * See also _sff8472_media_cr_passive, which encodes some
+     * additional workarounds for these cables.
+     */
     if (SFF8472_MODULE_SFP(idprom)
-        && SFF8472_MEDIA_XGE_ER(idprom))
+        && SFF8472_MEDIA_XGE_ER(idprom)
+        && !_sff8472_inf_1x_cu_active(idprom)
+        && !_sff8472_inf_1x_cu_passive(idprom))
         return SFF_MODULE_TYPE_10G_BASE_ER;
 
     /* XXX roth - not sure on this one */
@@ -114,6 +122,16 @@ sff_module_type_get(const uint8_t* idprom)
         && SFF8472_MEDIA_CBE_FX(idprom))
         return SFF_MODULE_TYPE_100_BASE_FX;
 
+    /* non-standard (e.g. Finisar) ZR media */
+    if (SFF8472_MODULE_SFP(idprom)
+        && _sff8472_media_zr(idprom))
+        return SFF_MODULE_TYPE_10G_BASE_ZR;
+
+    /* non-standard (e.g. Finisar) SRL media */
+    if (SFF8472_MODULE_SFP(idprom)
+        && _sff8472_media_srlite(idprom))
+        return SFF_MODULE_TYPE_10G_BASE_SRL;
+
     return SFF_MODULE_TYPE_INVALID;
 }
 
@@ -140,6 +158,8 @@ sff_media_type_get(const uint8_t* idprom)
         case SFF_MODULE_TYPE_10G_BASE_ER:
         case SFF_MODULE_TYPE_10G_BASE_SX:
         case SFF_MODULE_TYPE_10G_BASE_LX:
+        case SFF_MODULE_TYPE_10G_BASE_ZR:
+        case SFF_MODULE_TYPE_10G_BASE_SRL:
         case SFF_MODULE_TYPE_1G_BASE_SX:
         case SFF_MODULE_TYPE_1G_BASE_LX:
         case SFF_MODULE_TYPE_100_BASE_LX:
@@ -193,12 +213,14 @@ sff_info_init(sff_info_t* rv, uint8_t* eeprom)
 
     rv->sfp_type = sff_sfp_type_get(rv->eeprom);
     if(rv->sfp_type == SFF_SFP_TYPE_INVALID) {
+        AIM_LOG_ERROR("sff_info_init() failed: invalid sfp type");
         return -1;
     }
     rv->sfp_type_name = sff_sfp_type_desc(rv->sfp_type);
 
     rv->module_type = sff_module_type_get(rv->eeprom);
     if(rv->module_type == SFF_MODULE_TYPE_INVALID) {
+        AIM_LOG_ERROR("sff_info_init() failed: invalid module type");
         return -1;
     }
     rv->module_type_name = sff_module_type_desc(rv->module_type);
