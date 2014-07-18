@@ -61,6 +61,11 @@ sff_module_type_get(const uint8_t* idprom)
             || SFF8436_MEDIA_FC_FIBER_MM(idprom)))
         return SFF_MODULE_TYPE_40G_BASE_SR4;
 
+    /* pre-standard QSFP-BiDi optics */
+    if (SFF8436_MODULE_QSFP_PLUS_V2(idprom)
+        && _sff8436_qsfp_40g_sr2_bidi_pre(idprom))
+        return SFF_MODULE_TYPE_40G_BASE_SR2;
+
     if (SFF8472_MODULE_SFP(idprom)
         && SFF8472_MEDIA_XGE_SR(idprom))
         return SFF_MODULE_TYPE_10G_BASE_SR;
@@ -152,6 +157,7 @@ sff_media_type_get(const uint8_t* idprom)
         case SFF_MODULE_TYPE_40G_BASE_SR4:
         case SFF_MODULE_TYPE_40G_BASE_LR4:
         case SFF_MODULE_TYPE_40G_BASE_ACTIVE:
+        case SFF_MODULE_TYPE_40G_BASE_SR2:
         case SFF_MODULE_TYPE_10G_BASE_SR:
         case SFF_MODULE_TYPE_10G_BASE_LR:
         case SFF_MODULE_TYPE_10G_BASE_LRM:

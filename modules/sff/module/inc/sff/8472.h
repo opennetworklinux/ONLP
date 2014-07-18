@@ -612,6 +612,39 @@ _sff8472_media_zr(const uint8_t *idprom)
 }
 
 static inline int
+_sff8472_length_sm(const uint8_t *idprom)
+{
+    if ((idprom[14] == 0) && (idprom[15] == 0)) return 0;
+    if (idprom[14] != 0)
+        return idprom[14] * 1000;
+    return idprom[15] * 100;
+}
+
+static inline int
+_sff8472_length_om2(const uint8_t *idprom)
+{
+    return idprom[16] * 10;
+}
+
+static inline int
+_sff8472_length_om1(const uint8_t *idprom)
+{
+    return idprom[17] * 10;
+}
+
+static inline int
+_sff8472_length_om4(const uint8_t *idprom)
+{
+    return idprom[18] * 10;
+}
+
+static inline int
+_sff8472_length_om3(const uint8_t *idprom)
+{
+    return idprom[19] * 10;
+}
+
+static inline int
 _sff8472_media_srlite(const uint8_t *idprom)
 {
     if (!SFF8472_MODULE_SFP(idprom)) return 0;
@@ -638,17 +671,11 @@ _sff8472_media_srlite(const uint8_t *idprom)
     if (idprom[15] != 0) return 0;
 
     /* some non-zero multi-mode fiber length */
-    int om_valid = 0;
-    if (idprom[16] == 0xff) return 0;
-    if (idprom[16] != 0) om_valid++;
-    if (idprom[17] == 0xff) return 0;
-    if (idprom[17] != 0) om_valid++;
-    if (idprom[18] == 0xff) return 0;
-    if (idprom[18] != 0) om_valid++;
-    if (idprom[19] == 0xff) return 0;
-    if (idprom[19] != 0) om_valid++;
-    if (om_valid) return 1;
-
+    if (_sff8472_length_sm(idprom)) return 0;
+    if (_sff8472_length_om1(idprom)) return 1;
+    if (_sff8472_length_om2(idprom)) return 1;
+    if (_sff8472_length_om3(idprom)) return 1;
+    if (_sff8472_length_om4(idprom)) return 1;
     return 0;
     
 }

@@ -226,4 +226,93 @@ _sff8436_qsfp_40g_pre(const uint8_t* idprom)
     return 0;
 }
 
+static inline int
+_sff8436_bitrate(const uint8_t *idprom)
+{
+    if (idprom[12] == 0)
+        return 0;
+    if (idprom[12] == 0xFF)
+        return 0;
+    long br = (long) idprom[12] * 100*1000000;
+    if ((br > 1000*1000000L) && (br < 5*1000*1000000L))
+        return 1;
+    return 0;
+}
+
+static inline int
+_sff8436_length_sm(const uint8_t *idprom)
+{
+    return idprom[142] * 1000;
+}
+
+static inline int
+_sff8436_length_om3(const uint8_t *idprom)
+{
+    return idprom[143] * 2;
+}
+
+static inline int
+_sff8436_length_om2(const uint8_t *idprom)
+{
+    return idprom[144];
+}
+
+static inline int
+_sff8436_length_om1(const uint8_t *idprom)
+{
+    return idprom[145];
+}
+
+static inline int
+_sff8436_wavelength(const uint8_t *idprom)
+{
+    return ((idprom[186] << 8) | idprom[187]) / 20;
+}
+
+/*
+ * try to detect QSFP modules (outside of the 8436 spec)
+ */
+static inline int
+_sff8436_qsfp_40g_sr2_bidi_pre(const uint8_t *idprom)
+{
+    /* module should be qsfp */
+    if (!SFF8436_MODULE_QSFP_PLUS(idprom)
+        && !SFF8436_MODULE_QSFP_PLUS_V2(idprom))
+        return 0;
+
+    /* module should have LC connector */
+    if (idprom[130] != SFF8436_CONN_LC) return 0;
+
+    /* reject any unrelated compliance codes */
+    if (SFF8436_MEDIA_XGE_LRM(idprom)) return 0;
+    if (SFF8436_MEDIA_XGE_LR(idprom)) return 0;
+    if (SFF8436_MEDIA_XGE_SR(idprom)) return 0;
+    if (SFF8436_MEDIA_40GE_CR4(idprom)) return 0;
+
+    /* do *not* report SR4 compliance */
+    if (SFF8436_MEDIA_40GE_SR4(idprom)) return 0;
+
+    if (SFF8436_MEDIA_40GE_LR4(idprom)) return 0;
+    if (SFF8436_MEDIA_40GE_ACTIVE(idprom)) return 0;
+
+    /* make sure it's MM fiber */
+    if (_sff8436_wavelength(idprom) != 850) return 0;
+
+    /* make sure it reports a MM cable length */
+    if (_sff8436_length_sm(idprom) > 0) return 0;
+    if (!_sff8436_length_om1(idprom)
+        && !_sff8436_length_om2(idprom)
+        && !_sff8436_length_om3(idprom))
+        return 0;
+
+    /*
+     * report a BR greater than 10G...
+     * for a two-fiber bidi cable we report 20G, but that is per fiber
+     */
+    long br = (long) idprom[140] * 100 * 1000000;
+    if ((br >= 20L*1000*1000000) && (br < 40L*1000*1000000)) return 1;
+    return 0;
+    
+}
+
 #endif /* __SFF_8436_H__ */
