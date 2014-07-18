@@ -37,6 +37,10 @@ sff_module_type_get(const uint8_t* idprom)
         return SFF_MODULE_TYPE_40G_BASE_SR4;
 
     if (SFF8436_MODULE_QSFP_PLUS_V2(idprom)
+        && _sff8436_qsfp_40g_sr4_aoc_pre(idprom))
+        return SFF_MODULE_TYPE_40G_BASE_SR4;
+
+    if (SFF8436_MODULE_QSFP_PLUS_V2(idprom)
         && SFF8436_MEDIA_40GE_LR4(idprom))
         return SFF_MODULE_TYPE_40G_BASE_LR4;
 
