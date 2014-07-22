@@ -233,8 +233,8 @@ _sff8436_bitrate(const uint8_t *idprom)
         return 0;
     if (idprom[12] == 0xFF)
         return 0;
-    long br = (long) idprom[12] * 100*1000000;
-    if ((br > 1000*1000000L) && (br < 5*1000*1000000L))
+    long long br = (long long) idprom[12] * 100*1000000;
+    if ((br > 1000*1000000LL) && (br < 5*1000*1000000LL))
         return 1;
     return 0;
 }
@@ -309,8 +309,8 @@ _sff8436_qsfp_40g_sr2_bidi_pre(const uint8_t *idprom)
      * report a BR greater than 10G...
      * for a two-fiber bidi cable we report 20G, but that is per fiber
      */
-    long br = (long) idprom[140] * 100 * 1000000;
-    if ((br >= 20L*1000*1000000) && (br < 40L*1000*1000000)) return 1;
+    long long br = (long long) idprom[140] * 100 * 1000000;
+    if ((br >= 20LL*1000*1000000) && (br < 40LL*1000*1000000)) return 1;
     return 0;
     
 }
@@ -354,8 +354,8 @@ _sff8436_qsfp_40g_sr4_aoc_pre(const uint8_t *idprom)
     /*
      * report a BR roughly 10G (4 strands)
      */
-    long br = (long) idprom[140] * 100 * 1000000;
-    if ((br >= 10L*1000*1000000) && (br < 15L*1000*1000000)) return 1;
+    long long br = (long long) idprom[140] * 100 * 1000000;
+    if ((br >= 10LL*1000*1000000) && (br < 15LL*1000*1000000)) return 1;
     return 0;
     
 }

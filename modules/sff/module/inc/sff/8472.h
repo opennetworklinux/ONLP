@@ -562,8 +562,8 @@ _sff8472_bitrate_xge(const uint8_t *idprom)
         return 0;
     if (idprom[12] == 0xFF)
         return 0;
-    long br = (long) idprom[12] * 100*1000000;
-    if (br > 10*1000*1000000L)
+    long long br = (long long) idprom[12] * 100*1000000;
+    if (br > 10LL*1000*1000000)
         return 1;
     return 0;
 }
@@ -575,8 +575,8 @@ _sff8472_bitrate_gbe(const uint8_t *idprom)
         return 0;
     if (idprom[12] == 0xFF)
         return 0;
-    long br = (long) idprom[12] * 100*1000000;
-    if (br > 1000*1000000L && br < 5*1000*1000000L)
+    long long br = (long long) idprom[12] * 100*1000000;
+    if (br > 1LL*1000*1000000 && br < 5LL*1000*1000000)
         return 1;
     return 0;
 }
