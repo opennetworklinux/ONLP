@@ -184,6 +184,56 @@ sff_media_type_get(const uint8_t* idprom)
     return SFF_MEDIA_TYPE_INVALID;
 }
 
+int
+sff_module_caps_get(const uint8_t* idprom, uint32_t *caps)
+{
+    if (idprom == NULL)
+        return -1;
+    if (caps == NULL)
+        return -1;
+
+    sff_module_type_t mt = sff_module_type_get(idprom);
+    *caps = 0;
+
+    switch(mt)
+        {
+        case SFF_MODULE_TYPE_40G_BASE_CR4:
+        case SFF_MODULE_TYPE_40G_BASE_SR4:
+        case SFF_MODULE_TYPE_40G_BASE_LR4:
+        case SFF_MODULE_TYPE_40G_BASE_ACTIVE:
+        case SFF_MODULE_TYPE_40G_BASE_CR:
+        case SFF_MODULE_TYPE_40G_BASE_SR2:
+            *caps |= SFF_MODULE_CAPS_F_40G;
+            return 0;
+
+        case SFF_MODULE_TYPE_10G_BASE_SR:
+        case SFF_MODULE_TYPE_10G_BASE_LR:
+        case SFF_MODULE_TYPE_10G_BASE_LRM:
+        case SFF_MODULE_TYPE_10G_BASE_ER:
+        case SFF_MODULE_TYPE_10G_BASE_CR:
+        case SFF_MODULE_TYPE_10G_BASE_SX:
+        case SFF_MODULE_TYPE_10G_BASE_LX:
+        case SFF_MODULE_TYPE_10G_BASE_ZR:
+        case SFF_MODULE_TYPE_10G_BASE_SRL:
+            *caps |= SFF_MODULE_CAPS_F_10G;
+            return 0;
+
+        case SFF_MODULE_TYPE_1G_BASE_SX:
+        case SFF_MODULE_TYPE_1G_BASE_LX:
+        case SFF_MODULE_TYPE_1G_BASE_CX:
+        case SFF_MODULE_TYPE_1G_BASE_T:
+            *caps |= SFF_MODULE_CAPS_F_1G;
+            return 0;
+
+        case SFF_MODULE_TYPE_100_BASE_LX:
+        case SFF_MODULE_TYPE_100_BASE_FX:
+            *caps |= SFF_MODULE_CAPS_F_100;
+            return 0;
+
+        default:
+            return -1;
+        }
+}
 
 void
 sff_module_show(const uint8_t* idprom, aim_pvs_t* pvs)
@@ -237,6 +287,11 @@ sff_info_init(sff_info_t* rv, uint8_t* eeprom)
 
     rv->media_type = sff_media_type_get(rv->eeprom);
     rv->media_type_name = sff_media_type_desc(rv->media_type);
+
+    if (sff_module_caps_get(rv->eeprom, &rv->caps) < 0) {
+        AIM_LOG_ERROR("sff_info_init() failed: invalid module caps");
+        return -1;
+    }
 
     rv->length = -1;
     if(rv->media_type == SFF_MEDIA_TYPE_COPPER) {

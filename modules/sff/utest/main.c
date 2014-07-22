@@ -50,7 +50,7 @@ static eeprom_verify_t data[] =
                 "Copper",
 
                 /* caps */
-                0x0,
+                SFF_MODULE_CAPS_F_10G,
 
                 /* Length */
                 0x1
@@ -90,7 +90,7 @@ static eeprom_verify_t data[] =
 
                 SFF_MEDIA_TYPE_COPPER,
                 "Copper",
-                0x0,
+                SFF_MODULE_CAPS_F_10G,
                 0x1,
             },
         },
@@ -119,7 +119,7 @@ static eeprom_verify_t data[] =
                 "10GBASE-CR",
                 SFF_MEDIA_TYPE_COPPER,
                 "Copper",
-                0x0,
+                SFF_MODULE_CAPS_F_10G,
                 0x0,
             },
         },
@@ -152,7 +152,7 @@ static eeprom_verify_t data[] =
                 "10GBASE-CR",
                 SFF_MEDIA_TYPE_COPPER,
                 "Copper",
-                0x0,
+                SFF_MODULE_CAPS_F_10G,
                 0x3
             },
         },
@@ -186,7 +186,7 @@ static eeprom_verify_t data[] =
                 "40GBASE-SR4",
                 SFF_MEDIA_TYPE_FIBER,
                 "Fiber",
-                0x0,
+                SFF_MODULE_CAPS_F_40G,
                 -1,
             },
         },
@@ -219,7 +219,7 @@ static eeprom_verify_t data[] =
                 "40GBASE-CR4",
                 SFF_MEDIA_TYPE_COPPER,
                 "Copper",
-                0x0,
+                SFF_MODULE_CAPS_F_40G,
                 0x3
             },
         },
@@ -253,7 +253,7 @@ static eeprom_verify_t data[] =
                 "10GBASE-CR",
                 SFF_MEDIA_TYPE_COPPER,
                 "Copper",
-                0x0,
+                SFF_MODULE_CAPS_F_10G,
                 0x1,
             },
         },
@@ -287,7 +287,7 @@ static eeprom_verify_t data[] =
                 "1GBASE-CX",
                 SFF_MEDIA_TYPE_COPPER,
                 "Copper",
-                0x0,
+                SFF_MODULE_CAPS_F_1G,
                 0x3,
             },
         },
@@ -326,7 +326,7 @@ static eeprom_verify_t data[] =
                 "1GBASE-ZR",
                 SFF_MEDIA_TYPE_FIBER,
                 "Fiber",
-                0x0,
+                SFF_MODULE_CAPS_F_10G,
                 -1,
             },
         },
@@ -365,7 +365,7 @@ static eeprom_verify_t data[] =
                 "1GBASE-SRL",
                 SFF_MEDIA_TYPE_FIBER,
                 "Fiber",
-                0x0,
+                SFF_MODULE_CAPS_F_10G,
                 -1,
             },
         },
@@ -404,7 +404,7 @@ static eeprom_verify_t data[] =
                 "1GBASE-LR",
                 SFF_MEDIA_TYPE_FIBER,
                 "Fiber",
-                0x0,
+                SFF_MODULE_CAPS_F_1G,
                 -1,
             },
         },
@@ -438,10 +438,10 @@ static eeprom_verify_t data[] =
                 SFF_SFP_TYPE_SFP,
                 "SFP",
                 SFF_MODULE_TYPE_10G_BASE_CR,
-                "1GBASE-CR",
+                "10GBASE-CR",
                 SFF_MEDIA_TYPE_COPPER,
                 "Copper",
-                0x0,
+                SFF_MODULE_CAPS_F_10G,
                 1,
             },
         },
@@ -477,7 +477,7 @@ static eeprom_verify_t data[] =
                 "40GBASE-SR2",
                 SFF_MEDIA_TYPE_FIBER,
                 "Fiber",
-                0x0,
+                SFF_MODULE_CAPS_F_40G,
                 -1,
             },
         },
@@ -512,7 +512,7 @@ static eeprom_verify_t data[] =
                 "40GBASE-SR4",
                 SFF_MEDIA_TYPE_FIBER,
                 "Fiber",
-                0x0,
+                SFF_MODULE_CAPS_F_40G,
                 -1,
             },
         },
@@ -577,6 +577,11 @@ aim_main(int argc, char* argv[])
         if(strcmp(info.media_type_name, p->info.media_type_name)) {
             AIM_DIE("index=%d media_type_name expected '%s' got '%s'",
                     i, p->info.media_type_name, info.media_type_name);
+        }
+
+        if (info.caps != p->info.caps) {
+            AIM_DIE("index=%d caps expected '%{sff_module_caps}' got '%{sff_module_caps}'",
+                    i, p->info.caps, info.caps);
         }
 
         if(info.length != p->info.length) {
