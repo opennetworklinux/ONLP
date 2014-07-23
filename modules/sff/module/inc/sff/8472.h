@@ -680,4 +680,55 @@ _sff8472_media_srlite(const uint8_t *idprom)
     
 }
 
+/*
+ * some modules (e.g. Finisar FTRJ8519P1BNL-B1, 1G Ethernet /
+ * 2G fiber) mis-identify as supporting 10G *and* 1G;
+ * in this case we do not want to enable 10G mode;
+ * we can verify this by looking at the FC speed field
+ */
+
+static inline int
+_sff8472_media_gbe_sx_fc_hack(const uint8_t *idprom)
+{
+    if (!SFF8472_MODULE_SFP(idprom)) return 0;
+
+    /* module should report as SX */
+    if (!SFF8472_MEDIA_GBE_SX(idprom)) return 0;
+
+    /* module erroneously reports as 10G */
+    if (!SFF8472_MEDIA_XGE_SR(idprom)
+        || !SFF8472_MEDIA_XGE_LR(idprom)
+        || !SFF8472_MEDIA_XGE_LRM(idprom)
+        || !SFF8472_MEDIA_XGE_ER(idprom)) return 0;
+
+    /* module reports as 1G FC, but not 10G */
+    if (_sff8472_fc_speed_1g(idprom)
+        && !_sff8472_fc_speed_10g(idprom))
+        return 1;
+    else
+        return 0;
+}
+
+static inline int
+_sff8472_media_gbe_lx_fc_hack(const uint8_t *idprom)
+{
+    if (!SFF8472_MODULE_SFP(idprom)) return 0;
+
+    /* module should report as LX */
+    if (!SFF8472_MEDIA_GBE_LX(idprom)) return 0;
+
+    /* module erroneously reports as 10G */
+    if (!SFF8472_MEDIA_XGE_SR(idprom)
+        || !SFF8472_MEDIA_XGE_LR(idprom)
+        || !SFF8472_MEDIA_XGE_LRM(idprom)
+        || !SFF8472_MEDIA_XGE_ER(idprom)) return 0;
+
+    /* module reports as 1G FC, but not 10G */
+    if (_sff8472_fc_speed_1g(idprom)
+        && !_sff8472_fc_speed_10g(idprom))
+        return 1;
+    else
+        return 0;
+}
+
 #endif

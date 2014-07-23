@@ -71,15 +71,18 @@ sff_module_type_get(const uint8_t* idprom)
         return SFF_MODULE_TYPE_40G_BASE_SR2;
 
     if (SFF8472_MODULE_SFP(idprom)
-        && SFF8472_MEDIA_XGE_SR(idprom))
+        && SFF8472_MEDIA_XGE_SR(idprom)
+        && !_sff8472_media_gbe_sx_fc_hack(idprom))
         return SFF_MODULE_TYPE_10G_BASE_SR;
 
     if (SFF8472_MODULE_SFP(idprom)
-        && SFF8472_MEDIA_XGE_LR(idprom))
+        && SFF8472_MEDIA_XGE_LR(idprom)
+        && !_sff8472_media_gbe_lx_fc_hack(idprom))
         return SFF_MODULE_TYPE_10G_BASE_LR;
 
     if (SFF8472_MODULE_SFP(idprom)
-        && SFF8472_MEDIA_XGE_LRM(idprom))
+        && SFF8472_MEDIA_XGE_LRM(idprom)
+        && !_sff8472_media_gbe_lx_fc_hack(idprom))
         return SFF_MODULE_TYPE_10G_BASE_LRM;
 
     /*
@@ -267,9 +270,29 @@ sff_info_init(sff_info_t* rv, uint8_t* eeprom)
     if(rv == NULL) {
         return -1;
     }
+    rv->supported = 0;
+
     if(eeprom) {
         SFF_MEMCPY(rv->eeprom, eeprom, 256);
     }
+
+    if (SFF8472_MODULE_SFP(rv->eeprom)) {
+        /* See SFF-8472 pp22, pp28 */
+        int i;
+        for (i = 0, rv->cc_base = 0; i < 63; ++i)
+            rv->cc_base = (rv->cc_base + rv->eeprom[i]) & 0xFF;
+        for (i = 64, rv->cc_ext = 0; i < 95; ++i)
+            rv->cc_ext = (rv->cc_ext + rv->eeprom[i]) & 0xFF;
+    } else if (SFF8436_MODULE_QSFP_PLUS_V2(rv->eeprom)) {
+        /* See SFF-8436 pp72, pp73 */
+        int i;
+        for (i = 128, rv->cc_base = 0; i < 191; ++i)
+            rv->cc_base = (rv->cc_base + rv->eeprom[i]) & 0xFF;
+        for (i = 192, rv->cc_ext = 0; i < 223; ++i)
+            rv->cc_ext = (rv->cc_ext + rv->eeprom[i]) & 0xFF;
+    }
+    
+    if (!sff_info_valid(rv, 1)) return -1;
 
     rv->sfp_type = sff_sfp_type_get(rv->eeprom);
     if(rv->sfp_type == SFF_SFP_TYPE_INVALID) {
@@ -339,6 +362,7 @@ sff_info_init(sff_info_t* rv, uint8_t* eeprom)
     else {
         SFF_SNPRINTF(rv->length_desc, sizeof(rv->length_desc), "%dm", rv->length);
     }
+    rv->supported = 1;
     return 0;
 }
 
@@ -377,3 +401,40 @@ sff_info_init_file(sff_info_t* info, const char* fname)
     return rv;
 }
 
+void
+sff_info_invalidate(sff_info_t *info)
+{
+    memset(info->eeprom, 0xFF, 256);
+    info->cc_base = 0xFF;
+    info->cc_ext = 0xFF;
+    info->supported = 0;
+}
+
+int
+sff_info_valid(sff_info_t *info, int verbose)
+{
+    if (SFF8436_MODULE_QSFP_PLUS_V2(info->eeprom)) {
+        if (info->cc_base != info->eeprom[191]) {
+            if (verbose) AIM_LOG_ERROR("sff_info_valid() failed: invalid base QSFP checksum");
+            return 0;
+        }
+        if (info->cc_ext != info->eeprom[223]) {
+            if (verbose) AIM_LOG_ERROR("sff_info_valid() failed: invalid extended QSFP checksum");
+            return 0;
+        }
+    } else if (SFF8472_MODULE_SFP(info->eeprom)) {
+        if (info->cc_base != info->eeprom[63]) {
+            if (verbose) AIM_LOG_ERROR("sff_info_valid() failed: invalid base SFP checksum");
+            return 0;
+        }
+        if (info->cc_ext != info->eeprom[95]) {
+            if (verbose) AIM_LOG_ERROR("sff_info_valid() failed: invalid extended SFP checksum");
+            return 0;
+        }
+    } else {
+        if (verbose) AIM_LOG_ERROR("sff_info_valid() failed: invalid module type");
+        return 0;
+    }
+
+    return 1;
+}
