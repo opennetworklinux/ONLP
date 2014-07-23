@@ -70,3 +70,26 @@ onlp_oid_show_state_missing(iof_t* iof)
     iof_iprintf(iof, "State: Missing");
 }
 
+#if ONLP_CONFIG_INCLUDE_API_LOCK == 1
+#include <OS/os_sem.h>
+static os_sem_t onlp_api_lock__;
+
+void
+onlp_api_lock_init(void)
+{
+    onlp_api_lock__ = os_sem_create(1);
+}
+
+void
+onlp_api_lock(void)
+{
+    os_sem_take(onlp_api_lock__);
+}
+
+void
+onlp_api_unlock(void)
+{
+    os_sem_give(onlp_api_lock__);
+}
+
+#endif

@@ -194,6 +194,16 @@
 #define ONLP_CONFIG_CONFIGURATION_ENV "ONLP_CONF"
 #endif
 
+/**
+ * ONLP_CONFIG_INCLUDE_API_LOCK
+ *
+ * Include exclusive locking for all API calls. */
+
+
+#ifndef ONLP_CONFIG_INCLUDE_API_LOCK
+#define ONLP_CONFIG_INCLUDE_API_LOCK 0
+#endif
+
 
 
 /**

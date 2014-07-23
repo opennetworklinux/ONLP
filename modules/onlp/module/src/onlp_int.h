@@ -48,4 +48,22 @@ void onlp_oid_show_description(iof_t* iof, onlp_oid_hdr_t* hdr);
 /** Standard message when an OID is missing. */
 void onlp_oid_show_state_missing(iof_t* iof);
 
+#if ONLP_CONFIG_INCLUDE_API_LOCK == 1
+
+void onlp_api_lock_init();
+void onlp_api_lock(void);
+void onlp_api_unlock(void);
+
+#define ONLP_API_LOCK_INIT() onlp_api_lock_init()
+#define ONLP_API_LOCK() onlp_api_lock()
+#define ONLP_API_UNLOCK() onlp_api_unlock()
+
+#else
+
+#define ONLP_API_LOCK_INIT()
+#define ONLP_API_LOCK()
+#define ONLP_API_UNLOCK()
+
+#endif
+
 #endif /* __ONLP_INT_H__ */
