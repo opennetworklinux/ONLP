@@ -1,21 +1,21 @@
 /************************************************************
  * <bsn.cl fy=2014 v=onl>
- * 
- *           Copyright 2014 Big Switch Networks, Inc.          
- * 
+ *
+ *           Copyright 2014 Big Switch Networks, Inc.
+ *
  * Licensed under the Eclipse Public License, Version 1.0 (the
  * "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
- * 
+ *
  *        http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the
  * License.
- * 
+ *
  * </bsn.cl>
  ************************************************************
  *
@@ -106,6 +106,8 @@ iter__(onlp_oid_t oid, void* cookie)
 #include <onlp/fan.h>
 #include <onlp/thermal.h>
 #include <onlp/oids.h>
+#include <onlp/sys.h>
+
 int
 aim_main(int argc, char* argv[])
 {
@@ -116,6 +118,14 @@ aim_main(int argc, char* argv[])
     onlp_platform_dump(&aim_pvs_stdout, ONLP_OID_DUMP_F_RECURSE);
     onlp_oid_iterate(0, 0, iter__, NULL);
     onlp_platform_show(&aim_pvs_stdout, ONLP_OID_SHOW_F_RECURSE|ONLP_OID_SHOW_F_EXTENDED);
+
+    if(argv[1] && !strcmp("manage", argv[1])) {
+        onlp_sys_platform_manage_start();
+        printf("Sleeping...\n");
+        sleep(10);
+        printf("Stopping...\n");
+        onlp_sys_platform_manage_stop();
+        printf("Stopped.\n");
+    }
     return 0;
 }
-
