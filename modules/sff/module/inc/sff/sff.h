@@ -54,6 +54,7 @@ typedef enum sff_module_type_e {
     SFF_MODULE_TYPE_40G_BASE_LR4,
     SFF_MODULE_TYPE_40G_BASE_ACTIVE,
     SFF_MODULE_TYPE_40G_BASE_CR,
+    SFF_MODULE_TYPE_40G_BASE_SR2,
     SFF_MODULE_TYPE_10G_BASE_SR,
     SFF_MODULE_TYPE_10G_BASE_LR,
     SFF_MODULE_TYPE_10G_BASE_LRM,
@@ -61,6 +62,8 @@ typedef enum sff_module_type_e {
     SFF_MODULE_TYPE_10G_BASE_CR,
     SFF_MODULE_TYPE_10G_BASE_SX,
     SFF_MODULE_TYPE_10G_BASE_LX,
+    SFF_MODULE_TYPE_10G_BASE_ZR,
+    SFF_MODULE_TYPE_10G_BASE_SRL,
     SFF_MODULE_TYPE_1G_BASE_SX,
     SFF_MODULE_TYPE_1G_BASE_LX,
     SFF_MODULE_TYPE_1G_BASE_CX,
@@ -80,6 +83,7 @@ typedef enum sff_module_type_e {
     "40G_BASE_LR4", \
     "40G_BASE_ACTIVE", \
     "40G_BASE_CR", \
+    "40G_BASE_SR2", \
     "10G_BASE_SR", \
     "10G_BASE_LR", \
     "10G_BASE_LRM", \
@@ -87,6 +91,8 @@ typedef enum sff_module_type_e {
     "10G_BASE_CR", \
     "10G_BASE_SX", \
     "10G_BASE_LX", \
+    "10G_BASE_ZR", \
+    "10G_BASE_SRL", \
     "1G_BASE_SX", \
     "1G_BASE_LX", \
     "1G_BASE_CX", \
@@ -254,6 +260,13 @@ typedef struct sff_info_s {
     int length;
     char length_desc[16];
 
+    /** computed checksums for idprom contents */
+    uint8_t cc_base;
+    uint8_t cc_ext;
+
+    /** whether this SFP is supported */
+    int supported;
+
 } sff_info_t;
 
 
@@ -280,5 +293,20 @@ int sff_info_init_file(sff_info_t* rv, const char* fname);
  * @param pvs The output pvs.
  */
 void sff_info_show(sff_info_t* info, aim_pvs_t* pvs);
+
+/**
+ * @brief Invalidate an idprom data structure,
+ *     such that any resulting sff_info_init will fail.
+ * @param eeprom  The idprom buffer (256 bytes).
+ */
+void sff_info_invalidate(sff_info_t *info);
+
+/**
+ * @brief Determine if this is a valid SFP
+ *     (whether or not we can parse it)
+ * @param info The info structure.
+ * @param verbose Whether to report errors on invalid contents.
+ */
+int sff_info_valid(sff_info_t *info, int verbose);
 
 #endif /* __SFF_SFF_H__ */

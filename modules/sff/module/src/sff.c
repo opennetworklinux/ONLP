@@ -37,6 +37,10 @@ sff_module_type_get(const uint8_t* idprom)
         return SFF_MODULE_TYPE_40G_BASE_SR4;
 
     if (SFF8436_MODULE_QSFP_PLUS_V2(idprom)
+        && _sff8436_qsfp_40g_sr4_aoc_pre(idprom))
+        return SFF_MODULE_TYPE_40G_BASE_SR4;
+
+    if (SFF8436_MODULE_QSFP_PLUS_V2(idprom)
         && SFF8436_MEDIA_40GE_LR4(idprom))
         return SFF_MODULE_TYPE_40G_BASE_LR4;
 
@@ -61,20 +65,36 @@ sff_module_type_get(const uint8_t* idprom)
             || SFF8436_MEDIA_FC_FIBER_MM(idprom)))
         return SFF_MODULE_TYPE_40G_BASE_SR4;
 
+    /* pre-standard QSFP-BiDi optics */
+    if (SFF8436_MODULE_QSFP_PLUS_V2(idprom)
+        && _sff8436_qsfp_40g_sr2_bidi_pre(idprom))
+        return SFF_MODULE_TYPE_40G_BASE_SR2;
+
     if (SFF8472_MODULE_SFP(idprom)
-        && SFF8472_MEDIA_XGE_SR(idprom))
+        && SFF8472_MEDIA_XGE_SR(idprom)
+        && !_sff8472_media_gbe_sx_fc_hack(idprom))
         return SFF_MODULE_TYPE_10G_BASE_SR;
 
     if (SFF8472_MODULE_SFP(idprom)
-        && SFF8472_MEDIA_XGE_LR(idprom))
+        && SFF8472_MEDIA_XGE_LR(idprom)
+        && !_sff8472_media_gbe_lx_fc_hack(idprom))
         return SFF_MODULE_TYPE_10G_BASE_LR;
 
     if (SFF8472_MODULE_SFP(idprom)
-        && SFF8472_MEDIA_XGE_LRM(idprom))
+        && SFF8472_MEDIA_XGE_LRM(idprom)
+        && !_sff8472_media_gbe_lx_fc_hack(idprom))
         return SFF_MODULE_TYPE_10G_BASE_LRM;
 
+    /*
+     * XXX roth -- PAN-934 -- DAC cable erroneously reports ER,
+     * so we need to disallow infiniband features when matching here.
+     * See also _sff8472_media_cr_passive, which encodes some
+     * additional workarounds for these cables.
+     */
     if (SFF8472_MODULE_SFP(idprom)
-        && SFF8472_MEDIA_XGE_ER(idprom))
+        && SFF8472_MEDIA_XGE_ER(idprom)
+        && !_sff8472_inf_1x_cu_active(idprom)
+        && !_sff8472_inf_1x_cu_passive(idprom))
         return SFF_MODULE_TYPE_10G_BASE_ER;
 
     /* XXX roth - not sure on this one */
@@ -114,6 +134,16 @@ sff_module_type_get(const uint8_t* idprom)
         && SFF8472_MEDIA_CBE_FX(idprom))
         return SFF_MODULE_TYPE_100_BASE_FX;
 
+    /* non-standard (e.g. Finisar) ZR media */
+    if (SFF8472_MODULE_SFP(idprom)
+        && _sff8472_media_zr(idprom))
+        return SFF_MODULE_TYPE_10G_BASE_ZR;
+
+    /* non-standard (e.g. Finisar) SRL media */
+    if (SFF8472_MODULE_SFP(idprom)
+        && _sff8472_media_srlite(idprom))
+        return SFF_MODULE_TYPE_10G_BASE_SRL;
+
     return SFF_MODULE_TYPE_INVALID;
 }
 
@@ -134,12 +164,15 @@ sff_media_type_get(const uint8_t* idprom)
         case SFF_MODULE_TYPE_40G_BASE_SR4:
         case SFF_MODULE_TYPE_40G_BASE_LR4:
         case SFF_MODULE_TYPE_40G_BASE_ACTIVE:
+        case SFF_MODULE_TYPE_40G_BASE_SR2:
         case SFF_MODULE_TYPE_10G_BASE_SR:
         case SFF_MODULE_TYPE_10G_BASE_LR:
         case SFF_MODULE_TYPE_10G_BASE_LRM:
         case SFF_MODULE_TYPE_10G_BASE_ER:
         case SFF_MODULE_TYPE_10G_BASE_SX:
         case SFF_MODULE_TYPE_10G_BASE_LX:
+        case SFF_MODULE_TYPE_10G_BASE_ZR:
+        case SFF_MODULE_TYPE_10G_BASE_SRL:
         case SFF_MODULE_TYPE_1G_BASE_SX:
         case SFF_MODULE_TYPE_1G_BASE_LX:
         case SFF_MODULE_TYPE_100_BASE_LX:
@@ -154,6 +187,56 @@ sff_media_type_get(const uint8_t* idprom)
     return SFF_MEDIA_TYPE_INVALID;
 }
 
+int
+sff_module_caps_get(const uint8_t* idprom, uint32_t *caps)
+{
+    if (idprom == NULL)
+        return -1;
+    if (caps == NULL)
+        return -1;
+
+    sff_module_type_t mt = sff_module_type_get(idprom);
+    *caps = 0;
+
+    switch(mt)
+        {
+        case SFF_MODULE_TYPE_40G_BASE_CR4:
+        case SFF_MODULE_TYPE_40G_BASE_SR4:
+        case SFF_MODULE_TYPE_40G_BASE_LR4:
+        case SFF_MODULE_TYPE_40G_BASE_ACTIVE:
+        case SFF_MODULE_TYPE_40G_BASE_CR:
+        case SFF_MODULE_TYPE_40G_BASE_SR2:
+            *caps |= SFF_MODULE_CAPS_F_40G;
+            return 0;
+
+        case SFF_MODULE_TYPE_10G_BASE_SR:
+        case SFF_MODULE_TYPE_10G_BASE_LR:
+        case SFF_MODULE_TYPE_10G_BASE_LRM:
+        case SFF_MODULE_TYPE_10G_BASE_ER:
+        case SFF_MODULE_TYPE_10G_BASE_CR:
+        case SFF_MODULE_TYPE_10G_BASE_SX:
+        case SFF_MODULE_TYPE_10G_BASE_LX:
+        case SFF_MODULE_TYPE_10G_BASE_ZR:
+        case SFF_MODULE_TYPE_10G_BASE_SRL:
+            *caps |= SFF_MODULE_CAPS_F_10G;
+            return 0;
+
+        case SFF_MODULE_TYPE_1G_BASE_SX:
+        case SFF_MODULE_TYPE_1G_BASE_LX:
+        case SFF_MODULE_TYPE_1G_BASE_CX:
+        case SFF_MODULE_TYPE_1G_BASE_T:
+            *caps |= SFF_MODULE_CAPS_F_1G;
+            return 0;
+
+        case SFF_MODULE_TYPE_100_BASE_LX:
+        case SFF_MODULE_TYPE_100_BASE_FX:
+            *caps |= SFF_MODULE_CAPS_F_100;
+            return 0;
+
+        default:
+            return -1;
+        }
+}
 
 void
 sff_module_show(const uint8_t* idprom, aim_pvs_t* pvs)
@@ -187,24 +270,51 @@ sff_info_init(sff_info_t* rv, uint8_t* eeprom)
     if(rv == NULL) {
         return -1;
     }
+    rv->supported = 0;
+
     if(eeprom) {
         SFF_MEMCPY(rv->eeprom, eeprom, 256);
     }
 
+    if (SFF8472_MODULE_SFP(rv->eeprom)) {
+        /* See SFF-8472 pp22, pp28 */
+        int i;
+        for (i = 0, rv->cc_base = 0; i < 63; ++i)
+            rv->cc_base = (rv->cc_base + rv->eeprom[i]) & 0xFF;
+        for (i = 64, rv->cc_ext = 0; i < 95; ++i)
+            rv->cc_ext = (rv->cc_ext + rv->eeprom[i]) & 0xFF;
+    } else if (SFF8436_MODULE_QSFP_PLUS_V2(rv->eeprom)) {
+        /* See SFF-8436 pp72, pp73 */
+        int i;
+        for (i = 128, rv->cc_base = 0; i < 191; ++i)
+            rv->cc_base = (rv->cc_base + rv->eeprom[i]) & 0xFF;
+        for (i = 192, rv->cc_ext = 0; i < 223; ++i)
+            rv->cc_ext = (rv->cc_ext + rv->eeprom[i]) & 0xFF;
+    }
+    
+    if (!sff_info_valid(rv, 1)) return -1;
+
     rv->sfp_type = sff_sfp_type_get(rv->eeprom);
     if(rv->sfp_type == SFF_SFP_TYPE_INVALID) {
+        AIM_LOG_ERROR("sff_info_init() failed: invalid sfp type");
         return -1;
     }
     rv->sfp_type_name = sff_sfp_type_desc(rv->sfp_type);
 
     rv->module_type = sff_module_type_get(rv->eeprom);
     if(rv->module_type == SFF_MODULE_TYPE_INVALID) {
+        AIM_LOG_ERROR("sff_info_init() failed: invalid module type");
         return -1;
     }
     rv->module_type_name = sff_module_type_desc(rv->module_type);
 
     rv->media_type = sff_media_type_get(rv->eeprom);
     rv->media_type_name = sff_media_type_desc(rv->media_type);
+
+    if (sff_module_caps_get(rv->eeprom, &rv->caps) < 0) {
+        AIM_LOG_ERROR("sff_info_init() failed: invalid module caps");
+        return -1;
+    }
 
     rv->length = -1;
     if(rv->media_type == SFF_MEDIA_TYPE_COPPER) {
@@ -252,6 +362,7 @@ sff_info_init(sff_info_t* rv, uint8_t* eeprom)
     else {
         SFF_SNPRINTF(rv->length_desc, sizeof(rv->length_desc), "%dm", rv->length);
     }
+    rv->supported = 1;
     return 0;
 }
 
@@ -290,3 +401,40 @@ sff_info_init_file(sff_info_t* info, const char* fname)
     return rv;
 }
 
+void
+sff_info_invalidate(sff_info_t *info)
+{
+    memset(info->eeprom, 0xFF, 256);
+    info->cc_base = 0xFF;
+    info->cc_ext = 0xFF;
+    info->supported = 0;
+}
+
+int
+sff_info_valid(sff_info_t *info, int verbose)
+{
+    if (SFF8436_MODULE_QSFP_PLUS_V2(info->eeprom)) {
+        if (info->cc_base != info->eeprom[191]) {
+            if (verbose) AIM_LOG_ERROR("sff_info_valid() failed: invalid base QSFP checksum");
+            return 0;
+        }
+        if (info->cc_ext != info->eeprom[223]) {
+            if (verbose) AIM_LOG_ERROR("sff_info_valid() failed: invalid extended QSFP checksum");
+            return 0;
+        }
+    } else if (SFF8472_MODULE_SFP(info->eeprom)) {
+        if (info->cc_base != info->eeprom[63]) {
+            if (verbose) AIM_LOG_ERROR("sff_info_valid() failed: invalid base SFP checksum");
+            return 0;
+        }
+        if (info->cc_ext != info->eeprom[95]) {
+            if (verbose) AIM_LOG_ERROR("sff_info_valid() failed: invalid extended SFP checksum");
+            return 0;
+        }
+    } else {
+        if (verbose) AIM_LOG_ERROR("sff_info_valid() failed: invalid module type");
+        return 0;
+    }
+
+    return 1;
+}
