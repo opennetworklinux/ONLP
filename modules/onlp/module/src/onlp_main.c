@@ -37,8 +37,9 @@ onlpdump_main(int argc, char* argv[])
     int rv = -1;
     int j = 0;
     int o = 0;
+    int m = 0;
 
-    while( (c = getopt(argc, argv, "srehdoj")) != -1) {
+    while( (c = getopt(argc, argv, "srehdojm")) != -1) {
         switch(c)
             {
             case 's': show=1; break;
@@ -48,6 +49,7 @@ onlpdump_main(int argc, char* argv[])
             case 'h': help=1; rv = 0; break;
             case 'j': j=1; break;
             case 'o': o=1; break;
+            case 'm': m=1; break;
             default: help=1; rv = 1; break;
             }
     }
@@ -60,7 +62,9 @@ onlpdump_main(int argc, char* argv[])
         printf("  -e   Extended show(). Implies -s\n");
         printf("  -o   Dump ONIE data only.\n");
         printf("  -j   Dump ONIE data in JSON format.\n");
+        printf("  -m   Run platform manager.");
         return rv;
+
     }
 
     onlp_init();
@@ -89,6 +93,14 @@ onlpdump_main(int argc, char* argv[])
     else {
         onlp_platform_show(&aim_pvs_stdout,
                            showflags);
+    }
+
+    if(m) {
+        printf("Running the platform manager for 60 seconds...\n");
+        onlp_sys_platform_manage_start();
+        sleep(60);
+        printf("Stopping the platform manager.\n");
+        onlp_sys_platform_manage_stop();
     }
     return 0;
 }
