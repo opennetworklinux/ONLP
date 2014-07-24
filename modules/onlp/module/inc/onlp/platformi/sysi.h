@@ -109,14 +109,14 @@ int onlp_sysi_oids_get(onlp_oid_t* table, int max);
 
 /**
  * @brief This function provides a generic ioctl interface.
- * @param id context dependent.
+ * @param code context dependent.
  * @param vargs The variable argument list for the ioctl call.
  * @notes This is provided as a generic expansion and
  * and custom programming mechanism for future and non-standard
  * functionality.
  * @notes Optional
  */
-int onlp_sysi_ioctl(int id, va_list vargs);
+int onlp_sysi_ioctl(int code, va_list vargs);
 
 
 /**

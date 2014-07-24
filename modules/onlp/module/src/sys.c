@@ -234,4 +234,13 @@ onlp_sys_show(onlp_oid_t id, aim_pvs_t* pvs, uint32_t flags)
     onlp_sys_info_free(&si);
 }
 
-
+int
+onlp_sys_ioctl(int code, ...)
+{
+    int rv;
+    va_list vargs;
+    va_start(vargs, code);
+    rv = onlp_sysi_ioctl(code, vargs);
+    va_end(vargs);
+    return rv;
+}
