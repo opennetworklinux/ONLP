@@ -272,10 +272,7 @@ _sff8472_tech_fc_el(const uint8_t* idprom)
     if ((idprom[8] & SFF8472_CC8_FC_TECH_SN) != 0) return 0;
 
     if (((idprom[7] & SFF8472_CC7_FC_TECH_EL) != 0)
-        && ((idprom[8] & SFF8472_CC8_FC_TECH_EL) == 0))
-        return 1;
-    if (((idprom[7] & SFF8472_CC7_FC_TECH_EL) == 0)
-        && ((idprom[8] & SFF8472_CC8_FC_TECH_EL) != 0))
+        || ((idprom[8] & SFF8472_CC8_FC_TECH_EL) != 0))
         return 1;
 
     return 0;
