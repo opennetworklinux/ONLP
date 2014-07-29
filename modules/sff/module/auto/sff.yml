@@ -47,6 +47,8 @@ sff_module_types: &sff_module_types
     desc: "40GBASE-ACTIVE"
 - 40G_BASE_CR:
     desc: "40GBASE-CR"
+- 40G_BASE_SR2:
+    desc: "40GBASE-SR2"
 - 10G_BASE_SR:
     desc: "10GBASE-SR"
 - 10G_BASE_LR:
@@ -61,6 +63,10 @@ sff_module_types: &sff_module_types
     desc: "10GBASE-SX"
 - 10G_BASE_LX:
     desc: "10GBASE-LX"
+- 10G_BASE_ZR:
+    desc: "10GBASE-ZR"
+- 10G_BASE_SRL:
+    desc: "10GBASE-SRL"
 - 1G_BASE_SX:
     desc: "1GBASE-SX"
 - 1G_BASE_LX:
