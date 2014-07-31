@@ -173,19 +173,31 @@ onlp_sys_platform_manage_thread__(void* vctrl)
             tv.tv_sec = 0;
         }
         else {
-            tv.tv_sec = (twe->deadline - now) / 1000000;
-            tv.tv_usec = (twe->deadline - now) % 1000000;
+            if(twe->deadline > now) {
+                /* Sleep until next deadline */
+                tv.tv_sec = (twe->deadline - now) / 1000000;
+                tv.tv_usec = (twe->deadline - now) % 1000000;
+            }
+            else {
+                /* We have surpassed the current deadline */
+                tv.tv_sec = 0;
+                tv.tv_usec = 0;
+            }
         }
 
-        select(ctrl->eventfd+1, &fds, NULL, NULL, &tv);
-
-        if(FD_ISSET(ctrl->eventfd, &fds)) {
+        int rv = select(ctrl->eventfd+1, &fds, NULL, NULL, &tv);
+        if(rv == 1 && FD_ISSET(ctrl->eventfd, &fds)) {
             /* We've been asked to terminate. */
             AIM_LOG_MSG("Terminating.");
             /* Also signifies that we have exit */
             close(ctrl->eventfd);
             ctrl->eventfd = -1;
             return NULL;
+        }
+        if(rv < 0) {
+            AIM_LOG_ERROR("select() returned %d (%{errno})", rv, errno);
+            /* Sleep 1 second, but continue to run */
+            sleep(1);
         }
 
         /*
