@@ -96,9 +96,9 @@ onlpdump_main(int argc, char* argv[])
     }
 
     if(m) {
-        printf("Running the platform manager for 60 seconds...\n");
+        printf("Running the platform manager for 600 seconds...\n");
         onlp_sys_platform_manage_start();
-        sleep(60);
+        sleep(600);
         printf("Stopping the platform manager.\n");
         onlp_sys_platform_manage_stop();
     }
