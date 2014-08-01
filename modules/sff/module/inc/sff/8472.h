@@ -509,7 +509,13 @@ _sff8472_media_cr_active(const uint8_t* idprom)
 
     if (idprom[4] != 0) return 0;
     if (idprom[5] != 0) return 0;
-    if (idprom[6] != 0) return 0;
+    /*
+     * XXX roth -- PAN-1111 -- 3M CR cable advertises 1000BASE-CX,
+     * presumably because it is a 2-wire cable
+     */
+    if ((idprom[6] != SFF8472_CC6_GBE_BASE_CX)
+        && (idprom[6] != 0))
+        return 0;
 
     if (_sff8472_sfp_plus_active(idprom))
         maybe = 1;
@@ -520,6 +526,18 @@ _sff8472_media_cr_active(const uint8_t* idprom)
         return 0;
 
     if (!_sff8472_fc_speed_ok(idprom))
+        return 0;
+
+    /*
+     * XXX roth -- PAN-1111 -- yet another CR cable
+     * that advertises as 1000BASE-CX.
+     */
+    if ((idprom[6] == SFF8472_CC6_GBE_BASE_CX)
+        && !_sff8472_tech_fc(idprom))
+        return 0;
+    if ((idprom[6] == SFF8472_CC6_GBE_BASE_CX)
+        && _sff8472_tech_fc(idprom)
+        && !_sff8472_fc_speed_10g(idprom))
         return 0;
 
     if (maybe) {
