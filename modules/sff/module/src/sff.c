@@ -352,9 +352,20 @@ sff_info_init(sff_info_t* rv, uint8_t* eeprom)
             break;
         }
 
-    aim_strlcpy(rv->vendor, (char*)vendor, sizeof(rv->vendor));
-    aim_strlcpy(rv->model, (char*)model, sizeof(rv->model));
-    aim_strlcpy(rv->serial, (char*)serial, sizeof(rv->serial));
+    /* handle NULL fields, they should actually be space-padded */
+    const char *empty = "                ";
+    if (*vendor)
+        aim_strlcpy(rv->vendor, (char*)vendor, sizeof(rv->vendor));
+    else
+        aim_strlcpy(rv->vendor, empty, 17);
+    if (*model)
+        aim_strlcpy(rv->model, (char*)model, sizeof(rv->model));
+    else
+        aim_strlcpy(rv->model, empty, 17);
+    if (*serial)
+        aim_strlcpy(rv->serial, (char*)serial, sizeof(rv->serial));
+    else
+        aim_strlcpy(rv->serial, empty, 17);
 
     if(rv->length == -1) {
         rv->length_desc[0] = 0;
