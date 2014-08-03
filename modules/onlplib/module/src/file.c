@@ -24,7 +24,6 @@ onlp_file_vread(uint8_t* data, int max, int* len, char* fmt, va_list vargs)
     ONLPLIB_VSNPRINTF(fname, sizeof(fname)-1, fmt, vargs);
 
     if ((fd = open(fname, O_RDONLY)) == -1) {
-        AIM_LOG_ERROR("Failed to open input file '%s'", fname);
         rv = ONLP_STATUS_E_MISSING;
     }
     else {
@@ -89,7 +88,6 @@ onlp_file_vwrite(uint8_t* data, int len, const char* fmt, va_list vargs)
     ONLPLIB_VSNPRINTF(fname, sizeof(fname)-1, fmt, vargs);
 
     if ((fd = open(fname, O_WRONLY)) == -1) {
-        AIM_LOG_ERROR("Failed to open output file '%s'", fname);
         rv = ONLP_STATUS_E_MISSING;
     }
     else {
