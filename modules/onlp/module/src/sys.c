@@ -131,9 +131,15 @@ onlp_sys_info_get(onlp_sys_info_t* rv)
      */
     int free;
     uint8_t* onie_data = onie_data_get__(&free);
-    onlp_onie_decode(&rv->onie_info, onie_data, -1);
-    if(free) {
-        onlp_sysi_onie_data_free(onie_data);
+
+    if(onie_data) {
+        onlp_onie_decode(&rv->onie_info, onie_data, -1);
+        if(free) {
+            onlp_sysi_onie_data_free(onie_data);
+        }
+    }
+    else {
+        onlp_sysi_onie_info_get(&rv->onie_info);
     }
 
     /*

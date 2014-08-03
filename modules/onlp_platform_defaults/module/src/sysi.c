@@ -53,6 +53,7 @@ __ONLP_DEFAULTI_IMPLEMENTATION(onlp_sysi_init(void));
 __ONLP_DEFAULTI_IMPLEMENTATION(onlp_sysi_onie_data_phys_addr_get(void** physaddr));
 __ONLP_DEFAULTI_IMPLEMENTATION(onlp_sysi_onie_data_get(uint8_t** data, int* size));
 __ONLP_DEFAULTI_VIMPLEMENTATION(onlp_sysi_onie_data_free(uint8_t* data));
+__ONLP_DEFAULTI_IMPLEMENTATION(onlp_sysi_onie_info_get(onlp_onie_info_t* onie));
 __ONLP_DEFAULTI_IMPLEMENTATION(onlp_sysi_oids_get(onlp_oid_t* table, int max));
 __ONLP_DEFAULTI_IMPLEMENTATION(onlp_sysi_ioctl(int id, va_list vargs));
 __ONLP_DEFAULTI_IMPLEMENTATION(onlp_sysi_platform_manage_fans(void));

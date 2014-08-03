@@ -99,6 +99,17 @@ int onlp_sysi_onie_data_get(uint8_t** data, int* size);
  */
 void onlp_sysi_onie_data_free(uint8_t* data);
 
+
+/**
+ * @brief Return the ONIE system information for this platform.
+ * @param onie The onie information structure.
+ * @notes If all previous attempts to get the eeprom data fail
+ * then this routine will be called. Used as a translation option
+ * for platforms without access to an ONIE-formatted eeprom.
+ */
+int onlp_sysi_onie_info_get(onlp_onie_info_t* onie);
+
+
 /**
  * @brief This function returns the root oid list for the platform.
  * @param table [out] Receives the table.
