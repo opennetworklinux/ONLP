@@ -44,7 +44,7 @@ onlp_ucli_ucli__config__(ucli_context_t* uc)
  * source file.
  *
  *****************************************************************************/
-static ucli_command_handler_f onlp_ucli_ucli_handlers__[] =
+static ucli_command_handler_f onlp_ucli_ucli_handlers__[] = 
 {
     onlp_ucli_ucli__config__,
     NULL
