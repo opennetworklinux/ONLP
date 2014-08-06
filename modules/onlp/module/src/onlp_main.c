@@ -27,6 +27,42 @@
 #include <unistd.h>
 #include <onlp/sys.h>
 
+static int
+iterate_oids_callback__(onlp_oid_t oid, void* cookie)
+{
+    int type = ONLP_OID_TYPE_GET(oid);
+    int id   = ONLP_OID_ID_GET(oid);
+
+    static int thermal = 1;
+    static int fan = 1;
+    static int psu = 1;
+
+    switch(type)
+        {
+        case ONLP_OID_TYPE_THERMAL:
+            printf("thermal,Thermal %d,%d\n", id, thermal++);
+            break;
+        case ONLP_OID_TYPE_FAN:
+            printf("fan,Fan %d,%d\n", id, fan++);
+            break;
+        case ONLP_OID_TYPE_PSU:
+            printf("psu,PSU %d,%d\n", id, psu++);
+            break;
+        }
+    return 0;
+}
+
+
+static void
+iterate_oids__(void)
+{
+    onlp_oid_iterate(ONLP_OID_SYS, 0,
+                     iterate_oids_callback__, NULL);
+}
+
+
+
+
 int
 onlpdump_main(int argc, char* argv[])
 {
@@ -38,8 +74,9 @@ onlpdump_main(int argc, char* argv[])
     int j = 0;
     int o = 0;
     int m = 0;
+    int i = 0;
 
-    while( (c = getopt(argc, argv, "srehdojm")) != -1) {
+    while( (c = getopt(argc, argv, "srehdojmi")) != -1) {
         switch(c)
             {
             case 's': show=1; break;
@@ -50,6 +87,7 @@ onlpdump_main(int argc, char* argv[])
             case 'j': j=1; break;
             case 'o': o=1; break;
             case 'm': m=1; break;
+            case 'i': i=1; break;
             default: help=1; rv = 1; break;
             }
     }
@@ -62,12 +100,17 @@ onlpdump_main(int argc, char* argv[])
         printf("  -e   Extended show(). Implies -s\n");
         printf("  -o   Dump ONIE data only.\n");
         printf("  -j   Dump ONIE data in JSON format.\n");
-        printf("  -m   Run platform manager.");
+        printf("  -m   Run platform manager.\n");
+        printf("  -i   Iterate OIDs.\n");
         return rv;
-
     }
 
     onlp_init();
+
+    if(i) {
+        iterate_oids__();
+        return 0;
+    }
 
     if(o) {
         onlp_sys_info_t si;
@@ -94,6 +137,7 @@ onlpdump_main(int argc, char* argv[])
         onlp_platform_show(&aim_pvs_stdout,
                            showflags);
     }
+
 
     if(m) {
         printf("Running the platform manager for 600 seconds...\n");
