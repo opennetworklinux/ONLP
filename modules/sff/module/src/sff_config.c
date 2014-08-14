@@ -50,6 +50,11 @@ sff_config_settings_t sff_config_settings[] =
 #else
 { SFF_CONFIG_INCLUDE_SFF_TOOL(__sff_config_STRINGIFY_NAME), "__undefined__" },
 #endif
+#ifdef SFF_CONFIG_INCLUDE_EXT_CC_CHECK
+    { __sff_config_STRINGIFY_NAME(SFF_CONFIG_INCLUDE_EXT_CC_CHECK), __sff_config_STRINGIFY_VALUE(SFF_CONFIG_INCLUDE_EXT_CC_CHECK) },
+#else
+{ SFF_CONFIG_INCLUDE_EXT_CC_CHECK(__sff_config_STRINGIFY_NAME), "__undefined__" },
+#endif
     { NULL, NULL }
 };
 #undef __sff_config_STRINGIFY_VALUE

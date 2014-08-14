@@ -99,6 +99,16 @@
 #define SFF_CONFIG_INCLUDE_SFF_TOOL 0
 #endif
 
+/**
+ * SFF_CONFIG_INCLUDE_EXT_CC_CHECK
+ *
+ * Include extended checksum verification. */
+
+
+#ifndef SFF_CONFIG_INCLUDE_EXT_CC_CHECK
+#define SFF_CONFIG_INCLUDE_EXT_CC_CHECK 0
+#endif
+
 
 
 /**

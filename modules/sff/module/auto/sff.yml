@@ -29,6 +29,9 @@ cdefs: &cdefs
 - SFF_CONFIG_INCLUDE_SFF_TOOL:
     doc: "Include the SFF tool main entry point."
     default: 0
+- SFF_CONFIG_INCLUDE_EXT_CC_CHECK:
+    doc: "Include extended checksum verification."
+    default: 0
 
 sff_media_types: &sff_media_types
 - COPPER:

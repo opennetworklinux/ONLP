@@ -291,7 +291,7 @@ sff_info_init(sff_info_t* rv, uint8_t* eeprom)
         for (i = 192, rv->cc_ext = 0; i < 223; ++i)
             rv->cc_ext = (rv->cc_ext + rv->eeprom[i]) & 0xFF;
     }
-    
+
     if (!sff_info_valid(rv, 1)) return -1;
 
     rv->sfp_type = sff_sfp_type_get(rv->eeprom);
@@ -429,19 +429,24 @@ sff_info_valid(sff_info_t *info, int verbose)
             if (verbose) AIM_LOG_ERROR("sff_info_valid() failed: invalid base QSFP checksum");
             return 0;
         }
+#if SFF_CONFIG_INCLUDE_EXT_CC_CHECK == 1
         if (info->cc_ext != info->eeprom[223]) {
-            if (verbose) AIM_LOG_ERROR("sff_info_valid() failed: invalid extended QSFP checksum");
+            if (verbose) AIM_LOG_ERROR("sff_info_valid() failed: invalid extended QSFP checksum (0x%x should be 0x%x)",
+                                       info->eeprom[223], info->cc_ext);
             return 0;
         }
+#endif
     } else if (SFF8472_MODULE_SFP(info->eeprom)) {
         if (info->cc_base != info->eeprom[63]) {
             if (verbose) AIM_LOG_ERROR("sff_info_valid() failed: invalid base SFP checksum");
             return 0;
         }
+#if SFF_CONFIG_INCLUDE_EXT_CC_CHECK == 1
         if (info->cc_ext != info->eeprom[95]) {
             if (verbose) AIM_LOG_ERROR("sff_info_valid() failed: invalid extended SFP checksum");
             return 0;
         }
+#endif
     } else {
         if (verbose) AIM_LOG_ERROR("sff_info_valid() failed: invalid module type");
         return 0;
