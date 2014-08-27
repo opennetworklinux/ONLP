@@ -132,7 +132,14 @@ onlp_sfp_dump(aim_pvs_t* pvs)
         }
         else if(rv == 1) {
             /* Present, OK */
-            aim_printf(pvs, "Present.\n");
+            uint32_t status = 0;
+            int srv = onlp_sfp_status_get(p, &status);
+            if(srv >= 0) {
+                aim_printf(pvs, "Present, Status = %{onlp_sfp_status_flags}\n", status);
+            }
+            else {
+                aim_printf(pvs, "Present, Status Unavailable [ %{onlp_status} ]", srv);
+            }
         }
         else {
             /* Error */
@@ -156,18 +163,28 @@ onlp_sfp_dump(aim_pvs_t* pvs)
 int
 onlp_sfp_post_insert(int port, sff_info_t* info)
 {
+    ONLP_SFP_PORT_VALIDATE(port);
     return onlp_sfpi_post_insert(port, info);
 }
 
 int
 onlp_sfp_enable_set(int port, int enable)
 {
+    ONLP_SFP_PORT_VALIDATE(port);
     return onlp_sfpi_enable_set(port, enable);
 }
 int
 onlp_sfp_enable_get(int port, int* enable)
 {
+    ONLP_SFP_PORT_VALIDATE(port);
     return onlp_sfpi_enable_get(port, enable);
+}
+
+int
+onlp_sfp_status_get(int port, uint32_t* flags)
+{
+    ONLP_SFP_PORT_VALIDATE(port);
+    return onlp_sfpi_status_get(port, flags);
 }
 
 int

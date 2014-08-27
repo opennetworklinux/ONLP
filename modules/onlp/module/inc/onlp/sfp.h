@@ -149,4 +149,13 @@ int onlp_sfp_ioctl(int port, ...);
  */
 int onlp_sfp_post_insert(int port, sff_info_t* info);
 
+/**
+ * @brief Retrieve the SFP status flags.
+ * @param port The port.
+ * @param [out] flags Receives the flags.
+ * @note See onlp_sfp_status_t
+ */
+int onlp_sfp_status_get(int port, uint32_t* flags);
+
+
 #endif /* __ONLP_SFP_H__ */
