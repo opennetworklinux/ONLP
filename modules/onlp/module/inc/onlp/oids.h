@@ -1,21 +1,21 @@
 /************************************************************
  * <bsn.cl fy=2014 v=onl>
- * 
- *           Copyright 2014 Big Switch Networks, Inc.          
- * 
+ *
+ *           Copyright 2014 Big Switch Networks, Inc.
+ *
  * Licensed under the Eclipse Public License, Version 1.0 (the
  * "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
- * 
+ *
  *        http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the
  * License.
- * 
+ *
  * </bsn.cl>
  ************************************************************
  *
@@ -46,7 +46,7 @@
 
 typedef uint32_t onlp_oid_t;
 
-/* <auto.start.enum(onlp_oid_type).define> */
+/* <auto.start.enum(onlp_oid_type).header> */
 /** onlp_oid_type */
 typedef enum onlp_oid_type_e {
     ONLP_OID_TYPE_SYS = 1,
@@ -57,7 +57,28 @@ typedef enum onlp_oid_type_e {
     ONLP_OID_TYPE_MODULE = 6,
     ONLP_OID_TYPE_RTC = 7,
 } onlp_oid_type_t;
-/* <auto.end.enum(onlp_oid_type).define> */
+
+/** Enum names. */
+const char* onlp_oid_type_name(onlp_oid_type_t e);
+
+/** Enum values. */
+int onlp_oid_type_value(const char* str, onlp_oid_type_t* e, int substr);
+
+/** Enum descriptions. */
+const char* onlp_oid_type_desc(onlp_oid_type_t e);
+
+/** Enum validator. */
+int onlp_oid_type_valid(onlp_oid_type_t e);
+
+/** validator */
+#define ONLP_OID_TYPE_VALID(_e) \
+    (onlp_oid_type_valid((_e)))
+
+/** onlp_oid_type_map table. */
+extern aim_map_si_t onlp_oid_type_map[];
+/** onlp_oid_type_desc_map table. */
+extern aim_map_si_t onlp_oid_type_desc_map[];
+/* <auto.end.enum(onlp_oid_type).header> */
 
 /**
  * Get the or set the type of an OID
