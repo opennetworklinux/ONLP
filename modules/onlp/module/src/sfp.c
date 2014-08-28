@@ -138,7 +138,7 @@ onlp_sfp_dump(aim_pvs_t* pvs)
                 aim_printf(pvs, "Present, Status = %{onlp_sfp_status_flags}\n", status);
             }
             else {
-                aim_printf(pvs, "Present, Status Unavailable [ %{onlp_status} ]", srv);
+                aim_printf(pvs, "Present, Status Unavailable [ %{onlp_status} ]\n", srv);
             }
         }
         else {
