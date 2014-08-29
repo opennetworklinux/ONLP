@@ -34,6 +34,7 @@ static onlp_sfp_bitmap_t sfpi_bitmap__;
 int
 onlp_sfp_init(void)
 {
+    AIM_BITMAP_INIT(&sfpi_bitmap__, 255);
     AIM_BITMAP_CLR_ALL(&sfpi_bitmap__);
 
     int rv = onlp_sfpi_init();
