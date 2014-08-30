@@ -425,30 +425,51 @@ int
 sff_info_valid(sff_info_t *info, int verbose)
 {
     if (SFF8436_MODULE_QSFP_PLUS_V2(info->eeprom)) {
+
         if (info->cc_base != info->eeprom[191]) {
-            if (verbose) AIM_LOG_ERROR("sff_info_valid() failed: invalid base QSFP checksum");
+            if (verbose) {
+                AIM_LOG_ERROR("sff_info_valid() failed: invalid base QSFP checksum (0x%x should be 0x%x)",
+                              info->eeprom[191], info->cc_base);
+            }
             return 0;
         }
+
 #if SFF_CONFIG_INCLUDE_EXT_CC_CHECK == 1
         if (info->cc_ext != info->eeprom[223]) {
-            if (verbose) AIM_LOG_ERROR("sff_info_valid() failed: invalid extended QSFP checksum (0x%x should be 0x%x)",
-                                       info->eeprom[223], info->cc_ext);
+            if (verbose) {
+                AIM_LOG_ERROR("sff_info_valid() failed: invalid extended QSFP checksum (0x%x should be 0x%x)",
+                              info->eeprom[223], info->cc_ext);
+            }
             return 0;
         }
 #endif
+
     } else if (SFF8472_MODULE_SFP(info->eeprom)) {
+
         if (info->cc_base != info->eeprom[63]) {
-            if (verbose) AIM_LOG_ERROR("sff_info_valid() failed: invalid base SFP checksum");
+            if (verbose) {
+                AIM_LOG_ERROR("sff_info_valid() failed: invalid base SFP checksum (0x%x should be 0x%x)",
+                              info->eeprom[63], info->cc_base);
+            }
             return 0;
         }
+
 #if SFF_CONFIG_INCLUDE_EXT_CC_CHECK == 1
         if (info->cc_ext != info->eeprom[95]) {
-            if (verbose) AIM_LOG_ERROR("sff_info_valid() failed: invalid extended SFP checksum");
+            if (verbose) {
+                AIM_LOG_ERROR("sff_info_valid() failed: invalid extended SFP checksum (0x%x should be 0x%x)",
+                              info->eeprom[95], info->cc_ext);
+            }
             return 0;
         }
 #endif
+
     } else {
-        if (verbose) AIM_LOG_ERROR("sff_info_valid() failed: invalid module type");
+
+        if (verbose) {
+            AIM_LOG_ERROR("sff_info_valid() failed: invalid module type");
+        }
+
         return 0;
     }
 
