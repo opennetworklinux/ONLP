@@ -24,6 +24,7 @@
  ***********************************************************/
 #include <onlp/sys.h>
 #include <onlp/psu.h>
+#include <onlp/fan.h>
 #include <onlp/platformi/sysi.h>
 #include <onlplib/mmap.h>
 #include <timer_wheel/timer_wheel.h>
@@ -77,6 +78,15 @@ static management_ctrl_t control__ = { NULL };
  */
 static int platform_psus_notify__(void);
 
+
+/*
+ * Internal notification handler for FAN
+ * status changes (all platforms)
+ */
+static int platform_fans_notify__(void);
+
+
+
 /*
  * First Version : Static callback rates.
  * TODO: Allow individual platform callbacks to reregister
@@ -105,6 +115,13 @@ static management_entry_t management_entries[] =
             /* Every second */
             1*1000*1000,
             "PSUs",
+        },
+        {
+            { },
+            platform_fans_notify__,
+            /* Every second */
+            1*1000*1000,
+            "Fans",
         }
     };
 
@@ -308,6 +325,71 @@ platform_psus_notify__(void)
             }
 
             memcpy(psu_info_table+i, &pi, sizeof(pi));
+        }
+    }
+    return 0;
+}
+
+static int
+platform_fans_notify__(void)
+{
+    static onlp_oid_t fan_oid_table[ONLP_OID_TABLE_SIZE] = {0};
+    static onlp_fan_info_t fan_info_table[ONLP_OID_TABLE_SIZE];
+    int i = 0;
+
+    if(fan_oid_table[0] == 0) {
+        /* We haven't retreived the system FAN oids yet. */
+        onlp_sys_info_t si;
+        onlp_oid_t* oidp;
+
+        if(onlp_sys_info_get(&si) < 0) {
+            AIM_LOG_ERROR("onlp_sys_info_get() failed.");
+            return -1;
+        }
+        ONLP_OID_TABLE_ITER_TYPE(si.hdr.coids, oidp, FAN) {
+            fan_oid_table[i++] = *oidp;
+        }
+    }
+
+    for(i = 0; i < AIM_ARRAYSIZE(fan_oid_table); i++) {
+        onlp_fan_info_t fi;
+        int fid = ONLP_OID_ID_GET(fan_oid_table[i]);
+
+        if(fan_oid_table[i] == 0) {
+            break;
+        }
+
+        if(onlp_fan_info_get(fan_oid_table[i], &fi) < 0) {
+            AIM_LOG_ERROR("Failure retreiving status of FAN ID %d",
+                          fid);
+            continue;
+        }
+
+        /*
+         * Log any presences or failure transitions.
+         */
+        if(fi.status != fan_info_table[i].status) {
+            uint32_t new = fi.status;
+            uint32_t old = fan_info_table[i].status;
+
+            if( !(old & 0x1) && (new & 0x1) ) {
+                /* FAN Inserted */
+                AIM_LOG_INFO("FAN %d has been inserted.", fid);
+            }
+            if( (old & 0x1) && !(new & 0x1) ) {
+                /* FAN Removed */
+                AIM_LOG_INFO("FAN %d has been removed.", fid);
+            }
+            if( (old & ONLP_FAN_STATUS_FAILED) && !(new & ONLP_FAN_STATUS_FAILED) ) {
+                AIM_LOG_INFO("FAN %d has recovered.", fid);
+            }
+
+            if( !(old & ONLP_FAN_STATUS_FAILED) && (new & ONLP_FAN_STATUS_FAILED) ) {
+                /* FAN Failure */
+                AIM_LOG_INFO("FAN %d has failed.", fid);
+            }
+
+            memcpy(fan_info_table+i, &fi, sizeof(fi));
         }
     }
     return 0;
