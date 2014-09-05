@@ -426,6 +426,91 @@ _sff8472_hack_cr(const uint8_t* idprom)
     return 1;
 }
 
+#define SFF8472_MEDIA_GBE_SX(idprom)            \
+  ((idprom[6] & SFF8472_CC6_GBE_BASE_SX) != 0)
+#define SFF8472_MEDIA_GBE_LX(idprom)            \
+  ((idprom[6] & SFF8472_CC6_GBE_BASE_LX) != 0)
+#define SFF8472_MEDIA_GBE_CX(idprom)            \
+  ((idprom[6] & SFF8472_CC6_GBE_BASE_CX) != 0)
+#define SFF8472_MEDIA_GBE_T(idprom)             \
+  ((idprom[6] & SFF8472_CC6_GBE_BASE_T) != 0)
+
+#define SFF8472_MEDIA_CBE_LX(idprom)            \
+  ((idprom[6] & SFF8472_CC6_CBE_BASE_LX) != 0)
+#define SFF8472_MEDIA_CBE_FX(idprom)            \
+  ((idprom[6] & SFF8472_CC6_CBE_BASE_FX) != 0)
+
+/*
+ * XXX roth
+ * ZR Finisar optics don't list any ethernet
+ * or FC compliance, but *do* identify as having a high bit rate
+ */
+
+static inline int
+_sff8472_bitrate_xge(const uint8_t *idprom)
+{
+    if (idprom[12] == 0)
+        return 0;
+    if (idprom[12] == 0xFF)
+        return 0;
+    long long br = (long long) idprom[12] * 100*1000000;
+    if (br > 10LL*1000*1000000)
+        return 1;
+    return 0;
+}
+
+static inline int
+_sff8472_bitrate_gbe(const uint8_t *idprom)
+{
+    if (idprom[12] == 0)
+        return 0;
+    if (idprom[12] == 0xFF)
+        return 0;
+    long long br = (long long) idprom[12] * 100*1000000;
+    if (br > 1LL*1000*1000000 && br < 5LL*1000*1000000)
+        return 1;
+    return 0;
+}
+
+static inline int
+_sff8472_length_sm(const uint8_t *idprom)
+{
+    if ((idprom[14] == 0) && (idprom[15] == 0)) return 0;
+    if (idprom[14] != 0)
+        return idprom[14] * 1000;
+    return idprom[15] * 100;
+}
+
+static inline int
+_sff8472_length_om2(const uint8_t *idprom)
+{
+    return idprom[16] * 10;
+}
+
+static inline int
+_sff8472_length_om1(const uint8_t *idprom)
+{
+    return idprom[17] * 10;
+}
+
+static inline int
+_sff8472_length_om4(const uint8_t *idprom)
+{
+    return idprom[18] * 10;
+}
+
+static inline int
+_sff8472_length_cu(const uint8_t *idprom)
+{
+    return idprom[18];
+}
+
+static inline int
+_sff8472_length_om3(const uint8_t *idprom)
+{
+    return idprom[19] * 10;
+}
+
 /* grab-bag to detect pre-standard CR media */
 static inline int
 _sff8472_media_cr_passive(const uint8_t* idprom)
@@ -470,12 +555,21 @@ _sff8472_media_cr_passive(const uint8_t* idprom)
      * and is high enough.
      */
     if ((idprom[6] == SFF8472_CC6_GBE_BASE_CX)
-        && !_sff8472_tech_fc(idprom))
+        && !_sff8472_tech_fc(idprom)
+        && !_sff8472_bitrate_xge(idprom))
         return 0;
     if ((idprom[6] == SFF8472_CC6_GBE_BASE_CX)
         && _sff8472_tech_fc(idprom)
         && !_sff8472_fc_speed_10g(idprom))
         return 0;
+
+    /*
+     * PAN-1233 -- cable identifies as 1000BASE-CX with a high BR
+     */
+    if ((idprom[6] == SFF8472_CC6_GBE_BASE_CX)
+        && (_sff8472_length_cu(idprom) > 0)
+        && (_sff8472_bitrate_xge(idprom)))
+        maybe = 1;
 
     if (_sff8472_hack_cr(idprom))
         maybe = 1;
@@ -550,52 +644,6 @@ _sff8472_media_cr_active(const uint8_t* idprom)
     return maybe;
 }
 
-#define SFF8472_MEDIA_GBE_SX(idprom)            \
-  ((idprom[6] & SFF8472_CC6_GBE_BASE_SX) != 0)
-#define SFF8472_MEDIA_GBE_LX(idprom)            \
-  ((idprom[6] & SFF8472_CC6_GBE_BASE_LX) != 0)
-#define SFF8472_MEDIA_GBE_CX(idprom)            \
-  ((idprom[6] & SFF8472_CC6_GBE_BASE_CX) != 0)
-#define SFF8472_MEDIA_GBE_T(idprom)             \
-  ((idprom[6] & SFF8472_CC6_GBE_BASE_T) != 0)
-
-#define SFF8472_MEDIA_CBE_LX(idprom)            \
-  ((idprom[6] & SFF8472_CC6_CBE_BASE_LX) != 0)
-#define SFF8472_MEDIA_CBE_FX(idprom)            \
-  ((idprom[6] & SFF8472_CC6_CBE_BASE_FX) != 0)
-
-/*
- * XXX roth
- * ZR Finisar optics don't list any ethernet
- * or FC compliance, but *do* identify as having a high bit rate
- */
-
-static inline int
-_sff8472_bitrate_xge(const uint8_t *idprom)
-{
-    if (idprom[12] == 0)
-        return 0;
-    if (idprom[12] == 0xFF)
-        return 0;
-    long long br = (long long) idprom[12] * 100*1000000;
-    if (br > 10LL*1000*1000000)
-        return 1;
-    return 0;
-}
-
-static inline int
-_sff8472_bitrate_gbe(const uint8_t *idprom)
-{
-    if (idprom[12] == 0)
-        return 0;
-    if (idprom[12] == 0xFF)
-        return 0;
-    long long br = (long long) idprom[12] * 100*1000000;
-    if (br > 1LL*1000*1000000 && br < 5LL*1000*1000000)
-        return 1;
-    return 0;
-}
-
 static inline int
 _sff8472_media_zr(const uint8_t *idprom)
 {
@@ -624,39 +672,6 @@ _sff8472_media_zr(const uint8_t *idprom)
 
     return 0;
     
-}
-
-static inline int
-_sff8472_length_sm(const uint8_t *idprom)
-{
-    if ((idprom[14] == 0) && (idprom[15] == 0)) return 0;
-    if (idprom[14] != 0)
-        return idprom[14] * 1000;
-    return idprom[15] * 100;
-}
-
-static inline int
-_sff8472_length_om2(const uint8_t *idprom)
-{
-    return idprom[16] * 10;
-}
-
-static inline int
-_sff8472_length_om1(const uint8_t *idprom)
-{
-    return idprom[17] * 10;
-}
-
-static inline int
-_sff8472_length_om4(const uint8_t *idprom)
-{
-    return idprom[18] * 10;
-}
-
-static inline int
-_sff8472_length_om3(const uint8_t *idprom)
-{
-    return idprom[19] * 10;
 }
 
 static inline int
