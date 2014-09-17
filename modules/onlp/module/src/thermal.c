@@ -148,10 +148,10 @@ onlp_thermal_show(onlp_oid_t id, aim_pvs_t* pvs, uint32_t flags)
         if(ti.status & 0x1) {
             /* Present */
             if(ti.status & ONLP_THERMAL_STATUS_FAILED) {
-                iof_iprintf(&iof, "Status: FAILED");
+                iof_iprintf(&iof, "Status: Sensor FAILED");
             }
             else {
-                iof_iprintf(&iof, "Status: Good");
+                iof_iprintf(&iof, "Status: Sensor Functional");
                 if(ti.caps & ONLP_THERMAL_CAPS_GET_TEMPERATURE) {
                     iof_iprintf(&iof, "Temperature: %d.%d C.",
                                 ONLP_MILLI_NORMAL_INTEGER_TENTHS(ti.mcelsius));
