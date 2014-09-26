@@ -10,6 +10,7 @@
 #include <sff/8472.h>
 #include <sff/8436.h>
 #include "sff_log.h"
+#include <ctype.h>
 
 sff_sfp_type_t
 sff_sfp_type_get(const uint8_t* idprom)
@@ -255,6 +256,16 @@ sff_module_show(const uint8_t* idprom, aim_pvs_t* pvs)
     }
 }
 
+static void
+make_printable__(char* string)
+{
+    char* p;
+    for(p = string; p && *p; p++) {
+        if(!isprint(*p)) {
+            *p = '?';
+        }
+    }
+}
 
 /**
  * @brief Initialize an SFF module information structure.
@@ -354,18 +365,27 @@ sff_info_init(sff_info_t* rv, uint8_t* eeprom)
 
     /* handle NULL fields, they should actually be space-padded */
     const char *empty = "                ";
-    if (*vendor)
+    if (*vendor) {
         aim_strlcpy(rv->vendor, (char*)vendor, sizeof(rv->vendor));
-    else
+        make_printable__(rv->vendor);
+    }
+    else {
         aim_strlcpy(rv->vendor, empty, 17);
-    if (*model)
+    }
+    if (*model) {
         aim_strlcpy(rv->model, (char*)model, sizeof(rv->model));
-    else
+        make_printable__(rv->model);
+    }
+    else {
         aim_strlcpy(rv->model, empty, 17);
-    if (*serial)
+    }
+    if (*serial) {
         aim_strlcpy(rv->serial, (char*)serial, sizeof(rv->serial));
-    else
+        make_printable__(rv->serial);
+    }
+    else {
         aim_strlcpy(rv->serial, empty, 17);
+    }
 
     if(rv->length == -1) {
         rv->length_desc[0] = 0;
