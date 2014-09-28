@@ -97,6 +97,17 @@ int onlp_sfpi_reset(int port);
 int onlp_sfpi_status_get(int port, uint32_t* status);
 
 /**
+ * @brief Remap SFP user SFP port numbers before calling the SFPI interface.
+ * @param port The user SFP port number.
+ * @param [out] rport Receives the new port.
+ * @note This function will be called to remap the user SFP port number
+ * to the number returned in rport before the SFPI functions are called.
+ * This is an optional convenience for platforms with dynamic or
+ * variant physical SFP numbering.
+ */
+int onlp_sfpi_port_map(int port, int* rport);
+
+/**
  * @brief Deinitialize the SFP driver.
  */
 int onlp_sfpi_denit(void);

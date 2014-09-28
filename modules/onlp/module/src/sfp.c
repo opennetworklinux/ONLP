@@ -74,17 +74,21 @@ onlp_sfp_denit(void)
     return onlp_sfpi_denit();
 }
 
-#define ONLP_SFP_PORT_VALIDATE(_port)                    \
+#define ONLP_SFP_PORT_VALIDATE_AND_MAP(_port)            \
     do {                                                 \
         if(AIM_BITMAP_GET(&sfpi_bitmap__, _port) == 0) { \
             return -1;                                   \
+        }                                                \
+        int _rport;                                      \
+        if(onlp_sfpi_port_map(_port, &_rport) >= 0) {  \
+            _port = _rport;                              \
         }                                                \
     } while(0)
 
 int
 onlp_sfp_is_present(int port)
 {
-    ONLP_SFP_PORT_VALIDATE(port);
+    ONLP_SFP_PORT_VALIDATE_AND_MAP(port);
     return onlp_sfpi_is_present(port);
 }
 
@@ -98,7 +102,7 @@ int
 onlp_sfp_eeprom_read(int port, uint8_t** rv)
 {
     uint8_t* data;
-    ONLP_SFP_PORT_VALIDATE(port);
+    ONLP_SFP_PORT_VALIDATE_AND_MAP(port);
 
     data = aim_zmalloc(256);
     onlp_sfpi_eeprom_read(port, data);
@@ -109,7 +113,7 @@ onlp_sfp_eeprom_read(int port, uint8_t** rv)
 int
 onlp_sfp_reset(int port)
 {
-    ONLP_SFP_PORT_VALIDATE(port);
+    ONLP_SFP_PORT_VALIDATE_AND_MAP(port);
     return onlp_sfpi_reset(port);
 }
 
@@ -164,27 +168,27 @@ onlp_sfp_dump(aim_pvs_t* pvs)
 int
 onlp_sfp_post_insert(int port, sff_info_t* info)
 {
-    ONLP_SFP_PORT_VALIDATE(port);
+    ONLP_SFP_PORT_VALIDATE_AND_MAP(port);
     return onlp_sfpi_post_insert(port, info);
 }
 
 int
 onlp_sfp_enable_set(int port, int enable)
 {
-    ONLP_SFP_PORT_VALIDATE(port);
+    ONLP_SFP_PORT_VALIDATE_AND_MAP(port);
     return onlp_sfpi_enable_set(port, enable);
 }
 int
 onlp_sfp_enable_get(int port, int* enable)
 {
-    ONLP_SFP_PORT_VALIDATE(port);
+    ONLP_SFP_PORT_VALIDATE_AND_MAP(port);
     return onlp_sfpi_enable_get(port, enable);
 }
 
 int
 onlp_sfp_status_get(int port, uint32_t* flags)
 {
-    ONLP_SFP_PORT_VALIDATE(port);
+    ONLP_SFP_PORT_VALIDATE_AND_MAP(port);
     return onlp_sfpi_status_get(port, flags);
 }
 

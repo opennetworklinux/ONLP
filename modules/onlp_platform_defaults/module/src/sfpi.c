@@ -34,6 +34,7 @@ __ONLP_DEFAULTI_IMPLEMENTATION(onlp_sfpi_enable_get(int port, int* enable));
 __ONLP_DEFAULTI_IMPLEMENTATION(onlp_sfpi_post_insert(int port, sff_info_t* sff_info));
 __ONLP_DEFAULTI_IMPLEMENTATION(onlp_sfpi_reset(int port));
 __ONLP_DEFAULTI_IMPLEMENTATION(onlp_sfpi_status_get(int port, uint32_t* status));
+__ONLP_DEFAULTI_IMPLEMENTATION(onlp_sfpi_port_map(int port, int* rport));
 __ONLP_DEFAULTI_IMPLEMENTATION(onlp_sfpi_denit(void));
 __ONLP_DEFAULTI_VIMPLEMENTATION(onlp_sfpi_debug(int port, aim_pvs_t* pvs));
 __ONLP_DEFAULTI_IMPLEMENTATION(onlp_sfpi_ioctl(int port, va_list vargs));
