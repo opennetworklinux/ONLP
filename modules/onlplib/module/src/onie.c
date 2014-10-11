@@ -92,6 +92,7 @@ typedef struct __attribute__ ((__packed__)) tlvinfo_tlv_s {
 #define TLV_CODE_MANUF_COUNTRY  0x2C
 #define TLV_CODE_VENDOR_NAME    0x2D
 #define TLV_CODE_DIAG_VERSION   0x2E
+#define TLV_CODE_SERVICE_TAG    0x2F
 #define TLV_CODE_VENDOR_EXT     0xFD
 #define TLV_CODE_CRC_32         0xFE
 
@@ -123,6 +124,7 @@ decode_tlv__(onlp_onie_info_t* info, tlvinfo_tlv_t * tlv)
             CASE_TLV_STRING(info, manufacturer, MANUF_NAME, tlv);
             CASE_TLV_STRING(info, country_code, MANUF_COUNTRY, tlv);
             CASE_TLV_STRING(info, vendor, VENDOR_NAME, tlv);
+            CASE_TLV_STRING(info, service_tag, SERVICE_TAG, tlv);
             CASE_TLV_STRING(info, diag_version, DIAG_VERSION, tlv);
 
         case TLV_CODE_MAC_BASE:
