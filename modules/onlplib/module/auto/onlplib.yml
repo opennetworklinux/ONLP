@@ -45,6 +45,9 @@ cdefs: &cdefs
 - ONLPLIB_CONFIG_INCLUDE_UCLI:
     doc: "Include generic uCli support."
     default: 0
+- ONLPLIB_CONFIG_INCLUDE_I2C:
+    doc: "Include Userspace I2C support."
+    default: 0
 
 
 definitions:

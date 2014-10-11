@@ -23,6 +23,9 @@
  *
  ***********************************************************/
 #include <onlplib/i2c.h>
+
+#if ONLPLIB_CONFIG_INCLUDE_I2C == 1
+
 #include <onlplib/file.h>
 #include <fcntl.h>
 #include <unistd.h>
@@ -147,3 +150,5 @@ onlp_i2c_writeb(int bus, uint8_t addr, uint8_t offset, uint8_t byte,
 {
     return onlp_i2c_write(bus, addr, offset, 1, &byte, flags);
 }
+
+#endif /* ONLPLIB_CONFIG_INCLUDE_I2C */

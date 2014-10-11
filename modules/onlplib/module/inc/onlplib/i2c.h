@@ -27,6 +27,8 @@
 
 #include <onlplib/onlplib_config.h>
 
+#if ONLPLIB_CONFIG_INCLUDE_I2C == 1
+
 /**
  * Use TENBIT mode. Default is to disable TENBIT mode.
  */
@@ -93,8 +95,6 @@ int onlp_i2c_readb(int bus, uint8_t addr, uint8_t offset, uint32_t flags);
 int onlp_i2c_writeb(int bus, uint8_t addr, uint8_t offset, uint8_t byte,
                     uint32_t flags);
 
-
-
-
+#endif /* ONLPLIB_CONFIG_INCLUDE_I2C */
 
 #endif /* __ONLP_I2C_H__ */

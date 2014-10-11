@@ -115,6 +115,16 @@
 #define ONLPLIB_CONFIG_INCLUDE_UCLI 0
 #endif
 
+/**
+ * ONLPLIB_CONFIG_INCLUDE_I2C
+ *
+ * Include Userspace I2C support. */
+
+
+#ifndef ONLPLIB_CONFIG_INCLUDE_I2C
+#define ONLPLIB_CONFIG_INCLUDE_I2C 0
+#endif
+
 
 
 /**
