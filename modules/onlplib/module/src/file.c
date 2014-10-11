@@ -13,6 +13,7 @@
 #include <fcntl.h>
 #include "onlplib_log.h"
 #include <onlp/onlp.h>
+#include <errno.h>
 
 int
 onlp_file_vread(uint8_t* data, int max, int* len, char* fmt, va_list vargs)
@@ -152,3 +153,27 @@ onlp_file_write_int(int value, const char* fmt, ...)
     return rv;
 }
 
+int
+onlp_file_open(int flags, int log, const char* fmt, ...)
+{
+    int rv;
+    va_list vargs;
+    va_start(vargs, fmt);
+    rv = onlp_file_vopen(flags, log, fmt, vargs);
+    va_end(vargs);
+    return rv;
+}
+
+
+int
+onlp_file_vopen(int flags, int log, const char* fmt, va_list vargs)
+{
+    int rv;
+    char fname[PATH_MAX];
+    ONLPLIB_VSNPRINTF(fname, sizeof(fname)-1, fmt, vargs);
+    rv = open(fname, flags);
+    if(rv < 0 && log) {
+        AIM_LOG_ERROR("failed to open file %s (0x%x): %{errno}", fname, flags, errno);
+    }
+    return rv;
+}

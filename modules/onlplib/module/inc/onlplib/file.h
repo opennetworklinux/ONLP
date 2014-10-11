@@ -101,6 +101,23 @@ int onlp_file_vwrite_int(int value, const char* fmt, va_list vargs);
 int onlp_file_write_int(int value, const char* fmt, ...);
 
 
+/**
+ * @brief Open a file.
+ * @param flags The open flags
+ * @param fmt The filename format string
+ * @param ... The format arguments.
+ */
+int onlp_file_open(int flags, int log, const char* fmt, ...);
+
+
+/**
+ * @brief Open a file.
+ * @param flags The open flags.
+ * @param fmt The filename format string.
+ * @param vargs The format arguments.
+ */
+int onlp_file_vopen(int flags, int log, const char* fmt, va_list vargs);
+
 
 
 
