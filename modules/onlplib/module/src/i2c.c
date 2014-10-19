@@ -54,6 +54,14 @@ onlp_i2c_open(int bus, uint8_t addr, uint32_t flags)
         goto error;
     }
 
+    /* Enable/Disable PEC */
+    rv = ioctl(fd, I2C_PEC, (flags & ONLP_I2C_F_PEC) ? 1 : 0);
+    if(rv != 0) {
+        AIM_LOG_ERROR("i2c-%d: failed to set PEC mode %d",
+                      (flags & ONLP_I2C_F_PEC) ? 1 : 0);
+        goto error;
+    }
+
     /* Set SLAVE or SLAVE_FORCE address */
     rv = ioctl(fd,
                (flags & ONLP_I2C_F_FORCE) ? I2C_SLAVE_FORCE : I2C_SLAVE,
@@ -149,6 +157,44 @@ onlp_i2c_writeb(int bus, uint8_t addr, uint8_t offset, uint8_t byte,
                 uint32_t flags)
 {
     return onlp_i2c_write(bus, addr, offset, 1, &byte, flags);
+}
+
+int
+onlp_i2c_readw(int bus, uint8_t addr, uint8_t offset, uint32_t flags)
+{
+    int fd;
+    int rv;
+
+    fd = onlp_i2c_open(bus, addr, flags);
+
+    if(fd < 0) {
+        return fd;
+    }
+
+    rv = i2c_smbus_read_word_data(fd, offset);
+
+    close(fd);
+    return rv;
+}
+
+int
+onlp_i2c_writew(int bus, uint8_t addr, uint8_t offset, uint16_t word,
+                    uint32_t flags)
+{
+    int fd;
+    int rv;
+
+    fd = onlp_i2c_open(bus, addr, flags);
+
+    if(fd < 0) {
+        return fd;
+    }
+
+    rv = i2c_smbus_write_word_data(fd, offset, word);
+
+    close(fd);
+    return rv;
+
 }
 
 #endif /* ONLPLIB_CONFIG_INCLUDE_I2C */

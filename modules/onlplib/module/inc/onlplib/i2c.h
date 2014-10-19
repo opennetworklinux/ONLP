@@ -34,11 +34,16 @@
  */
 #define ONLP_I2C_F_TENBIT 0x1
 
-/*
+/**
  * Use SLAVE_FORCE instead of SLAVE when setting the
  * i2c slave address.
  */
 #define ONLP_I2C_F_FORCE 0x2
+
+/**
+ * Enable PEC.
+ */
+#define ONLP_I2C_F_PEC 0x4
 
 /**
  * @brief Open and prepare for reading or writing.
@@ -94,6 +99,29 @@ int onlp_i2c_readb(int bus, uint8_t addr, uint8_t offset, uint32_t flags);
  */
 int onlp_i2c_writeb(int bus, uint8_t addr, uint8_t offset, uint8_t byte,
                     uint32_t flags);
+
+
+/**
+ * @brief Read a word over i2c
+ * @param bus The i2c bus number.
+ * @param addr The address.
+ * @param offset The byte offset.
+ * @param flags See ONLP_I2C_F_*
+ * @returns The word if successfull, errno on error.
+ */
+int onlp_i2c_readw(int bus, uint8_t addr, uint8_t offset, uint32_t flags);
+
+/**
+ * @brief Write a word over i2c
+ * @param bus The i2c bus number.
+ * @param addr The slave address.
+ * @param offset The byte offset.
+ * @param byte The byte
+ * @param flags See ONLP_I2C_F_*
+ */
+int onlp_i2c_writew(int bus, uint8_t addr, uint8_t offset, uint16_t word,
+                    uint32_t flags);
+
 
 #endif /* ONLPLIB_CONFIG_INCLUDE_I2C */
 
