@@ -16,7 +16,7 @@
 #include <errno.h>
 
 int
-onlp_file_vread(uint8_t* data, int max, int* len, char* fmt, va_list vargs)
+onlp_file_vread(uint8_t* data, int max, int* len, const char* fmt, va_list vargs)
 {
     int fd;
     char fname[PATH_MAX];
@@ -41,7 +41,7 @@ onlp_file_vread(uint8_t* data, int max, int* len, char* fmt, va_list vargs)
 }
 
 int
-onlp_file_read(uint8_t* data, int max, int* len, char* fmt, ...)
+onlp_file_read(uint8_t* data, int max, int* len, const char* fmt, ...)
 {
     int rv;
     va_list vargs;
@@ -52,7 +52,7 @@ onlp_file_read(uint8_t* data, int max, int* len, char* fmt, ...)
 }
 
 int
-onlp_file_vread_int(int* value, char* fmt, va_list vargs)
+onlp_file_vread_int(int* value, const char* fmt, va_list vargs)
 {
     int rv;
     uint8_t data[32];
@@ -67,7 +67,7 @@ onlp_file_vread_int(int* value, char* fmt, va_list vargs)
 }
 
 int
-onlp_file_read_int(int* value, char* fmt, ...)
+onlp_file_read_int(int* value, const char* fmt, ...)
 {
     int rv;
     va_list vargs;

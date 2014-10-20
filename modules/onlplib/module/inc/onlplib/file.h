@@ -19,7 +19,7 @@
  * @param fmt The filename format string.
  * @param vargs The filename format string arguments.
  */
-int onlp_file_vread(uint8_t* data, int max, int* len, char* fmt, va_list vargs);
+int onlp_file_vread(uint8_t* data, int max, int* len, const char* fmt, va_list vargs);
 
 /**
  * @brief Read and return the contents of the given file.
@@ -29,7 +29,7 @@ int onlp_file_vread(uint8_t* data, int max, int* len, char* fmt, va_list vargs);
  * @param fmt The filename format string.
  * @param ... The filename format string arguments.
  */
-int onlp_file_read(uint8_t* data, int max, int* len, char* fmt, ...);
+int onlp_file_read(uint8_t* data, int max, int* len, const char* fmt, ...);
 
 /**
  * @brief Read and return the integer contents of the given file.
@@ -37,7 +37,7 @@ int onlp_file_read(uint8_t* data, int max, int* len, char* fmt, ...);
  * @param fmt The filename format string.
  * @param vargs The filename format string arguments.
  */
-int onlp_file_vread_int(int* value, char* fmt, va_list vargs);
+int onlp_file_vread_int(int* value, const char* fmt, va_list vargs);
 
 /**
  * @brief Read and return the integer contents of the given file.
@@ -45,7 +45,7 @@ int onlp_file_vread_int(int* value, char* fmt, va_list vargs);
  * @param fmt The filename format string.
  * @param ... The filename format string arguments.
  */
-int onlp_file_read_int(int* value, char* fmt, ...);
+int onlp_file_read_int(int* value, const char* fmt, ...);
 
 
 /**
