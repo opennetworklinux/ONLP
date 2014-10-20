@@ -93,6 +93,16 @@ onlp_thermal_info_get(onlp_oid_t oid, onlp_thermal_info_t* info)
     return rv;
 }
 
+int
+onlp_thermal_ioctl(int code, ...)
+{
+    int rv;
+    va_list vargs;
+    va_start(vargs, code);
+    rv = onlp_thermali_ioctl(code, vargs);
+    va_end(vargs);
+    return rv;
+}
 
 /************************************************************
  *
