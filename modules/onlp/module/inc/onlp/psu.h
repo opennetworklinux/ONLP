@@ -112,5 +112,11 @@ void onlp_psu_dump(onlp_oid_t id, aim_pvs_t* pvs, uint32_t flags);
  */
 void onlp_psu_show(onlp_oid_t id, aim_pvs_t* pvs, uint32_t flags);
 
+/**
+ * Convenience macros for processing PSU status.
+ */
+#define ONLP_PSU_STATUS_PRESENT(_pi) ( (_pi).status & ONLP_PSU_STATUS_PRESENT )
+#define ONLP_PSU_STATUS_MISSING(_pi) (!ONLP_PSU_STATUS_PRESENT(_pi))
+#define ONLP_PSU_STATUS_FAILED(_pi) ( (_pi).status & ONLP_PSU_STATUS_FAILED)
 
 #endif /* __ONLP_PSU_H__ */

@@ -1,21 +1,21 @@
 /************************************************************
  * <bsn.cl fy=2014 v=onl>
- * 
- *           Copyright 2014 Big Switch Networks, Inc.          
- * 
+ *
+ *           Copyright 2014 Big Switch Networks, Inc.
+ *
  * Licensed under the Eclipse Public License, Version 1.0 (the
  * "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
- * 
+ *
  *        http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the
  * License.
- * 
+ *
  * </bsn.cl>
  ************************************************************
  *
@@ -159,9 +159,17 @@ void onlp_fan_dump(onlp_oid_t id, aim_pvs_t* pvs, uint32_t flags);
  * @brief Show the given Fan OID.
  * @param id The Fan OID
  * @param pvs The output pvs
- * @param flags The output flags. 
+ * @param flags The output flags.
  */
 void onlp_fan_show(onlp_oid_t id, aim_pvs_t* pvs, uint32_t flags);
+
+/**
+ * Convenience macros for processing Fan status information.
+ */
+#define ONLP_FAN_STATUS_PRESENT(_fi) ((_fi).status & ONLP_FAN_STATUS_PRESENT)
+#define ONLP_FAN_STATUS_MISSING(_fi) (!ONLP_FAN_INFO_PRESENT(_fi))
+#define ONLP_FAN_STATUS_FAILED(_fi) ( (_fi).status & ONLP_FAN_STATUS_FAILED)
+#define ONLP_FAN_STATUS_NORMAL(_fi) ( ONLP_FAN_STATUS_PRESENT(_fi) && !ONLP_FAN_STATUS_FAILED(_fi) )
 
 #endif /* __ONLP_FAN_H__ */
 
