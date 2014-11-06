@@ -124,7 +124,8 @@ onlp_psu_dump(onlp_oid_t id, aim_pvs_t* pvs, uint32_t flags)
         iof_iprintf(&iof, "Description: %s", info.hdr.description);
         if(info.status & 1) {
             /* Present */
-            iof_iprintf(&iof, "Model:  %s", info.model[0] ? info.model : "Unknown.");
+            iof_iprintf(&iof, "Model:  %s", info.model[0] ? info.model : "NULL");
+            iof_iprintf(&iof, "SN:     %s", info.serial[0] ? info.serial : "NULL");
             iof_iprintf(&iof, "Status: %{onlp_psu_status_flags}", info.status);
             iof_iprintf(&iof, "Caps:   %{onlp_psu_caps_flags}", info.caps);
             iof_iprintf(&iof, "Vin:    %d", info.mvin);
@@ -172,6 +173,7 @@ onlp_psu_show(onlp_oid_t id, aim_pvs_t* pvs, uint32_t flags)
             else {
                 iof_iprintf(&iof, "Status: Running.");
                 iof_iprintf(&iof, "Model: %s", pi.model[0] ? pi.model : "Unknown");
+                if(pi.serial[0]) iof_iprintf(&iof, "SN: %s", pi.serial);
                 if(pi.caps & ONLP_PSU_CAPS_AC) {
                     iof_iprintf(&iof, "Type: AC");
                 }

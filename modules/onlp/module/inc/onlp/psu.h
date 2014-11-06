@@ -60,8 +60,11 @@ typedef struct onlp_psu_info_t {
     onlp_oid_hdr_t hdr;
 
     /* Model */
-#define ONLP_PSU_MODEL_NAME_MAX 64
-    char model[ONLP_PSU_MODEL_NAME_MAX];
+#define ONLP_PSU_STR_MAX 64
+    char model[ONLP_PSU_STR_MAX];
+
+    /* Serial Number */
+    char serial[ONLP_PSU_STR_MAX];
 
     /* Status */
     uint32_t status;
