@@ -46,7 +46,7 @@ static onlp_psu_info_t pinfo[] =
                 /* This PSU has 2 fans */
                 { ONLP_FAN_ID_CREATE(3), ONLP_FAN_ID_CREATE(4) }
             },
-            "ONLPIE PSU MODEL (AC)",
+            "ONLPIE PSU MODEL (AC)", "ONLPIE PSU SN",
             0x1,
             ONLP_PSU_CAPS_AC | ONLP_PSU_CAPS_VIN | ONLP_PSU_CAPS_VOUT | ONLP_PSU_CAPS_IIN,
             241100,
@@ -58,12 +58,12 @@ static onlp_psu_info_t pinfo[] =
         },
         {
             { ONLP_PSU_ID_CREATE(2), "PSU-2", 0 },
-            "",
+            "", "",
             0,
         },
         {
             { ONLP_PSU_ID_CREATE(3), "PSU-3", 0 },
-            "ONLPIE PSU MODEL (DC)",
+            "ONLPIE PSU MODEL (DC)", "ONLPIE PSU SN",
             0x1,
             ONLP_PSU_CAPS_DC48,
             48100,
