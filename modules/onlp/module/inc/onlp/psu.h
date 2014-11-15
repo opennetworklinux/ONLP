@@ -28,16 +28,7 @@
 #include <onlp/onlp.h>
 #include <onlp/oids.h>
 
-/* <auto.start.enum(onlp_psu_status).define> */
-/** onlp_psu_status */
-typedef enum onlp_psu_status_e {
-    ONLP_PSU_STATUS_PRESENT = (1 << 0),
-    ONLP_PSU_STATUS_FAILED = (1 << 1),
-    ONLP_PSU_STATUS_UNPLUGGED = (1 << 2),
-} onlp_psu_status_t;
-/* <auto.end.enum(onlp_psu_status).define> */
-
-/* <auto.start.enum(onlp_psu_caps).define> */
+/* <auto.start.enum(tag:psu).define> */
 /** onlp_psu_caps */
 typedef enum onlp_psu_caps_e {
     ONLP_PSU_CAPS_AC = (1 << 0),
@@ -50,7 +41,15 @@ typedef enum onlp_psu_caps_e {
     ONLP_PSU_CAPS_PIN = (1 << 7),
     ONLP_PSU_CAPS_POUT = (1 << 8),
 } onlp_psu_caps_t;
-/* <auto.end.enum(onlp_psu_caps).define> */
+
+/** onlp_psu_status */
+typedef enum onlp_psu_status_e {
+    ONLP_PSU_STATUS_PRESENT = (1 << 0),
+    ONLP_PSU_STATUS_FAILED = (1 << 1),
+    ONLP_PSU_STATUS_UNPLUGGED = (1 << 2),
+} onlp_psu_status_t;
+/* <auto.end.enum(tag:psu).define> */
+
 
 /**
  * PSU Information Structure
@@ -121,5 +120,58 @@ void onlp_psu_show(onlp_oid_t id, aim_pvs_t* pvs, uint32_t flags);
 #define ONLP_PSU_STATUS_PRESENT(_pi) ( (_pi).status & ONLP_PSU_STATUS_PRESENT )
 #define ONLP_PSU_STATUS_MISSING(_pi) (!ONLP_PSU_STATUS_PRESENT(_pi))
 #define ONLP_PSU_STATUS_FAILED(_pi) ( (_pi).status & ONLP_PSU_STATUS_FAILED)
+
+
+
+/******************************************************************************
+ *
+ * Enumeration Support Definitions.
+ *
+ * Please do not add additional code beyond this point.
+ *
+ *****************************************************************************/
+/* <auto.start.enum(tag:psu).supportheader> */
+/** Enum names. */
+const char* onlp_psu_caps_name(onlp_psu_caps_t e);
+
+/** Enum values. */
+int onlp_psu_caps_value(const char* str, onlp_psu_caps_t* e, int substr);
+
+/** Enum descriptions. */
+const char* onlp_psu_caps_desc(onlp_psu_caps_t e);
+
+/** Enum validator. */
+int onlp_psu_caps_valid(onlp_psu_caps_t e);
+
+/** validator */
+#define ONLP_PSU_CAPS_VALID(_e) \
+    (onlp_psu_caps_valid((_e)))
+
+/** onlp_psu_caps_map table. */
+extern aim_map_si_t onlp_psu_caps_map[];
+/** onlp_psu_caps_desc_map table. */
+extern aim_map_si_t onlp_psu_caps_desc_map[];
+
+/** Enum names. */
+const char* onlp_psu_status_name(onlp_psu_status_t e);
+
+/** Enum values. */
+int onlp_psu_status_value(const char* str, onlp_psu_status_t* e, int substr);
+
+/** Enum descriptions. */
+const char* onlp_psu_status_desc(onlp_psu_status_t e);
+
+/** Enum validator. */
+int onlp_psu_status_valid(onlp_psu_status_t e);
+
+/** validator */
+#define ONLP_PSU_STATUS_VALID(_e) \
+    (onlp_psu_status_valid((_e)))
+
+/** onlp_psu_status_map table. */
+extern aim_map_si_t onlp_psu_status_map[];
+/** onlp_psu_status_desc_map table. */
+extern aim_map_si_t onlp_psu_status_desc_map[];
+/* <auto.end.enum(tag:psu).supportheader> */
 
 #endif /* __ONLP_PSU_H__ */

@@ -46,7 +46,7 @@
 
 typedef uint32_t onlp_oid_t;
 
-/* <auto.start.enum(onlp_oid_type).header> */
+/* <auto.start.enum(tag:oid).define> */
 /** onlp_oid_type */
 typedef enum onlp_oid_type_e {
     ONLP_OID_TYPE_SYS = 1,
@@ -57,28 +57,8 @@ typedef enum onlp_oid_type_e {
     ONLP_OID_TYPE_MODULE = 6,
     ONLP_OID_TYPE_RTC = 7,
 } onlp_oid_type_t;
+/* <auto.end.enum(tag:oid).define> */
 
-/** Enum names. */
-const char* onlp_oid_type_name(onlp_oid_type_t e);
-
-/** Enum values. */
-int onlp_oid_type_value(const char* str, onlp_oid_type_t* e, int substr);
-
-/** Enum descriptions. */
-const char* onlp_oid_type_desc(onlp_oid_type_t e);
-
-/** Enum validator. */
-int onlp_oid_type_valid(onlp_oid_type_t e);
-
-/** validator */
-#define ONLP_OID_TYPE_VALID(_e) \
-    (onlp_oid_type_valid((_e)))
-
-/** onlp_oid_type_map table. */
-extern aim_map_si_t onlp_oid_type_map[];
-/** onlp_oid_type_desc_map table. */
-extern aim_map_si_t onlp_oid_type_desc_map[];
-/* <auto.end.enum(onlp_oid_type).header> */
 
 /**
  * Get the or set the type of an OID
@@ -205,5 +185,40 @@ int onlp_oid_iterate(onlp_oid_t oid, onlp_oid_type_t type,
  * @param hdr [out] Receives the header
  */
 int onlp_oid_hdr_get(onlp_oid_t oid, onlp_oid_hdr_t* hdr);
+
+
+
+
+
+
+/******************************************************************************
+ *
+ * Enumeration Support Definitions.
+ *
+ * Please do not add additional code beyond this point.
+ *
+ *****************************************************************************/
+/* <auto.start.enum(tag:oid).supportheader> */
+/** Enum names. */
+const char* onlp_oid_type_name(onlp_oid_type_t e);
+
+/** Enum values. */
+int onlp_oid_type_value(const char* str, onlp_oid_type_t* e, int substr);
+
+/** Enum descriptions. */
+const char* onlp_oid_type_desc(onlp_oid_type_t e);
+
+/** Enum validator. */
+int onlp_oid_type_valid(onlp_oid_type_t e);
+
+/** validator */
+#define ONLP_OID_TYPE_VALID(_e) \
+    (onlp_oid_type_valid((_e)))
+
+/** onlp_oid_type_map table. */
+extern aim_map_si_t onlp_oid_type_map[];
+/** onlp_oid_type_desc_map table. */
+extern aim_map_si_t onlp_oid_type_desc_map[];
+/* <auto.end.enum(tag:oid).supportheader> */
 
 #endif /* __ONLP_OID_H__ */

@@ -204,32 +204,46 @@ definitions:
 
   enum: &enums
     onlp_status:
+      tag: onlp
       members: *onlp_status
     onlp_oid_type:
+      tag: oid
       members: *oid_types
     onlp_thermal_status:
+      tag: thermal
       members: *thermal_status
     onlp_thermal_caps:
+      tag: thermal
       members: *thermal_caps
     onlp_sfp_status:
+      tag: sfp
       members: *sfp_status_flags
     onlp_fan_mode:
+      tag: fan
       members: *fan_modes
     onlp_fan_status:
+      tag: fan
       members: *fan_status
     onlp_fan_dir:
+      tag: fan
       members: *fan_dirs
     onlp_fan_caps:
+      tag: fan
       members: *fan_caps
     onlp_led_caps:
+      tag: led
       members: *led_caps
     onlp_led_status:
+      tag: led
       members: *led_status
     onlp_led_mode:
+      tag: led
       members: *led_mode
     onlp_psu_status:
+      tag: psu
       members: *psu_status
     onlp_psu_caps:
+      tag: psu
       members: *psu_caps
 
   portingmacro:

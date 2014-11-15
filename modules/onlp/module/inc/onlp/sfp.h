@@ -31,13 +31,13 @@
 #include <AIM/aim_pvs.h>
 #include <sff/sff.h>
 
-/* <auto.start.enum(onlp_sfp_status).define> */
+/* <auto.start.enum(tag:sfp).define> */
 /** onlp_sfp_status */
 typedef enum onlp_sfp_status_e {
     ONLP_SFP_STATUS_TX_FAILURE = (1 << 0),
     ONLP_SFP_STATUS_RX_LOS = (1 << 1),
 } onlp_sfp_status_t;
-/* <auto.end.enum(onlp_sfp_status).define> */
+/* <auto.end.enum(tag:sfp).define> */
 
 
 /**
@@ -157,5 +157,36 @@ int onlp_sfp_post_insert(int port, sff_info_t* info);
  */
 int onlp_sfp_status_get(int port, uint32_t* flags);
 
+
+
+/******************************************************************************
+ *
+ * Enumeration Support Definitions.
+ *
+ * Please do not add additional code beyond this point.
+ *
+ *****************************************************************************/
+/* <auto.start.enum(tag:sfp).supportheader> */
+/** Enum names. */
+const char* onlp_sfp_status_name(onlp_sfp_status_t e);
+
+/** Enum values. */
+int onlp_sfp_status_value(const char* str, onlp_sfp_status_t* e, int substr);
+
+/** Enum descriptions. */
+const char* onlp_sfp_status_desc(onlp_sfp_status_t e);
+
+/** Enum validator. */
+int onlp_sfp_status_valid(onlp_sfp_status_t e);
+
+/** validator */
+#define ONLP_SFP_STATUS_VALID(_e) \
+    (onlp_sfp_status_valid((_e)))
+
+/** onlp_sfp_status_map table. */
+extern aim_map_si_t onlp_sfp_status_map[];
+/** onlp_sfp_status_desc_map table. */
+extern aim_map_si_t onlp_sfp_status_desc_map[];
+/* <auto.end.enum(tag:sfp).supportheader> */
 
 #endif /* __ONLP_SFP_H__ */

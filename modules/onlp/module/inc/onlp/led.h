@@ -28,36 +28,14 @@
 #include <onlp/onlp.h>
 #include <onlp/oids.h>
 
-/* <auto.start.enum(onlp_led_status).define> */
+/* <auto.start.enum(tag:led).define> */
 /** onlp_led_status */
 typedef enum onlp_led_status_e {
     ONLP_LED_STATUS_PRESENT = (1 << 0),
     ONLP_LED_STATUS_FAILED = (1 << 1),
     ONLP_LED_STATUS_ON = (1 << 2),
 } onlp_led_status_t;
-/* <auto.end.enum(onlp_led_status).define> */
 
-/* <auto.start.enum(onlp_led_caps).define> */
-/** onlp_led_caps */
-typedef enum onlp_led_caps_e {
-    ONLP_LED_CAPS_ON_OFF = (1 << 0),
-    ONLP_LED_CAPS_RED = (1 << 10),
-    ONLP_LED_CAPS_RED_BLINKING = (1 << 11),
-    ONLP_LED_CAPS_ORANGE = (1 << 12),
-    ONLP_LED_CAPS_ORANGE_BLINKING = (1 << 13),
-    ONLP_LED_CAPS_YELLOW = ( 1 << 14),
-    ONLP_LED_CAPS_YELLOW_BLINKING = (1 << 15),
-    ONLP_LED_CAPS_GREEN = (1 << 16),
-    ONLP_LED_CAPS_GREEN_BLINKING = (1 << 17),
-    ONLP_LED_CAPS_BLUE = (1 << 18),
-    ONLP_LED_CAPS_BLUE_BLINKING = (1 << 19),
-    ONLP_LED_CAPS_PURPLE = (1 << 20),
-    ONLP_LED_CAPS_PURPLE_BLINKING = (1 << 21),
-    ONLP_LED_CAPS_AUTO = (1 << 22),
-} onlp_led_caps_t;
-/* <auto.end.enum(onlp_led_caps).define> */
-
-/* <auto.start.enum(onlp_led_mode).define> */
 /** onlp_led_mode */
 typedef enum onlp_led_mode_e {
     ONLP_LED_MODE_OFF,
@@ -77,7 +55,26 @@ typedef enum onlp_led_mode_e {
     ONLP_LED_MODE_PURPLE_BLINKING = 21,
     ONLP_LED_MODE_AUTO = 22,
 } onlp_led_mode_t;
-/* <auto.end.enum(onlp_led_mode).define> */
+
+/** onlp_led_caps */
+typedef enum onlp_led_caps_e {
+    ONLP_LED_CAPS_ON_OFF = (1 << 0),
+    ONLP_LED_CAPS_RED = (1 << 10),
+    ONLP_LED_CAPS_RED_BLINKING = (1 << 11),
+    ONLP_LED_CAPS_ORANGE = (1 << 12),
+    ONLP_LED_CAPS_ORANGE_BLINKING = (1 << 13),
+    ONLP_LED_CAPS_YELLOW = ( 1 << 14),
+    ONLP_LED_CAPS_YELLOW_BLINKING = (1 << 15),
+    ONLP_LED_CAPS_GREEN = (1 << 16),
+    ONLP_LED_CAPS_GREEN_BLINKING = (1 << 17),
+    ONLP_LED_CAPS_BLUE = (1 << 18),
+    ONLP_LED_CAPS_BLUE_BLINKING = (1 << 19),
+    ONLP_LED_CAPS_PURPLE = (1 << 20),
+    ONLP_LED_CAPS_PURPLE_BLINKING = (1 << 21),
+    ONLP_LED_CAPS_AUTO = (1 << 22),
+} onlp_led_caps_t;
+/* <auto.end.enum(tag:led).define> */
+
 
 /**
  * LED information structure.
@@ -142,5 +139,80 @@ void onlp_led_dump(onlp_oid_t oid, aim_pvs_t* pvs, uint32_t flags);
  * @param flags The output flags
  */
 void onlp_led_show(onlp_oid_t id, aim_pvs_t* pvs, uint32_t flags);
+
+
+
+
+/******************************************************************************
+ *
+ * Enumeration Support Definitions.
+ *
+ * Please do not add additional code beyond this point.
+ *
+ *****************************************************************************/
+/* <auto.start.enum(tag:led).supportheader> */
+/** Enum names. */
+const char* onlp_led_status_name(onlp_led_status_t e);
+
+/** Enum values. */
+int onlp_led_status_value(const char* str, onlp_led_status_t* e, int substr);
+
+/** Enum descriptions. */
+const char* onlp_led_status_desc(onlp_led_status_t e);
+
+/** Enum validator. */
+int onlp_led_status_valid(onlp_led_status_t e);
+
+/** validator */
+#define ONLP_LED_STATUS_VALID(_e) \
+    (onlp_led_status_valid((_e)))
+
+/** onlp_led_status_map table. */
+extern aim_map_si_t onlp_led_status_map[];
+/** onlp_led_status_desc_map table. */
+extern aim_map_si_t onlp_led_status_desc_map[];
+
+/** Enum names. */
+const char* onlp_led_mode_name(onlp_led_mode_t e);
+
+/** Enum values. */
+int onlp_led_mode_value(const char* str, onlp_led_mode_t* e, int substr);
+
+/** Enum descriptions. */
+const char* onlp_led_mode_desc(onlp_led_mode_t e);
+
+/** Enum validator. */
+int onlp_led_mode_valid(onlp_led_mode_t e);
+
+/** validator */
+#define ONLP_LED_MODE_VALID(_e) \
+    (onlp_led_mode_valid((_e)))
+
+/** onlp_led_mode_map table. */
+extern aim_map_si_t onlp_led_mode_map[];
+/** onlp_led_mode_desc_map table. */
+extern aim_map_si_t onlp_led_mode_desc_map[];
+
+/** Enum names. */
+const char* onlp_led_caps_name(onlp_led_caps_t e);
+
+/** Enum values. */
+int onlp_led_caps_value(const char* str, onlp_led_caps_t* e, int substr);
+
+/** Enum descriptions. */
+const char* onlp_led_caps_desc(onlp_led_caps_t e);
+
+/** Enum validator. */
+int onlp_led_caps_valid(onlp_led_caps_t e);
+
+/** validator */
+#define ONLP_LED_CAPS_VALID(_e) \
+    (onlp_led_caps_valid((_e)))
+
+/** onlp_led_caps_map table. */
+extern aim_map_si_t onlp_led_caps_map[];
+/** onlp_led_caps_desc_map table. */
+extern aim_map_si_t onlp_led_caps_desc_map[];
+/* <auto.end.enum(tag:led).supportheader> */
 
 #endif /* __ONLP_LED_H__ */
