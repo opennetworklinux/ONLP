@@ -97,6 +97,11 @@ sfp_status_flags: &sfp_status_flags
 - TX_FAILURE : (1 << 0)
 - RX_LOS :     (1 << 1)
 
+# SFP Control
+sfp_control: &sfp_control
+- LPMODE
+- TX_DISABLE
+
 # Fan modes
 fan_modes: &fan_modes
 - 'OFF'
@@ -218,6 +223,9 @@ definitions:
     onlp_sfp_status:
       tag: sfp
       members: *sfp_status_flags
+    onlp_sfp_control:
+      tag: sfp
+      members: *sfp_control
     onlp_fan_mode:
       tag: fan
       members: *fan_modes

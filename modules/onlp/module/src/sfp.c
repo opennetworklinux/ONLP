@@ -193,6 +193,20 @@ onlp_sfp_status_get(int port, uint32_t* flags)
 }
 
 int
+onlp_sfp_control_set(int port, onlp_sfp_control_t control, int value)
+{
+    ONLP_SFP_PORT_VALIDATE_AND_MAP(port);
+    return onlp_sfpi_control_set(port, control, value);
+}
+
+int
+onlp_sfp_control_get(int port, onlp_sfp_control_t control, int* value)
+{
+    ONLP_SFP_PORT_VALIDATE_AND_MAP(port);
+    return (value) ? onlp_sfpi_control_get(port, control, value) : ONLP_STATUS_E_PARAM;
+}
+
+int
 onlp_sfp_ioctl(int port, ...)
 {
     int rv;

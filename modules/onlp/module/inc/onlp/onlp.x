@@ -43,6 +43,7 @@ ONLP_OID_TYPE_ENTRY(RTC, 7)
 #ifdef ONLP_ENUMERATION_ENTRY
 ONLP_ENUMERATION_ENTRY(onlp_status, "")
 ONLP_ENUMERATION_ENTRY(onlp_psu_status, "")
+ONLP_ENUMERATION_ENTRY(onlp_sfp_control, "")
 ONLP_ENUMERATION_ENTRY(onlp_led_caps, "")
 ONLP_ENUMERATION_ENTRY(onlp_led_status, "")
 ONLP_ENUMERATION_ENTRY(onlp_thermal_status, "")

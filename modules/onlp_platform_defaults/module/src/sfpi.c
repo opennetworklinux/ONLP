@@ -38,3 +38,5 @@ __ONLP_DEFAULTI_IMPLEMENTATION(onlp_sfpi_port_map(int port, int* rport));
 __ONLP_DEFAULTI_IMPLEMENTATION(onlp_sfpi_denit(void));
 __ONLP_DEFAULTI_VIMPLEMENTATION(onlp_sfpi_debug(int port, aim_pvs_t* pvs));
 __ONLP_DEFAULTI_IMPLEMENTATION(onlp_sfpi_ioctl(int port, va_list vargs));
+__ONLP_DEFAULTI_IMPLEMENTATION(onlp_sfpi_control_set(int port, onlp_sfp_control_t control, int value));
+__ONLP_DEFAULTI_IMPLEMENTATION(onlp_sfpi_control_get(int port, onlp_sfp_control_t control, int* value));

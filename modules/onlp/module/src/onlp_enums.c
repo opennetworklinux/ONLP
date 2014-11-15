@@ -223,6 +223,60 @@ onlp_psu_status_valid(onlp_psu_status_t e)
 }
 
 
+aim_map_si_t onlp_sfp_control_map[] =
+{
+    { "LPMODE", ONLP_SFP_CONTROL_LPMODE },
+    { "TX_DISABLE", ONLP_SFP_CONTROL_TX_DISABLE },
+    { NULL, 0 }
+};
+
+aim_map_si_t onlp_sfp_control_desc_map[] =
+{
+    { "None", ONLP_SFP_CONTROL_LPMODE },
+    { "None", ONLP_SFP_CONTROL_TX_DISABLE },
+    { NULL, 0 }
+};
+
+const char*
+onlp_sfp_control_name(onlp_sfp_control_t e)
+{
+    const char* name;
+    if(aim_map_si_i(&name, e, onlp_sfp_control_map, 0)) {
+        return name;
+    }
+    else {
+        return "-invalid value for enum type 'onlp_sfp_control'";
+    }
+}
+
+int
+onlp_sfp_control_value(const char* str, onlp_sfp_control_t* e, int substr)
+{
+    int i;
+    AIM_REFERENCE(substr);
+    if(aim_map_si_s(&i, str, onlp_sfp_control_map, 0)) {
+        /* Enum Found */
+        *e = i;
+        return 0;
+    }
+    else {
+        return -1;
+    }
+}
+
+const char*
+onlp_sfp_control_desc(onlp_sfp_control_t e)
+{
+    const char* name;
+    if(aim_map_si_i(&name, e, onlp_sfp_control_desc_map, 0)) {
+        return name;
+    }
+    else {
+        return "-invalid value for enum type 'onlp_sfp_control'";
+    }
+}
+
+
 aim_map_si_t onlp_led_caps_map[] =
 {
     { "ON_OFF", ONLP_LED_CAPS_ON_OFF },

@@ -97,6 +97,25 @@ int onlp_sfpi_reset(int port);
 int onlp_sfpi_status_get(int port, uint32_t* status);
 
 /**
+ * @brief Set an SFP control.
+ * @param port The port.
+ * @param control The control.
+ * @param value The value.
+ */
+int onlp_sfpi_control_set(int port, onlp_sfp_control_t control, int value);
+
+/**
+ * @brief Get an SFP control.
+ * @param port The port.
+ * @param control The control
+ * @param [out] value Receives the current value.
+ */
+int onlp_sfpi_control_get(int port, onlp_sfp_control_t control, int* value);
+
+
+
+
+/**
  * @brief Remap SFP user SFP port numbers before calling the SFPI interface.
  * @param port The user SFP port number.
  * @param [out] rport Receives the new port.
