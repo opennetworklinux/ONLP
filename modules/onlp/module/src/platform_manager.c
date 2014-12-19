@@ -308,20 +308,28 @@ platform_psus_notify__(void)
 
             if( !(old & 0x1) && (new & 0x1) ) {
                 /* PSU Inserted */
-                AIM_LOG_INFO("PSU %d has been inserted.", pid);
+                AIM_SYSLOG_INFO("PSU <id> has been inserted.",
+                                "A PSU has been inserted in the given slot.",
+                                "PSU %d has been inserted.", pid);
             }
             if( (old & 0x1) && !(new & 0x1) ) {
                 /* PSU Removed */
-                AIM_LOG_INFO("PSU %d has been removed.", pid);
+                AIM_SYSLOG_WARN("PSU <id> has been removed.",
+                                "A PSU has been removed frmo the given slot.",
+                                "PSU %d has been removed.", pid);
             }
             if( (old & ONLP_PSU_STATUS_FAILED) && !(new & ONLP_PSU_STATUS_FAILED) ) {
                 /* PSU recovery (seems unlikely) */
-                AIM_LOG_INFO("PSU %d has recovered.", pid);
+                AIM_SYSLOG_INFO("PSU <id> has recovered.",
+                                "The given PSU has recovered from a failure.",
+                                "PSU %d has recovered.", pid);
             }
 
             if( !(old & ONLP_PSU_STATUS_FAILED) && (new & ONLP_PSU_STATUS_FAILED) ) {
                 /* PSU Failure */
-                AIM_LOG_INFO("PSU %d has failed.", pid);
+                AIM_SYSLOG_INFO("PSU <id> has failed.",
+                                "The given PSU has failed.",
+                                "PSU %d has failed.", pid);
             }
 
             memcpy(psu_info_table+i, &pi, sizeof(pi));
@@ -374,19 +382,27 @@ platform_fans_notify__(void)
 
             if( !(old & 0x1) && (new & 0x1) ) {
                 /* FAN Inserted */
-                AIM_LOG_INFO("FAN %d has been inserted.", fid);
+                AIM_SYSLOG_INFO("Fan <id> has been inserted.",
+                                "The given Fan has been inserted.",
+                                "Fan %d has been inserted.", fid);
             }
             if( (old & 0x1) && !(new & 0x1) ) {
                 /* FAN Removed */
-                AIM_LOG_INFO("FAN %d has been removed.", fid);
+                AIM_SYSLOG_WARN("Fan <id> has been removed.",
+                                "The given Fan has been removed.",
+                                "Fan %d has been removed.", fid);
             }
             if( (old & ONLP_FAN_STATUS_FAILED) && !(new & ONLP_FAN_STATUS_FAILED) ) {
-                AIM_LOG_INFO("FAN %d has recovered.", fid);
+                AIM_SYSLOG_INFO("Fan <id> has recoved.",
+                                "The given Fan has recovered from failure.",
+                                "Fan %d has recovered.", fid);
             }
 
             if( !(old & ONLP_FAN_STATUS_FAILED) && (new & ONLP_FAN_STATUS_FAILED) ) {
                 /* FAN Failure */
-                AIM_LOG_INFO("FAN %d has failed.", fid);
+                AIM_SYSLOG_WARN("Fan <id> has failed.",
+                                "The given fan has failed.",
+                                "Fan %d has failed.", fid);
             }
 
             memcpy(fan_info_table+i, &fi, sizeof(fi));
