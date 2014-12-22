@@ -1,4 +1,4 @@
-/************************************************************
+]/************************************************************
  * <bsn.cl fy=2014 v=onl>
  *
  *           Copyright 2014 Big Switch Networks, Inc.
@@ -315,7 +315,7 @@ platform_psus_notify__(void)
             if( (old & 0x1) && !(new & 0x1) ) {
                 /* PSU Removed */
                 AIM_SYSLOG_WARN("PSU <id> has been removed.",
-                                "A PSU has been removed frmo the given slot.",
+                                "A PSU has been removed from the given slot.",
                                 "PSU %d has been removed.", pid);
             }
             if( (old & ONLP_PSU_STATUS_FAILED) && !(new & ONLP_PSU_STATUS_FAILED) ) {
@@ -393,7 +393,7 @@ platform_fans_notify__(void)
                                 "Fan %d has been removed.", fid);
             }
             if( (old & ONLP_FAN_STATUS_FAILED) && !(new & ONLP_FAN_STATUS_FAILED) ) {
-                AIM_SYSLOG_INFO("Fan <id> has recoved.",
+                AIM_SYSLOG_INFO("Fan <id> has recovered.",
                                 "The given Fan has recovered from failure.",
                                 "Fan %d has recovered.", fid);
             }
