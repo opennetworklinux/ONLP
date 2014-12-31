@@ -777,6 +777,7 @@ aim_map_si_t onlp_sfp_status_map[] =
 {
     { "TX_FAILURE", ONLP_SFP_STATUS_TX_FAILURE },
     { "RX_LOS", ONLP_SFP_STATUS_RX_LOS },
+    { "TX_DISABLED", ONLP_SFP_STATUS_TX_DISABLED },
     { NULL, 0 }
 };
 
@@ -784,6 +785,7 @@ aim_map_si_t onlp_sfp_status_desc_map[] =
 {
     { "None", ONLP_SFP_STATUS_TX_FAILURE },
     { "None", ONLP_SFP_STATUS_RX_LOS },
+    { "None", ONLP_SFP_STATUS_TX_DISABLED },
     { NULL, 0 }
 };
 

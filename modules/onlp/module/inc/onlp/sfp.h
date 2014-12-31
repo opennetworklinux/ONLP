@@ -36,6 +36,7 @@
 typedef enum onlp_sfp_status_e {
     ONLP_SFP_STATUS_TX_FAILURE = (1 << 0),
     ONLP_SFP_STATUS_RX_LOS = (1 << 1),
+    ONLP_SFP_STATUS_TX_DISABLED = (1 << 2),
 } onlp_sfp_status_t;
 
 /** onlp_sfp_control */

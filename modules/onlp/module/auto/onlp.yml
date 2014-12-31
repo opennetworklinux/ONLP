@@ -94,8 +94,9 @@ oid_types: &oid_types
 
 # SFP Status
 sfp_status_flags: &sfp_status_flags
-- TX_FAILURE : (1 << 0)
-- RX_LOS :     (1 << 1)
+- TX_FAILURE :  (1 << 0)
+- RX_LOS :      (1 << 1)
+- TX_DISABLED : (1 << 2)
 
 # SFP Control
 sfp_control: &sfp_control
