@@ -28,6 +28,7 @@
 #include <AIM/aim.h>
 #include "onlp_log.h"
 #include "onlp_int.h"
+#include "onlp_locks.h"
 
 static char*
 platform_detect_fs__(int warn)
@@ -69,8 +70,8 @@ platform_detect__(void)
     return platform_detect_fs__(1);
 }
 
-int
-onlp_sys_init(void)
+static int
+onlp_sys_init_locked__(void)
 {
     int rv;
 
@@ -96,6 +97,7 @@ onlp_sys_init(void)
     rv = onlp_sysi_init();
     return rv;
 }
+ONLP_LOCKED_API0(onlp_sys_init);
 
 static uint8_t*
 onie_data_get__(int* free)
@@ -117,8 +119,8 @@ onie_data_get__(int* free)
     return ma;
 }
 
-int
-onlp_sys_info_get(onlp_sys_info_t* rv)
+static int
+onlp_sys_info_get_locked__(onlp_sys_info_t* rv)
 {
     if(rv == NULL) {
         return -1;
@@ -149,6 +151,7 @@ onlp_sys_info_get(onlp_sys_info_t* rv)
 
     return 0;
 }
+ONLP_LOCKED_API1(onlp_sys_info_get,onlp_sys_info_t*,rv);
 
 void
 onlp_sys_info_free(onlp_sys_info_t* info)
@@ -246,7 +249,14 @@ onlp_sys_ioctl(int code, ...)
     int rv;
     va_list vargs;
     va_start(vargs, code);
-    rv = onlp_sysi_ioctl(code, vargs);
+    rv = onlp_sys_vioctl(code, vargs);
     va_end(vargs);
     return rv;
 }
+
+static int
+onlp_sys_vioctl_locked__(int code, va_list vargs)
+{
+    return onlp_sysi_ioctl(code, vargs);
+}
+ONLP_LOCKED_API2(onlp_sys_vioctl, int, code, va_list, vargs);

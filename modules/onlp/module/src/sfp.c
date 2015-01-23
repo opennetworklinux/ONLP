@@ -25,14 +25,15 @@
 #include <onlp/sfp.h>
 #include <onlp/platformi/sfpi.h>
 #include "onlp_log.h"
+#include "onlp_locks.h"
 
 /**
  * All port numbers will be validated before calling the SFP driver.
  */
 static onlp_sfp_bitmap_t sfpi_bitmap__;
 
-int
-onlp_sfp_init(void)
+static int
+onlp_sfp_init_locked__(void)
 {
     AIM_BITMAP_INIT(&sfpi_bitmap__, 255);
     AIM_BITMAP_CLR_ALL(&sfpi_bitmap__);
@@ -60,19 +61,26 @@ onlp_sfp_init(void)
         return ONLP_STATUS_OK;
     }
 }
+ONLP_LOCKED_API0(onlp_sfp_init)
 
-int
-onlp_sfp_bitmap_get(onlp_sfp_bitmap_t* bmap)
+
+
+static int
+onlp_sfp_bitmap_get_locked__(onlp_sfp_bitmap_t* bmap)
 {
     AIM_BITMAP_ASSIGN(bmap, &sfpi_bitmap__);
     return ONLP_STATUS_OK;
 }
+ONLP_LOCKED_API1(onlp_sfp_bitmap_get, onlp_sfp_bitmap_t*, bmap);
 
-int
-onlp_sfp_denit(void)
+
+static int
+onlp_sfp_denit_locked__(void)
 {
     return onlp_sfpi_denit();
 }
+ONLP_LOCKED_API0(onlp_sfp_denit);
+
 
 #define ONLP_SFP_PORT_VALIDATE_AND_MAP(_port)            \
     do {                                                 \
@@ -85,12 +93,14 @@ onlp_sfp_denit(void)
         }                                                \
     } while(0)
 
-int
-onlp_sfp_is_present(int port)
+static int
+onlp_sfp_is_present_locked__(int port)
 {
     ONLP_SFP_PORT_VALIDATE_AND_MAP(port);
     return onlp_sfpi_is_present(port);
 }
+ONLP_LOCKED_API1(onlp_sfp_is_present, int, port);
+
 
 int
 onlp_sfp_port_valid(int port)
@@ -98,8 +108,8 @@ onlp_sfp_port_valid(int port)
     return AIM_BITMAP_GET(&sfpi_bitmap__, port);
 }
 
-int
-onlp_sfp_eeprom_read(int port, uint8_t** rv)
+static int
+onlp_sfp_eeprom_read_locked__(int port, uint8_t** rv)
 {
     uint8_t* data;
     ONLP_SFP_PORT_VALIDATE_AND_MAP(port);
@@ -109,13 +119,15 @@ onlp_sfp_eeprom_read(int port, uint8_t** rv)
     *rv = data;
     return 256;
 }
+ONLP_LOCKED_API2(onlp_sfp_eeprom_read, int, port, uint8_t**, rv);
 
-int
-onlp_sfp_reset(int port)
+static int
+onlp_sfp_reset_locked__(int port)
 {
     ONLP_SFP_PORT_VALIDATE_AND_MAP(port);
     return onlp_sfpi_reset(port);
 }
+ONLP_LOCKED_API1(onlp_sfp_reset, int, port);
 
 
 void
@@ -165,46 +177,56 @@ onlp_sfp_dump(aim_pvs_t* pvs)
     return;
 }
 
-int
-onlp_sfp_post_insert(int port, sff_info_t* info)
+static int
+onlp_sfp_post_insert_locked__(int port, sff_info_t* info)
 {
     ONLP_SFP_PORT_VALIDATE_AND_MAP(port);
     return onlp_sfpi_post_insert(port, info);
 }
+ONLP_LOCKED_API2(onlp_sfp_post_insert, int, port, sff_info_t*, info);
 
-int
-onlp_sfp_enable_set(int port, int enable)
+
+static int
+onlp_sfp_enable_set_locked__(int port, int enable)
 {
     ONLP_SFP_PORT_VALIDATE_AND_MAP(port);
     return onlp_sfpi_enable_set(port, enable);
 }
-int
-onlp_sfp_enable_get(int port, int* enable)
+ONLP_LOCKED_API2(onlp_sfp_enable_set, int, port, int, enable);
+
+static int
+onlp_sfp_enable_get_locked__(int port, int* enable)
 {
     ONLP_SFP_PORT_VALIDATE_AND_MAP(port);
     return onlp_sfpi_enable_get(port, enable);
 }
+ONLP_LOCKED_API2(onlp_sfp_enable_get, int, port, int*, enable);
 
-int
-onlp_sfp_status_get(int port, uint32_t* flags)
+static int
+onlp_sfp_status_get_locked__(int port, uint32_t* flags)
 {
     ONLP_SFP_PORT_VALIDATE_AND_MAP(port);
     return onlp_sfpi_status_get(port, flags);
 }
+ONLP_LOCKED_API2(onlp_sfp_status_get, int, port, uint32_t*, flags);
 
-int
-onlp_sfp_control_set(int port, onlp_sfp_control_t control, int value)
+static int
+onlp_sfp_control_set_locked__(int port, onlp_sfp_control_t control, int value)
 {
     ONLP_SFP_PORT_VALIDATE_AND_MAP(port);
     return onlp_sfpi_control_set(port, control, value);
 }
+ONLP_LOCKED_API3(onlp_sfp_control_set, int, port, onlp_sfp_control_t, control,
+                 int, value);
 
-int
-onlp_sfp_control_get(int port, onlp_sfp_control_t control, int* value)
+static int
+onlp_sfp_control_get_locked__(int port, onlp_sfp_control_t control, int* value)
 {
     ONLP_SFP_PORT_VALIDATE_AND_MAP(port);
     return (value) ? onlp_sfpi_control_get(port, control, value) : ONLP_STATUS_E_PARAM;
 }
+ONLP_LOCKED_API3(onlp_sfp_control_get, int, port, onlp_sfp_control_t, control,
+                 int*, value);
 
 int
 onlp_sfp_ioctl(int port, ...)
@@ -212,7 +234,16 @@ onlp_sfp_ioctl(int port, ...)
     int rv;
     va_list vargs;
     va_start(vargs, port);
-    rv = onlp_sfpi_ioctl(port, vargs);
+    rv = onlp_sfp_vioctl(port, vargs);
     va_end(vargs);
     return rv;
 }
+
+int
+onlp_sfp_vioctl_locked__(int port, va_list vargs)
+{
+    return onlp_sfpi_ioctl(port, vargs);
+};
+ONLP_LOCKED_API2(onlp_sfp_vioctl, int, port, va_list, vargs);
+
+

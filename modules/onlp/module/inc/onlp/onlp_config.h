@@ -201,7 +201,27 @@
 
 
 #ifndef ONLP_CONFIG_INCLUDE_API_LOCK
-#define ONLP_CONFIG_INCLUDE_API_LOCK 0
+#define ONLP_CONFIG_INCLUDE_API_LOCK 1
+#endif
+
+/**
+ * ONLP_CONFIG_API_LOCK_GLOBAL_SHARED
+ *
+ * If 0, the API lock is a simple semaphore. If 1, the API lock is a global shared mutex. */
+
+
+#ifndef ONLP_CONFIG_API_LOCK_GLOBAL_SHARED
+#define ONLP_CONFIG_API_LOCK_GLOBAL_SHARED 0
+#endif
+
+/**
+ * ONLP_CONFIG_API_LOCK_TIMEOUT
+ *
+ * The maximum amount of time (in usecs) to wait while attempting to acquire the API lock. Failure to acquire is fatal. */
+
+
+#ifndef ONLP_CONFIG_API_LOCK_TIMEOUT
+#define ONLP_CONFIG_API_LOCK_TIMEOUT 60000000
 #endif
 
 

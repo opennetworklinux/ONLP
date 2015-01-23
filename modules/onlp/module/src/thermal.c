@@ -26,6 +26,7 @@
 #include <onlp/platformi/thermali.h>
 #include <onlp/oids.h>
 #include "onlp_int.h"
+#include "onlp_locks.h"
 
 #define VALIDATE(_id)                           \
     do {                                        \
@@ -42,11 +43,12 @@
     } while(0)
 
 
-int
-onlp_thermal_init(void)
+static int
+onlp_thermal_init_locked__(void)
 {
     return onlp_thermali_init();
 }
+ONLP_LOCKED_API0(onlp_thermal_init);
 
 #if ONLP_CONFIG_INCLUDE_PLATFORM_OVERRIDES == 1
 
@@ -72,8 +74,8 @@ onlp_thermali_info_from_json__(cJSON* data, onlp_thermal_info_t* info, int error
 
 #endif
 
-int
-onlp_thermal_info_get(onlp_oid_t oid, onlp_thermal_info_t* info)
+static int
+onlp_thermal_info_get_locked__(onlp_oid_t oid, onlp_thermal_info_t* info)
 {
     int rv;
     VALIDATE(oid);
@@ -92,6 +94,7 @@ onlp_thermal_info_get(onlp_oid_t oid, onlp_thermal_info_t* info)
     }
     return rv;
 }
+ONLP_LOCKED_API2(onlp_thermal_info_get, onlp_oid_t, oid, onlp_thermal_info_t*, info);
 
 int
 onlp_thermal_ioctl(int code, ...)
@@ -99,10 +102,18 @@ onlp_thermal_ioctl(int code, ...)
     int rv;
     va_list vargs;
     va_start(vargs, code);
-    rv = onlp_thermali_ioctl(code, vargs);
+    rv = onlp_thermal_vioctl(code, vargs);
     va_end(vargs);
     return rv;
 }
+
+static int
+onlp_thermal_vioctl_locked__(int code, va_list vargs)
+{
+    return onlp_thermali_ioctl(code, vargs);
+}
+ONLP_LOCKED_API2(onlp_thermal_vioctl, int, code, va_list, vargs);
+
 
 /************************************************************
  *

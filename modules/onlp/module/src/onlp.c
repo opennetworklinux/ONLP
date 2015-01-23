@@ -34,15 +34,24 @@
 
 #include "onlp_int.h"
 #include "onlp_json.h"
+#include "onlp_locks.h"
 
 int
 onlp_init(void)
 {
+    extern void __onlp_module_init__(void);
+    __onlp_module_init__();
+
     char* cfile;
 
     if( (cfile=getenv(ONLP_CONFIG_CONFIGURATION_ENV)) == NULL) {
         cfile = ONLP_CONFIG_CONFIGURATION_FILENAME;
     }
+
+#if ONLP_CONFIG_INCLUDE_API_LOCK == 1
+    onlp_api_lock_init();
+#endif
+
 
     onlp_json_init(cfile);
     onlp_sys_init();

@@ -81,6 +81,12 @@ int onlp_thermal_info_get(onlp_oid_t id, onlp_thermal_info_t* rv);
  */
 int onlp_thermal_ioctl(int code, ...);
 
+/**
+ * @brief Thermal driver ioctl.
+ * @param code The thermal ioctl code.
+ * @param vargs The arguments.
+ */
+int onlp_thermal_vioctl(int code, va_list vargs);
 
 /**
  * @brief Thermal OID debug dump.

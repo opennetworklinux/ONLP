@@ -98,6 +98,20 @@ int onlp_psu_init(void);
 int onlp_psu_info_get(onlp_oid_t id, onlp_psu_info_t* rv);
 
 /**
+ * @brief Issue a PSU ioctl.
+ * @param id The PSU OID
+ * @param ... Ioctl arguments.
+ */
+int onlp_psu_ioctl(onlp_oid_t id, ...);
+
+/**
+ * @brief Issue a PSU ioctl.
+ * @param id The PSU OID
+ * @param vargs Ioctl arguments.
+ */
+int onlp_psu_vioctl(onlp_oid_t id, va_list vargs);
+
+/**
  * @brief PSU OID debug dump
  * @param id The PSU OID
  * @param pvs The output pvs

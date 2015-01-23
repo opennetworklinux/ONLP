@@ -27,6 +27,7 @@
 #include <onlp/led.h>
 #include <onlp/platformi/ledi.h>
 #include "onlp_int.h"
+#include "onlp_locks.h"
 
 #define VALIDATE(_id)                           \
     do {                                        \
@@ -68,21 +69,23 @@ onlp_led_present__(onlp_oid_t id, onlp_led_info_t* info)
         }                                               \
     } while(0)
 
-int
-onlp_led_init(void)
+static int
+onlp_led_init_locked__(void)
 {
     return onlp_ledi_init();
 }
+ONLP_LOCKED_API0(onlp_led_init);
 
-int
-onlp_led_info_get(onlp_oid_t id, onlp_led_info_t* info)
+static int
+onlp_led_info_get_locked__(onlp_oid_t id, onlp_led_info_t* info)
 {
     VALIDATE(id);
     return onlp_ledi_info_get(id, info);
 }
+ONLP_LOCKED_API2(onlp_led_info_get, onlp_oid_t, id, onlp_led_info_t*, info);
 
-int
-onlp_led_set(onlp_oid_t id, int on_or_off)
+static int
+onlp_led_set_locked__(onlp_oid_t id, int on_or_off)
 {
     onlp_led_info_t info;
     ONLP_LED_PRESENT_OR_RETURN(id, &info);
@@ -93,9 +96,10 @@ onlp_led_set(onlp_oid_t id, int on_or_off)
         return ONLP_STATUS_E_UNSUPPORTED;
     }
 }
+ONLP_LOCKED_API2(onlp_led_set, onlp_oid_t, id, int, on_or_off);
 
-int
-onlp_led_mode_set(onlp_oid_t id, onlp_led_mode_t mode)
+static int
+onlp_led_mode_set_locked__(onlp_oid_t id, onlp_led_mode_t mode)
 {
     onlp_led_info_t info;
     ONLP_LED_PRESENT_OR_RETURN(id, &info);
@@ -111,7 +115,7 @@ onlp_led_mode_set(onlp_oid_t id, onlp_led_mode_t mode)
         return ONLP_STATUS_E_UNSUPPORTED;
     }
 }
-
+ONLP_LOCKED_API2(onlp_led_mode_set, onlp_oid_t, id, onlp_led_mode_t, mode);
 
 /************************************************************
  *

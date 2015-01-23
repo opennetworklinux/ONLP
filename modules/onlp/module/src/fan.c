@@ -26,6 +26,7 @@
 #include <onlp/platformi/fani.h>
 #include <onlp/oids.h>
 #include "onlp_int.h"
+#include "onlp_locks.h"
 #include "onlp_log.h"
 #include "onlp_json.h"
 
@@ -44,11 +45,12 @@
     } while(0)
 
 
-int
-onlp_fan_init(void)
+static int
+onlp_fan_init_locked__(void)
 {
     return onlp_fani_init();
 }
+ONLP_LOCKED_API0(onlp_fan_init)
 
 
 #if ONLP_CONFIG_INCLUDE_PLATFORM_OVERRIDES == 1
@@ -82,8 +84,8 @@ onlp_fani_info_from_json__(cJSON* data, onlp_fan_info_t* fip, int errorcheck)
 
 #endif
 
-int
-onlp_fan_info_get(onlp_oid_t oid, onlp_fan_info_t* fip)
+static int
+onlp_fan_info_get_locked__(onlp_oid_t oid, onlp_fan_info_t* fip)
 {
     int rv;
 
@@ -115,6 +117,8 @@ onlp_fan_info_get(onlp_oid_t oid, onlp_fan_info_t* fip)
 
     return rv;
 }
+ONLP_LOCKED_API2(onlp_fan_info_get, onlp_oid_t, oid, onlp_fan_info_t*, fip);
+
 
 static int
 onlp_fan_present__(onlp_oid_t id, onlp_fan_info_t* info)
@@ -141,8 +145,9 @@ onlp_fan_present__(onlp_oid_t id, onlp_fan_info_t* info)
         }                                               \
     } while(0)
 
-int
-onlp_fan_rpm_set(onlp_oid_t id, int rpm)
+
+static int
+onlp_fan_rpm_set_locked__(onlp_oid_t id, int rpm)
 {
     onlp_fan_info_t info;
     ONLP_FAN_PRESENT_OR_RETURN(id, &info);
@@ -153,9 +158,10 @@ onlp_fan_rpm_set(onlp_oid_t id, int rpm)
         return ONLP_STATUS_E_UNSUPPORTED;
     }
 }
+ONLP_LOCKED_API2(onlp_fan_rpm_set, onlp_oid_t, id, int, rpm);
 
-int
-onlp_fan_percentage_set(onlp_oid_t id, int p)
+static int
+onlp_fan_percentage_set_locked__(onlp_oid_t id, int p)
 {
     onlp_fan_info_t info;
     ONLP_FAN_PRESENT_OR_RETURN(id, &info);
@@ -166,17 +172,19 @@ onlp_fan_percentage_set(onlp_oid_t id, int p)
         return ONLP_STATUS_E_UNSUPPORTED;
     }
 }
+ONLP_LOCKED_API2(onlp_fan_percentage_set, onlp_oid_t, id, int, p);
 
-int
-onlp_fan_mode_set(onlp_oid_t id, onlp_fan_mode_t mode)
+static int
+onlp_fan_mode_set_locked__(onlp_oid_t id, onlp_fan_mode_t mode)
 {
     onlp_fan_info_t info;
     ONLP_FAN_PRESENT_OR_RETURN(id, &info);
     return onlp_fani_mode_set(id, mode);
 }
+ONLP_LOCKED_API2(onlp_fan_mode_set, onlp_oid_t, id, onlp_fan_mode_t, mode);
 
-int
-onlp_fan_dir_set(onlp_oid_t id, onlp_fan_dir_t dir)
+static int
+onlp_fan_dir_set_locked__(onlp_oid_t id, onlp_fan_dir_t dir)
 {
     onlp_fan_info_t info;
     ONLP_FAN_PRESENT_OR_RETURN(id, &info);
@@ -188,7 +196,7 @@ onlp_fan_dir_set(onlp_oid_t id, onlp_fan_dir_t dir)
         return ONLP_STATUS_E_UNSUPPORTED;
     }
 }
-
+ONLP_LOCKED_API2(onlp_fan_dir_set, onlp_oid_t, id, onlp_fan_dir_t, dir);
 
 
 /************************************************************

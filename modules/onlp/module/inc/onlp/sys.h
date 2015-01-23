@@ -82,6 +82,13 @@ void onlp_sys_show(onlp_oid_t id, aim_pvs_t* pvs, uint32_t flags);
 int onlp_sys_ioctl(int code, ...);
 
 /**
+ * @brief SYS Ioctl
+ * @param code The ioctl code.
+ * @param vargs arguments.
+ */
+int onlp_sys_vioctl(int code, va_list vargs);
+
+/**
  * @brief Start the platform management thread.
  */
 int onlp_sys_platform_manage_start(void);

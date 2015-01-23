@@ -71,7 +71,14 @@ cdefs: &cdefs
     default: "\"ONLP_CONF\""
 - ONLP_CONFIG_INCLUDE_API_LOCK:
     doc: "Include exclusive locking for all API calls."
+    default: 1
+- ONLP_CONFIG_API_LOCK_GLOBAL_SHARED:
+    doc: "If 0, the API lock is a simple semaphore. If 1, the API lock is a global shared mutex."
     default: 0
+- ONLP_CONFIG_API_LOCK_TIMEOUT:
+    doc: "The maximum amount of time (in usecs) to wait while attempting to acquire the API lock. Failure to acquire is fatal. A value of zero disables this feature. "
+    default: 60000000
+
 
 # Error codes
 onlp_status: &onlp_status

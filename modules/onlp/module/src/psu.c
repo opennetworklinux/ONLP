@@ -28,6 +28,7 @@
 #include <onlp/psu.h>
 #include <onlp/platformi/psui.h>
 #include "onlp_int.h"
+#include "onlp_locks.h"
 
 #define VALIDATE(_id)                           \
     do {                                        \
@@ -45,59 +46,36 @@
 
 
 static int
-onlp_psu_present__(onlp_oid_t id, onlp_psu_info_t* info)
-{
-    int rv;
-    VALIDATE(id);
-
-    /* Info retrieval required. */
-    rv = onlp_psui_info_get(id, info);
-    if(rv < 0) {
-        return rv;
-    }
-    /* The psu must be present. */
-    if((info->status & 0x1) == 0) {
-        return ONLP_STATUS_E_MISSING;
-    }
-    return ONLP_STATUS_OK;
-}
-#define ONLP_PSU_PRESENT_OR_RETURN(_id, _info)          \
-    do {                                                \
-        int _rv = onlp_psu_present__(_id, _info);       \
-        if(_rv < 0) {                                   \
-            return _rv;                                 \
-        }                                               \
-    } while(0)
-
-
-int
-onlp_psu_init(void)
+onlp_psu_init_locked__(void)
 {
     return onlp_psui_init();
 }
+ONLP_LOCKED_API0(onlp_psu_init);
 
-int
-onlp_psu_info_get(onlp_oid_t id,  onlp_psu_info_t* info)
+static int
+onlp_psu_info_get_locked__(onlp_oid_t id,  onlp_psu_info_t* info)
 {
     VALIDATE(id);
     return onlp_psui_info_get(id, info);
 }
+ONLP_LOCKED_API2(onlp_psu_info_get, onlp_oid_t, id, onlp_psu_info_t*, info);
+
+int
+onlp_psu_vioctl_locked__(onlp_oid_t id, va_list vargs)
+{
+    return onlp_psui_ioctl(id, vargs);
+}
+ONLP_LOCKED_API2(onlp_psu_vioctl, onlp_oid_t, id, va_list, vargs);
 
 int
 onlp_psu_ioctl(onlp_oid_t id, ...)
 {
-    int rv;
-    onlp_psu_info_t info;
     va_list vargs;
-
-    ONLP_PSU_PRESENT_OR_RETURN(id, &info);
     va_start(vargs, id);
-    rv = onlp_psui_ioctl(id, vargs);
+    int rv = onlp_psu_vioctl(id, vargs);
     va_end(vargs);
     return rv;
 }
-
-
 
 /************************************************************
  *

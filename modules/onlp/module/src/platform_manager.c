@@ -29,6 +29,7 @@
 #include <onlplib/mmap.h>
 #include <timer_wheel/timer_wheel.h>
 #include <OS/os_time.h>
+#include <OS/os_thread.h>
 #include <AIM/aim.h>
 #include "onlp_log.h"
 #include "onlp_int.h"
@@ -164,6 +165,8 @@ static void*
 onlp_sys_platform_manage_thread__(void* vctrl)
 {
     volatile management_ctrl_t* ctrl = (volatile management_ctrl_t*)(vctrl);
+
+    os_thread_name_set("onlp.sys.pm");
 
     /*
      * Wait on the eventfd for the specified timeout period.
