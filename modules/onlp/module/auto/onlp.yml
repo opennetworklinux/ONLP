@@ -78,7 +78,9 @@ cdefs: &cdefs
 - ONLP_CONFIG_API_LOCK_TIMEOUT:
     doc: "The maximum amount of time (in usecs) to wait while attempting to acquire the API lock. Failure to acquire is fatal. A value of zero disables this feature. "
     default: 60000000
-
+- ONLP_CONFIG_INFO_STR_MAX:
+    doc: "The maximum size of static information string buffers."
+    default: 64
 
 # Error codes
 onlp_status: &onlp_status

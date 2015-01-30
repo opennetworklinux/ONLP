@@ -91,6 +91,12 @@ typedef struct onlp_fan_info_s {
     /* Current fan mode, if available  */
     onlp_fan_mode_t mode;
 
+    /* Model (if applicable) */
+    char model[ONLP_CONFIG_INFO_STR_MAX];
+
+    /* Serial Number (if applicable) */
+    char serial[ONLP_CONFIG_INFO_STR_MAX];
+
 } onlp_fan_info_t;
 
 

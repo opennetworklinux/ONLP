@@ -228,6 +228,8 @@ onlp_fan_dump(onlp_oid_t id, aim_pvs_t* pvs, uint32_t flags)
             iof_iprintf(&iof, "Caps:   %{onlp_fan_caps_flags}", info.caps);
             iof_iprintf(&iof, "RPM:    %d", info.rpm);
             iof_iprintf(&iof, "Per:    %d", info.percentage);
+            iof_iprintf(&iof, "Model:  %s", info.model[0] ? info.model : "NULL");
+            iof_iprintf(&iof, "SN:     %s", info.serial[0] ? info.serial : "NULL");
         }
         else {
             iof_iprintf(&iof, "Not present.");
@@ -261,6 +263,12 @@ onlp_fan_show(onlp_oid_t oid, aim_pvs_t* pvs, uint32_t flags)
             }
             else {
                 iof_iprintf(&iof, "Status: Running.");
+                if(fi.model[0]) {
+                    iof_iprintf(&iof, "Model: %s", fi.model);
+                }
+                if(fi.serial[0]) {
+                    iof_iprintf(&iof, "SN: %s", fi.serial);
+                }
                 if(fi.caps & ONLP_FAN_CAPS_GET_RPM) {
                     iof_iprintf(&iof, "RPM: %d.", fi.rpm);
                 }

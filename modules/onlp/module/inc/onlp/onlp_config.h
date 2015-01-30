@@ -217,11 +217,21 @@
 /**
  * ONLP_CONFIG_API_LOCK_TIMEOUT
  *
- * The maximum amount of time (in usecs) to wait while attempting to acquire the API lock. Failure to acquire is fatal. */
+ * The maximum amount of time (in usecs) to wait while attempting to acquire the API lock. Failure to acquire is fatal. A value of zero disables this feature.  */
 
 
 #ifndef ONLP_CONFIG_API_LOCK_TIMEOUT
 #define ONLP_CONFIG_API_LOCK_TIMEOUT 60000000
+#endif
+
+/**
+ * ONLP_CONFIG_INFO_STR_MAX
+ *
+ * The maximum size of static information string buffers. */
+
+
+#ifndef ONLP_CONFIG_INFO_STR_MAX
+#define ONLP_CONFIG_INFO_STR_MAX 64
 #endif
 
 
