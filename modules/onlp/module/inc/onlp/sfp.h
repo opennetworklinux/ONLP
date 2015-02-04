@@ -61,6 +61,12 @@ int onlp_sfp_init(void);
 typedef aim_bitmap256_t onlp_sfp_bitmap_t;
 
 /**
+ * Convenience function for initializing SFP bitmaps.
+ * @param bmap The address of the bitmap to initialize.
+ */
+void onlp_sfp_bitmap_t_init(onlp_sfp_bitmap_t* bmap);
+
+/**
  * @brief Get the set of valid {Q}SFP ports.
  * @param bmap Returns the valid set of SFP-capable port numbers.
  */
@@ -80,6 +86,15 @@ int onlp_sfp_port_valid(int port);
  * @returns <0 on error.
  */
 int onlp_sfp_is_present(int port);
+
+/**
+ * @brief Return the presence bitmap for all ports.
+ * @param dst The receives the presence bitmap for all ports.
+ * @note This function can return Unsupported.
+ * It will not be emulated if the SFPI driver does not support
+ * batch collection of the SFP presence.
+ */
+int onlp_sfp_presence_bitmap_get(onlp_sfp_bitmap_t* dst);
 
 /**
  * @brief Read IEEE standard EEPROM data from the given port.
@@ -139,6 +154,15 @@ int onlp_sfp_events_enable_set(int enable);
  * @brief Query event processing status.
  */
 int onlp_sfp_events_enable_get(int* enable);
+
+/**
+ * @brief Get the RX_LOS bitmap for all ports.
+ * @param dst Receives the RX_LOS bitmap for all ports.
+ * @note This function can return Unsupported.
+ * It will not be emulated if the SFPI driver does not support
+ * batch collection of the rx_los status.
+ */
+int onlp_sfp_rx_los_bitmap_get(onlp_sfp_bitmap_t* dst);
 
 /**
  * @brief Dump the status of all SFPs

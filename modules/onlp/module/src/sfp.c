@@ -32,11 +32,17 @@
  */
 static onlp_sfp_bitmap_t sfpi_bitmap__;
 
+void
+onlp_sfp_bitmap_t_init(onlp_sfp_bitmap_t* bmap)
+{
+    AIM_BITMAP_INIT(bmap, 255);
+    AIM_BITMAP_CLR_ALL(bmap);
+}
+
 static int
 onlp_sfp_init_locked__(void)
 {
-    AIM_BITMAP_INIT(&sfpi_bitmap__, 255);
-    AIM_BITMAP_CLR_ALL(&sfpi_bitmap__);
+    onlp_sfp_bitmap_t_init(&sfpi_bitmap__);
 
     int rv = onlp_sfpi_init();
     if(rv < 0) {
@@ -101,6 +107,20 @@ onlp_sfp_is_present_locked__(int port)
 }
 ONLP_LOCKED_API1(onlp_sfp_is_present, int, port);
 
+static int
+onlp_sfp_presence_bitmap_get_locked__(onlp_sfp_bitmap_t* dst)
+{
+    return onlp_sfpi_presence_bitmap_get(dst);
+}
+ONLP_LOCKED_API1(onlp_sfp_presence_bitmap_get, onlp_sfp_bitmap_t*, dst);
+
+
+static int
+onlp_sfp_rx_los_bitmap_get_locked__(onlp_sfp_bitmap_t* dst)
+{
+    return onlp_sfpi_rx_los_bitmap_get(dst);
+}
+ONLP_LOCKED_API1(onlp_sfp_rx_los_bitmap_get, onlp_sfp_bitmap_t*, dst);
 
 int
 onlp_sfp_port_valid(int port)
@@ -134,14 +154,35 @@ void
 onlp_sfp_dump(aim_pvs_t* pvs)
 {
     int p;
+    int rv;
 
     if(AIM_BITMAP_COUNT(&sfpi_bitmap__) == 0) {
         aim_printf(pvs, "There are no SFP capable ports.\n");
         return;
     }
 
+    onlp_sfp_bitmap_t bmap;
+    onlp_sfp_bitmap_t_init(&bmap);
+    rv = onlp_sfp_presence_bitmap_get(&bmap);
+    aim_printf(pvs, "  Presence Bitmap: ");
+    if(rv == 0) {
+        aim_printf(pvs, "%{aim_bitmap}\n", &bmap);
+    }
+    else {
+        aim_printf(pvs,"Error: %{onlp_status}\n", rv);
+    }
+    aim_printf(pvs, "  RX_LOS Bitmap: ");
+    rv = onlp_sfp_rx_los_bitmap_get(&bmap);
+    if(rv == 0) {
+        aim_printf(pvs, "%{aim_bitmap}\n", &bmap);
+    }
+    else {
+        aim_printf(pvs, "Error: %{onlp_status}\n", rv);
+    }
+    aim_printf(pvs, "\n");
+
     AIM_BITMAP_ITER(&sfpi_bitmap__, p) {
-        int rv = onlp_sfp_is_present(p);
+        rv = onlp_sfp_is_present(p);
         aim_printf(pvs, "Port %.2d: ", p);
         if(rv == 0) {
             /* Missing, OK */
@@ -160,7 +201,7 @@ onlp_sfp_dump(aim_pvs_t* pvs)
         }
         else {
             /* Error */
-            aim_printf(pvs, "Error: %{onlp_status}\n");
+            aim_printf(pvs, "Error: %{onlp_status}\n", rv);
         }
         if(rv == 1) {
             uint8_t* idprom = NULL;

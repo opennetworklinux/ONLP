@@ -53,6 +53,18 @@ int onlp_sfpi_bitmap_get(onlp_sfp_bitmap_t* bmap);
 int onlp_sfpi_is_present(int port);
 
 /**
+ * @brief Return the presence bitmap for all SFP ports.
+ * @param dst Receives the presence bitmap.
+ */
+int onlp_sfpi_presence_bitmap_get(onlp_sfp_bitmap_t* dst);
+
+/**
+ * @brief Return the RX_LOS bitmap for all SFP ports.
+ * @param dst Receives the RX_LOS bitmap.
+ */
+int onlp_sfpi_rx_los_bitmap_get(onlp_sfp_bitmap_t* dst);
+
+/**
  * @brief Read the SFP EEPROM.
  * @param port The port number.
  * @param data Receives the SFP data.

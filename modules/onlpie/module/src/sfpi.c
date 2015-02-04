@@ -54,8 +54,6 @@ int
 onlp_sfpi_bitmap_get(onlp_sfp_bitmap_t* bmap)
 {
     /* We simulate 4 SFP ports -- 17, 18, 19, and 20 */
-    AIM_BITMAP_INIT(bmap, 32);
-    AIM_BITMAP_CLR_ALL(bmap);
     AIM_BITMAP_SET(bmap, 17);
     AIM_BITMAP_SET(bmap, 18);
     AIM_BITMAP_SET(bmap, 19);
@@ -79,6 +77,23 @@ onlp_sfpi_is_present(int port)
         return 1;
     }
     return 0;
+}
+
+int
+onlp_sfpi_presence_bitmap_get(onlp_sfp_bitmap_t* dst)
+{
+    AIM_BITMAP_CLR_ALL(dst);
+    AIM_BITMAP_SET(dst, 17);
+    AIM_BITMAP_SET(dst, 19);
+    return ONLP_STATUS_OK;
+}
+
+int
+onlp_sfpi_rx_los_bitmap_get(onlp_sfp_bitmap_t* dst)
+{
+    AIM_BITMAP_CLR_ALL(dst);
+    AIM_BITMAP_SET(dst, 19);
+    return ONLP_STATUS_OK;
 }
 
 /*
