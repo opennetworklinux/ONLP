@@ -26,6 +26,7 @@
 #include <onlp/oids.h>
 #include <unistd.h>
 #include <onlp/sys.h>
+#include <onlp/sfp.h>
 
 static int
 iterate_oids_callback__(onlp_oid_t oid, void* cookie)
@@ -75,8 +76,9 @@ onlpdump_main(int argc, char* argv[])
     int o = 0;
     int m = 0;
     int i = 0;
+    int p = 0;
 
-    while( (c = getopt(argc, argv, "srehdojmi")) != -1) {
+    while( (c = getopt(argc, argv, "srehdojmip")) != -1) {
         switch(c)
             {
             case 's': show=1; break;
@@ -88,6 +90,7 @@ onlpdump_main(int argc, char* argv[])
             case 'o': o=1; break;
             case 'm': m=1; break;
             case 'i': i=1; break;
+            case 'p': p=1; show=-1; break;
             default: help=1; rv = 1; break;
             }
     }
@@ -102,6 +105,7 @@ onlpdump_main(int argc, char* argv[])
         printf("  -j   Dump ONIE data in JSON format.\n");
         printf("  -m   Run platform manager.\n");
         printf("  -i   Iterate OIDs.\n");
+        printf("  -p   Show SFP presence.\n");
         return rv;
     }
 
@@ -128,14 +132,16 @@ onlpdump_main(int argc, char* argv[])
         return 0;
     }
 
-    if(show == 0) {
-        /* Default to full dump */
-        onlp_platform_dump(&aim_pvs_stdout,
-                           ONLP_OID_DUMP_F_RECURSE | ONLP_OID_DUMP_F_EVEN_IF_ABSENT);
-    }
-    else {
-        onlp_platform_show(&aim_pvs_stdout,
-                           showflags);
+    if(show >= 0) {
+        if(show == 0) {
+            /* Default to full dump */
+            onlp_platform_dump(&aim_pvs_stdout,
+                               ONLP_OID_DUMP_F_RECURSE | ONLP_OID_DUMP_F_EVEN_IF_ABSENT);
+        }
+        else {
+            onlp_platform_show(&aim_pvs_stdout,
+                               showflags);
+        }
     }
 
 
@@ -145,6 +151,19 @@ onlpdump_main(int argc, char* argv[])
         sleep(600);
         printf("Stopping the platform manager.\n");
         onlp_sys_platform_manage_stop();
+    }
+
+    if(p) {
+        onlp_sfp_bitmap_t presence;
+        onlp_sfp_bitmap_t_init(&presence);
+        int rv = onlp_sfp_presence_bitmap_get(&presence);
+        aim_printf(&aim_pvs_stdout, "Presence: ");
+        if(rv < 0) {
+            aim_printf(&aim_pvs_stdout, "Error %{onlp_status}\n", rv);
+        }
+        else {
+            aim_printf(&aim_pvs_stdout, "%{aim_bitmap}\n", &presence);
+        }
     }
     return 0;
 }
