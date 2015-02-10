@@ -72,6 +72,13 @@ int onlp_sfpi_rx_los_bitmap_get(onlp_sfp_bitmap_t* dst);
 int onlp_sfpi_eeprom_read(int port, uint8_t data[256]);
 
 /**
+ * @brief Read the SFP DOM EEPROM.
+ * @param port The port number.
+ * @param data Receives the SFP data.
+ */
+int onlp_sfpi_dom_read(int port, uint8_t data[256]);
+
+/**
  * @brief Enable or disable the given SFP.
  * @param port The port number.
  * @param enable Enable the SFP is 1, Disable the SFP if 0

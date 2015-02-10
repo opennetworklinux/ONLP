@@ -106,6 +106,20 @@ int onlp_sfp_presence_bitmap_get(onlp_sfp_bitmap_t* dst);
  */
 int onlp_sfp_eeprom_read(int port, uint8_t** rv);
 
+
+/**
+ * @brief Read the DOM data from the given port.
+ * @param port The SFP Port
+ * @param rv Receives a buffer containing the DOM data.
+ * @notes The buffer must be freed after use.
+ * @returns The size of the eeprom data, if successful
+ * @returns -1 on error.
+ * @note This should only be called if the SFP
+ * has advertised DOM support.
+ */
+int onlp_sfp_dom_read(int port, uint8_t** rv);
+
+
 /**
  * @brief Reset the SFP on the given port.
  * @param port The SFP port.

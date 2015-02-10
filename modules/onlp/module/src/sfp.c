@@ -142,6 +142,24 @@ onlp_sfp_eeprom_read_locked__(int port, uint8_t** rv)
 ONLP_LOCKED_API2(onlp_sfp_eeprom_read, int, port, uint8_t**, rv);
 
 static int
+onlp_sfp_dom_read_locked__(int port, uint8_t** rv)
+{
+    uint8_t* data;
+    ONLP_SFP_PORT_VALIDATE_AND_MAP(port);
+
+    data = aim_zmalloc(256);
+    onlp_sfpi_dom_read(port, data);
+    *rv = data;
+    return 256;
+}
+ONLP_LOCKED_API2(onlp_sfp_dom_read, int, port, uint8_t**, rv);
+
+
+
+
+
+
+static int
 onlp_sfp_reset_locked__(int port)
 {
     ONLP_SFP_PORT_VALIDATE_AND_MAP(port);

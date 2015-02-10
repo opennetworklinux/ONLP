@@ -31,6 +31,7 @@ __ONLP_DEFAULTI_IMPLEMENTATION(onlp_sfpi_is_present(int port));
 __ONLP_DEFAULTI_IMPLEMENTATION(onlp_sfpi_presence_bitmap_get(onlp_sfp_bitmap_t* dst));
 __ONLP_DEFAULTI_IMPLEMENTATION(onlp_sfpi_rx_los_bitmap_get(onlp_sfp_bitmap_t* dst));
 __ONLP_DEFAULTI_IMPLEMENTATION(onlp_sfpi_eeprom_read(int port, uint8_t data[256]));
+__ONLP_DEFAULTI_IMPLEMENTATION(onlp_sfpi_dom_read(int port, uint8_t data[256]));
 __ONLP_DEFAULTI_IMPLEMENTATION(onlp_sfpi_enable_set(int port, int enable));
 __ONLP_DEFAULTI_IMPLEMENTATION(onlp_sfpi_enable_get(int port, int* enable));
 __ONLP_DEFAULTI_IMPLEMENTATION(onlp_sfpi_post_insert(int port, sff_info_t* sff_info));
