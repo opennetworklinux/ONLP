@@ -6,6 +6,7 @@
  *
  *
  ***********************************************************/
+#include <onlp/onlp.h>
 #include <onlplib/gpio.h>
 #include <onlplib/file.h>
 #include <unistd.h>
@@ -34,12 +35,23 @@ onlp_gpio_export(int gpio, int direction)
     }
     close(fd);
 
-    rv = onlp_file_write_str( (direction) ? "out\n" : "in\n",
-                              SYS_CLASS_GPIO_PATH "/direction", gpio);
-    if(rv < 0) {
-        AIM_LOG_MSG("Failed to set gpio%d direction=%s: %{errno}",
-                    gpio, (direction) ? "out" : "in", errno);
-        return -1;
+    const char* s;
+    switch(direction)
+        {
+        case ONLP_GPIO_DIRECTION_IN :  s = "in\n"; break;
+        case ONLP_GPIO_DIRECTION_OUT : s = "out\n"; break;
+        case ONLP_GPIO_DIRECTION_NONE : s = NULL; break;
+        default:
+            return ONLP_STATUS_E_PARAM;
+        }
+
+    if(s) {
+        rv = onlp_file_write_str(s, SYS_CLASS_GPIO_PATH "/direction", gpio);
+        if(rv < 0) {
+            AIM_LOG_MSG("Failed to set gpio%d direction=%s: %{errno}",
+                        gpio, direction, errno);
+            return -1;
+        }
     }
     return 0;
 }

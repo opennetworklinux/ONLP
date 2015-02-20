@@ -11,8 +11,9 @@
 
 #include <onlplib/onlplib_config.h>
 
-#define ONLP_GPIO_DIRECTION_IN  0x0
-#define ONLP_GPIO_DIRECTION_OUT 0x1
+#define ONLP_GPIO_DIRECTION_IN    0
+#define ONLP_GPIO_DIRECTION_OUT   1
+#define ONLP_GPIO_DIRECTION_NONE -1
 
 /**
  * @brief Export the given GPIO and set its direction.
