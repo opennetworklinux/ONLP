@@ -18,7 +18,7 @@
 #define SYS_CLASS_GPIO_PATH "/sys/class/gpio/gpio%d"
 
 int
-onlp_gpio_export(int gpio, int direction)
+onlp_gpio_export(int gpio, onlp_gpio_direction_t direction)
 {
     int fd;
     int rv;
@@ -38,9 +38,11 @@ onlp_gpio_export(int gpio, int direction)
     const char* s;
     switch(direction)
         {
-        case ONLP_GPIO_DIRECTION_IN :  s = "in\n"; break;
-        case ONLP_GPIO_DIRECTION_OUT : s = "out\n"; break;
-        case ONLP_GPIO_DIRECTION_NONE : s = NULL; break;
+        case ONLP_GPIO_DIRECTION_NONE: s = NULL; break; /* Don't set direction */
+        case ONLP_GPIO_DIRECTION_IN: s = "in\n"; break;
+        case ONLP_GPIO_DIRECTION_OUT: s = "out\n"; break;
+        case ONLP_GPIO_DIRECTION_LOW: s = "low\n"; break;
+        case ONLP_GPIO_DIRECTION_HIGH: s = "high\n"; break;
         default:
             return ONLP_STATUS_E_PARAM;
         }

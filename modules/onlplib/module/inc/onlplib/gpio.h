@@ -11,16 +11,20 @@
 
 #include <onlplib/onlplib_config.h>
 
-#define ONLP_GPIO_DIRECTION_IN    0
-#define ONLP_GPIO_DIRECTION_OUT   1
-#define ONLP_GPIO_DIRECTION_NONE -1
+typedef enum onlp_gpio_direction_e {
+    ONLP_GPIO_DIRECTION_NONE,
+    ONLP_GPIO_DIRECTION_IN,
+    ONLP_GPIO_DIRECTION_OUT,
+    ONLP_GPIO_DIRECTION_LOW,
+    ONLP_GPIO_DIRECTION_HIGH,
+} onlp_gpio_direction_t;
 
 /**
  * @brief Export the given GPIO and set its direction.
  * @param gpio The gpio number.
- * @param direction The gpio direction.
+ * @param dir The gpio direction.
  */
-int onlp_gpio_export(int gpio, int direction);
+int onlp_gpio_export(int gpio, onlp_gpio_direction_t dir);
 
 /**
  * @brief Set the given GPIO value.
