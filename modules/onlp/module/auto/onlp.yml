@@ -109,8 +109,11 @@ sfp_status_flags: &sfp_status_flags
 
 # SFP Control
 sfp_control: &sfp_control
-- LPMODE
+- RX_LOS
+- TX_FAULT
 - TX_DISABLE
+- LP_MODE
+- POWER_OVERRIDE
 
 # Fan modes
 fan_modes: &fan_modes

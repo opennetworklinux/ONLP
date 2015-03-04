@@ -273,6 +273,20 @@ static int
 onlp_sfp_control_set_locked__(int port, onlp_sfp_control_t control, int value)
 {
     ONLP_SFP_PORT_VALIDATE_AND_MAP(port);
+
+    if(!ONLP_SFP_CONTROL_VALID(control)) {
+        return ONLP_STATUS_E_PARAM;
+    }
+
+    switch(control)
+        {
+        case ONLP_SFP_CONTROL_RX_LOS:
+        case ONLP_SFP_CONTROL_TX_FAULT:
+            /** These are read-only. */
+            return ONLP_STATUS_E_PARAM;
+        default:
+            break;
+        }
     return onlp_sfpi_control_set(port, control, value);
 }
 ONLP_LOCKED_API3(onlp_sfp_control_set, int, port, onlp_sfp_control_t, control,
@@ -282,6 +296,11 @@ static int
 onlp_sfp_control_get_locked__(int port, onlp_sfp_control_t control, int* value)
 {
     ONLP_SFP_PORT_VALIDATE_AND_MAP(port);
+
+    if(!ONLP_SFP_CONTROL_VALID(control)) {
+        return ONLP_STATUS_E_PARAM;
+    }
+
     return (value) ? onlp_sfpi_control_get(port, control, value) : ONLP_STATUS_E_PARAM;
 }
 ONLP_LOCKED_API3(onlp_sfp_control_get, int, port, onlp_sfp_control_t, control,

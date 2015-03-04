@@ -41,9 +41,12 @@ typedef enum onlp_sfp_status_e {
 
 /** onlp_sfp_control */
 typedef enum onlp_sfp_control_e {
-    ONLP_SFP_CONTROL_LPMODE,
+    ONLP_SFP_CONTROL_RX_LOS,
+    ONLP_SFP_CONTROL_TX_FAULT,
     ONLP_SFP_CONTROL_TX_DISABLE,
-    ONLP_SFP_CONTROL_LAST = ONLP_SFP_CONTROL_TX_DISABLE,
+    ONLP_SFP_CONTROL_LP_MODE,
+    ONLP_SFP_CONTROL_POWER_OVERRIDE,
+    ONLP_SFP_CONTROL_LAST = ONLP_SFP_CONTROL_POWER_OVERRIDE,
     ONLP_SFP_CONTROL_COUNT,
     ONLP_SFP_CONTROL_INVALID = -1,
 } onlp_sfp_control_t;
@@ -260,8 +263,11 @@ extern aim_map_si_t onlp_sfp_status_desc_map[];
 /** Strings macro. */
 #define ONLP_SFP_CONTROL_STRINGS \
 {\
-    "LPMODE", \
+    "RX_LOS", \
+    "TX_FAULT", \
     "TX_DISABLE", \
+    "LP_MODE", \
+    "POWER_OVERRIDE", \
 }
 /** Enum names. */
 const char* onlp_sfp_control_name(onlp_sfp_control_t e);
@@ -274,7 +280,7 @@ const char* onlp_sfp_control_desc(onlp_sfp_control_t e);
 
 /** validator */
 #define ONLP_SFP_CONTROL_VALID(_e) \
-    ( (0 <= (_e)) && ((_e) <= ONLP_SFP_CONTROL_TX_DISABLE))
+    ( (0 <= (_e)) && ((_e) <= ONLP_SFP_CONTROL_POWER_OVERRIDE))
 
 /** onlp_sfp_control_map table. */
 extern aim_map_si_t onlp_sfp_control_map[];
