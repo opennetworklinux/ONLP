@@ -1,21 +1,21 @@
 /************************************************************
  * <bsn.cl fy=2014 v=onl>
- *
- *           Copyright 2014 Big Switch Networks, Inc.
- *
+ * 
+ *        Copyright 2014, 2015 Big Switch Networks, Inc.       
+ * 
  * Licensed under the Eclipse Public License, Version 1.0 (the
  * "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
- *
+ * 
  *        http://www.eclipse.org/legal/epl-v10.html
- *
+ * 
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the
  * License.
- *
+ * 
  * </bsn.cl>
  ************************************************************
  *
@@ -77,8 +77,9 @@ onlpdump_main(int argc, char* argv[])
     int m = 0;
     int i = 0;
     int p = 0;
+    int x = 0;
 
-    while( (c = getopt(argc, argv, "srehdojmip")) != -1) {
+    while( (c = getopt(argc, argv, "srehdojmipx")) != -1) {
         switch(c)
             {
             case 's': show=1; break;
@@ -88,6 +89,7 @@ onlpdump_main(int argc, char* argv[])
             case 'h': help=1; rv = 0; break;
             case 'j': j=1; break;
             case 'o': o=1; break;
+            case 'x': x=1; break;
             case 'm': m=1; break;
             case 'i': i=1; break;
             case 'p': p=1; show=-1; break;
@@ -102,6 +104,7 @@ onlpdump_main(int argc, char* argv[])
         printf("  -r   Recursive show(). Implies -s\n");
         printf("  -e   Extended show(). Implies -s\n");
         printf("  -o   Dump ONIE data only.\n");
+        printf("  -x   Dump Platform Info only.\n");
         printf("  -j   Dump ONIE data in JSON format.\n");
         printf("  -m   Run platform manager.\n");
         printf("  -i   Iterate OIDs.\n");
@@ -116,18 +119,31 @@ onlpdump_main(int argc, char* argv[])
         return 0;
     }
 
-    if(o) {
+    if(o || x) {
         onlp_sys_info_t si;
         if(onlp_sys_info_get(&si) < 0) {
             fprintf(stderr, "onlp_sys_info_get() failed.");
             return 1;
         }
-        if(j) {
-            onlp_onie_show_json(&si.onie_info, &aim_pvs_stdout);
+
+        if(o) {
+            if(j) {
+                onlp_onie_show_json(&si.onie_info, &aim_pvs_stdout);
+            }
+            else {
+                onlp_onie_show(&si.onie_info, &aim_pvs_stdout);
+            }
         }
-        else {
-            onlp_onie_show(&si.onie_info, &aim_pvs_stdout);
+
+        if(x) {
+            if(j) {
+                onlp_platform_info_show_json(&si.platform_info, &aim_pvs_stdout);
+            }
+            else {
+                onlp_platform_info_show(&si.platform_info, &aim_pvs_stdout);
+            }
         }
+
         onlp_sys_info_free(&si);
         return 0;
     }
