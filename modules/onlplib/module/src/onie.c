@@ -1,21 +1,21 @@
 /************************************************************
  * <bsn.cl fy=2014 v=onl>
- * 
- *        Copyright 2014, 2015 Big Switch Networks, Inc.       
- * 
+ *
+ *        Copyright 2014, 2015 Big Switch Networks, Inc.
+ *
  * Licensed under the Eclipse Public License, Version 1.0 (the
  * "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
- * 
+ *
  *        http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the
  * License.
- * 
+ *
  * </bsn.cl>
  ************************************************************
  *
@@ -140,8 +140,13 @@ decode_tlv__(onlp_onie_info_t* info, tlvinfo_tlv_t * tlv)
             break;
 
         case TLV_CODE_VENDOR_EXT:
-            AIM_LOG_WARN("ONIE data contains a vendor extension (ignored)");
-            break;
+            {
+                onlp_onie_vx_t* vx = aim_zmalloc(sizeof(*vx));
+                vx->size = tlv->length;
+                memcpy(vx->data, tlv->value, tlv->length);
+                list_push(&info->vx_list, &vx->links);
+                break;
+            }
 
         case TLV_CODE_CRC_32:
             info->crc =
@@ -204,6 +209,7 @@ onlp_onie_decode(onlp_onie_info_t* rv, const uint8_t* data, int size)
     }
 
     memset(rv, 0, sizeof(*rv));
+    list_init(&rv->vx_list);
 
     if ( !is_valid_tlvinfo_header__(data_hdr) ) {
         AIM_LOG_ERROR("ONIE data is not in TlvInfo format.");
@@ -240,6 +246,31 @@ onlp_onie_decode(onlp_onie_info_t* rv, const uint8_t* data, int size)
     }
 
     return 0;
+}
+
+int
+onlp_onie_decode_file(onlp_onie_info_t* onie, const char* file)
+{
+    char* data;
+    FILE* fp  = fopen(file, "rb");
+    int rv = -1;
+
+    if(fp) {
+        fseek(fp, 0L, SEEK_END);
+        int size = ftell(fp);
+        rewind(fp);
+        data = aim_malloc(size);
+
+        rv = fread(data, 1, size, fp);
+        fclose(fp);
+
+        if(rv == size) {
+            rv = onlp_onie_decode(onie, (uint8_t*)data, size);
+        }
+
+        aim_free(data);
+    }
+    return rv;
 }
 
 /**
@@ -303,6 +334,12 @@ onlp_onie_info_free(onlp_onie_info_t* info)
         aim_free(info->diag_version);
         aim_free(info->service_tag);
         aim_free(info->_hdr_id_string);
+
+        list_links_t *cur, *next;
+        LIST_FOREACH_SAFE(&info->vx_list, cur, next) {
+            onlp_onie_vx_t* vx = container_of(cur, links, onlp_onie_vx_t);
+            aim_free(vx);
+        }
     }
 }
 

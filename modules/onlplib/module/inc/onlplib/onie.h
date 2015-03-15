@@ -1,21 +1,21 @@
 /************************************************************
  * <bsn.cl fy=2014 v=onl>
- * 
- *        Copyright 2014, 2015 Big Switch Networks, Inc.       
- * 
+ *
+ *        Copyright 2014, 2015 Big Switch Networks, Inc.
+ *
  * Licensed under the Eclipse Public License, Version 1.0 (the
  * "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
- * 
+ *
  *        http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the
  * License.
- * 
+ *
  * </bsn.cl>
  ************************************************************
  *
@@ -28,6 +28,7 @@
 #include <stdint.h>
 #include <AIM/aim_pvs.h>
 #include <IOF/iof.h>
+#include <AIM/aim_list.h>
 
 /**
  * The ONIE specification defines the format of the system
@@ -56,7 +57,10 @@ typedef struct onlp_onie_info_s {
     char* service_tag;
     uint32_t    crc;
 
-
+    /**
+     * Vendor Extensions list, if available.
+     */
+    list_head_t vx_list;
 
     /* Internal/debug */
     char* _hdr_id_string;
@@ -67,12 +71,19 @@ typedef struct onlp_onie_info_s {
 } onlp_onie_info_t;
 
 
+typedef struct onlp_onie_vx_s {
+    list_links_t links;
+    uint8_t data[256];
+    int size;
+} onlp_onie_vx_t;
+
 /**
  * Support for parsing ONIE eeprom data into the
  * ONIE information structure is provided for all platforms.
  */
 
 int onlp_onie_decode(onlp_onie_info_t* rv, const uint8_t* data, int size);
+int onlp_onie_decode_file(onlp_onie_info_t* rv, const char* file);
 
 /**
  * Free an ONIE info structure.
