@@ -1,21 +1,21 @@
 /************************************************************
  * <bsn.cl v=2014 v=onl>
- * 
- *           Copyright 2015 Big Switch Networks, Inc.          
- * 
+ *
+ *           Copyright 2015 Big Switch Networks, Inc.
+ *
  * Licensed under the Eclipse Public License, Version 1.0 (the
  * "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
- * 
+ *
  *        http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the
  * License.
- * 
+ *
  * </bsn.cl>
  ************************************************************
  *
@@ -100,6 +100,18 @@ int onlp_i2c_readb(int bus, uint8_t addr, uint8_t offset, uint32_t flags);
 int onlp_i2c_writeb(int bus, uint8_t addr, uint8_t offset, uint8_t byte,
                     uint32_t flags);
 
+
+/**
+ * @brief Modify a single byte over i2c
+ * @param bus The i2c bus number.
+ * @param addr The slave address.
+ * @param offset The byte offset.
+ * @param andmask The and mask.
+ * @param ormask The or mask.
+ * @param flags See ONLP_I2C_F_*
+ */
+int onlp_i2c_modifyb(int bus, uint8_t addr, uint8_t offset,
+                     uint8_t andmask, uint8_t ormask, uint32_t flags);
 
 /**
  * @brief Read a word over i2c

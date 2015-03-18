@@ -1,21 +1,21 @@
 /************************************************************
  * <bsn.cl fy=2014 v=onl>
- * 
- *        Copyright 2014, 2015 Big Switch Networks, Inc.       
- * 
+ *
+ *        Copyright 2014, 2015 Big Switch Networks, Inc.
+ *
  * Licensed under the Eclipse Public License, Version 1.0 (the
  * "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
- * 
+ *
  *        http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the
  * License.
- * 
+ *
  * </bsn.cl>
  ************************************************************
  *
@@ -79,20 +79,6 @@ int onlp_sfpi_eeprom_read(int port, uint8_t data[256]);
 int onlp_sfpi_dom_read(int port, uint8_t data[256]);
 
 /**
- * @brief Enable or disable the given SFP.
- * @param port The port number.
- * @param enable Enable the SFP is 1, Disable the SFP if 0
- */
-int onlp_sfpi_enable_set(int port, int enable);
-
-/**
- * @brief Get the current enable state.
- * @param port The port number.
- * @param enable [out] Receives the enable state.
- */
-int onlp_sfpi_enable_get(int port, int* enable);
-
-/**
  * @brief Perform any actions required after an SFP is inserted.
  * @param port The port number.
  * @param info The SFF Module information structure.
@@ -101,19 +87,15 @@ int onlp_sfpi_enable_get(int port, int* enable);
 int onlp_sfpi_post_insert(int port, sff_info_t* info);
 
 /**
- * @brief Reset the SFP if supported.
+ * @brief Returns whether or not the given control is suppport on the given port.
  * @param port The port number.
- * @notes Optional
+ * @param control The control.
+ * @param rv [out] Receives 1 if supported, 0 if not supported.
+ * @note This provided for convenience and is optional.
+ * If you implement this function your control_set and control_get APIs
+ * will not be called on unsupported ports.
  */
-int onlp_sfpi_reset(int port);
-
-/**
- * @brief Get the current status flags for an SFP.
- * @param port The port number.
- * @param status [out] Receives the status flags.
- * @notes See onlp_sfp_status_t
- */
-int onlp_sfpi_status_get(int port, uint32_t* status);
+int onlp_sfpi_control_supported(int port, onlp_sfp_control_t control, int* rv);
 
 /**
  * @brief Set an SFP control.
@@ -130,9 +112,6 @@ int onlp_sfpi_control_set(int port, onlp_sfp_control_t control, int value);
  * @param [out] value Receives the current value.
  */
 int onlp_sfpi_control_get(int port, onlp_sfp_control_t control, int* value);
-
-
-
 
 /**
  * @brief Remap SFP user SFP port numbers before calling the SFPI interface.

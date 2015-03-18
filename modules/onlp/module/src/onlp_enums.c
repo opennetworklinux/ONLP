@@ -225,6 +225,8 @@ onlp_psu_status_valid(onlp_psu_status_t e)
 
 aim_map_si_t onlp_sfp_control_map[] =
 {
+    { "RESET", ONLP_SFP_CONTROL_RESET },
+    { "RESET_STATE", ONLP_SFP_CONTROL_RESET_STATE },
     { "RX_LOS", ONLP_SFP_CONTROL_RX_LOS },
     { "TX_FAULT", ONLP_SFP_CONTROL_TX_FAULT },
     { "TX_DISABLE", ONLP_SFP_CONTROL_TX_DISABLE },
@@ -235,6 +237,8 @@ aim_map_si_t onlp_sfp_control_map[] =
 
 aim_map_si_t onlp_sfp_control_desc_map[] =
 {
+    { "None", ONLP_SFP_CONTROL_RESET },
+    { "None", ONLP_SFP_CONTROL_RESET_STATE },
     { "None", ONLP_SFP_CONTROL_RX_LOS },
     { "None", ONLP_SFP_CONTROL_TX_FAULT },
     { "None", ONLP_SFP_CONTROL_TX_DISABLE },
@@ -364,6 +368,76 @@ int
 onlp_led_caps_valid(onlp_led_caps_t e)
 {
     return aim_map_si_i(NULL, e, onlp_led_caps_map, 0) ? 1 : 0;
+}
+
+
+aim_map_si_t onlp_sfp_control_flags_map[] =
+{
+    { "RESET", ONLP_SFP_CONTROL_FLAGS_RESET },
+    { "RESET_STATE", ONLP_SFP_CONTROL_FLAGS_RESET_STATE },
+    { "RX_LOS", ONLP_SFP_CONTROL_FLAGS_RX_LOS },
+    { "TX_FAULT", ONLP_SFP_CONTROL_FLAGS_TX_FAULT },
+    { "TX_DISABLE", ONLP_SFP_CONTROL_FLAGS_TX_DISABLE },
+    { "LP_MODE", ONLP_SFP_CONTROL_FLAGS_LP_MODE },
+    { "POWER_OVERRIDE", ONLP_SFP_CONTROL_FLAGS_POWER_OVERRIDE },
+    { NULL, 0 }
+};
+
+aim_map_si_t onlp_sfp_control_flags_desc_map[] =
+{
+    { "None", ONLP_SFP_CONTROL_FLAGS_RESET },
+    { "None", ONLP_SFP_CONTROL_FLAGS_RESET_STATE },
+    { "None", ONLP_SFP_CONTROL_FLAGS_RX_LOS },
+    { "None", ONLP_SFP_CONTROL_FLAGS_TX_FAULT },
+    { "None", ONLP_SFP_CONTROL_FLAGS_TX_DISABLE },
+    { "None", ONLP_SFP_CONTROL_FLAGS_LP_MODE },
+    { "None", ONLP_SFP_CONTROL_FLAGS_POWER_OVERRIDE },
+    { NULL, 0 }
+};
+
+const char*
+onlp_sfp_control_flags_name(onlp_sfp_control_flags_t e)
+{
+    const char* name;
+    if(aim_map_si_i(&name, e, onlp_sfp_control_flags_map, 0)) {
+        return name;
+    }
+    else {
+        return "-invalid value for enum type 'onlp_sfp_control_flags'";
+    }
+}
+
+int
+onlp_sfp_control_flags_value(const char* str, onlp_sfp_control_flags_t* e, int substr)
+{
+    int i;
+    AIM_REFERENCE(substr);
+    if(aim_map_si_s(&i, str, onlp_sfp_control_flags_map, 0)) {
+        /* Enum Found */
+        *e = i;
+        return 0;
+    }
+    else {
+        return -1;
+    }
+}
+
+const char*
+onlp_sfp_control_flags_desc(onlp_sfp_control_flags_t e)
+{
+    const char* name;
+    if(aim_map_si_i(&name, e, onlp_sfp_control_flags_desc_map, 0)) {
+        return name;
+    }
+    else {
+        return "-invalid value for enum type 'onlp_sfp_control_flags'";
+    }
+}
+
+int
+onlp_sfp_control_flags_valid(onlp_sfp_control_flags_t e)
+{
+    return aim_map_si_i(NULL, e, onlp_sfp_control_flags_map, 0) ? 1 : 0;
 }
 
 
@@ -776,68 +850,6 @@ int
 onlp_fan_status_valid(onlp_fan_status_t e)
 {
     return aim_map_si_i(NULL, e, onlp_fan_status_map, 0) ? 1 : 0;
-}
-
-
-aim_map_si_t onlp_sfp_status_map[] =
-{
-    { "TX_FAILURE", ONLP_SFP_STATUS_TX_FAILURE },
-    { "RX_LOS", ONLP_SFP_STATUS_RX_LOS },
-    { "TX_DISABLED", ONLP_SFP_STATUS_TX_DISABLED },
-    { NULL, 0 }
-};
-
-aim_map_si_t onlp_sfp_status_desc_map[] =
-{
-    { "None", ONLP_SFP_STATUS_TX_FAILURE },
-    { "None", ONLP_SFP_STATUS_RX_LOS },
-    { "None", ONLP_SFP_STATUS_TX_DISABLED },
-    { NULL, 0 }
-};
-
-const char*
-onlp_sfp_status_name(onlp_sfp_status_t e)
-{
-    const char* name;
-    if(aim_map_si_i(&name, e, onlp_sfp_status_map, 0)) {
-        return name;
-    }
-    else {
-        return "-invalid value for enum type 'onlp_sfp_status'";
-    }
-}
-
-int
-onlp_sfp_status_value(const char* str, onlp_sfp_status_t* e, int substr)
-{
-    int i;
-    AIM_REFERENCE(substr);
-    if(aim_map_si_s(&i, str, onlp_sfp_status_map, 0)) {
-        /* Enum Found */
-        *e = i;
-        return 0;
-    }
-    else {
-        return -1;
-    }
-}
-
-const char*
-onlp_sfp_status_desc(onlp_sfp_status_t e)
-{
-    const char* name;
-    if(aim_map_si_i(&name, e, onlp_sfp_status_desc_map, 0)) {
-        return name;
-    }
-    else {
-        return "-invalid value for enum type 'onlp_sfp_status'";
-    }
-}
-
-int
-onlp_sfp_status_valid(onlp_sfp_status_t e)
-{
-    return aim_map_si_i(NULL, e, onlp_sfp_status_map, 0) ? 1 : 0;
 }
 
 

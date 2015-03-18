@@ -1,21 +1,21 @@
 /*************************************************************
  * <bsn.cl fy=2014 v=onl>
- * 
- *        Copyright 2014, 2015 Big Switch Networks, Inc.       
- * 
+ *
+ *        Copyright 2014, 2015 Big Switch Networks, Inc.
+ *
  * Licensed under the Eclipse Public License, Version 1.0 (the
  * "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
- * 
+ *
  *        http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the
  * License.
- * 
+ *
  * </bsn.cl>
  *************************************************************
  *
@@ -31,16 +31,11 @@
 #include <AIM/aim_pvs.h>
 #include <sff/sff.h>
 
-/* <auto.start.enum(tag:sfp).define> */
-/** onlp_sfp_status */
-typedef enum onlp_sfp_status_e {
-    ONLP_SFP_STATUS_TX_FAILURE = (1 << 0),
-    ONLP_SFP_STATUS_RX_LOS = (1 << 1),
-    ONLP_SFP_STATUS_TX_DISABLED = (1 << 2),
-} onlp_sfp_status_t;
-
+/* <auto.start.enum(tag:sfp1).define> */
 /** onlp_sfp_control */
 typedef enum onlp_sfp_control_e {
+    ONLP_SFP_CONTROL_RESET,
+    ONLP_SFP_CONTROL_RESET_STATE,
     ONLP_SFP_CONTROL_RX_LOS,
     ONLP_SFP_CONTROL_TX_FAULT,
     ONLP_SFP_CONTROL_TX_DISABLE,
@@ -50,8 +45,20 @@ typedef enum onlp_sfp_control_e {
     ONLP_SFP_CONTROL_COUNT,
     ONLP_SFP_CONTROL_INVALID = -1,
 } onlp_sfp_control_t;
-/* <auto.end.enum(tag:sfp).define> */
+/* <auto.end.enum(tag:sfp1).define> */
 
+/* <auto.start.enum(tag:sfp2).define> */
+/** onlp_sfp_control_flags */
+typedef enum onlp_sfp_control_flags_e {
+    ONLP_SFP_CONTROL_FLAGS_RESET = (1 << ONLP_SFP_CONTROL_RESET),
+    ONLP_SFP_CONTROL_FLAGS_RESET_STATE = ( 1 << ONLP_SFP_CONTROL_RESET_STATE ),
+    ONLP_SFP_CONTROL_FLAGS_RX_LOS = ( 1 << ONLP_SFP_CONTROL_RX_LOS ),
+    ONLP_SFP_CONTROL_FLAGS_TX_FAULT = ( 1 << ONLP_SFP_CONTROL_TX_FAULT ),
+    ONLP_SFP_CONTROL_FLAGS_TX_DISABLE = ( 1 << ONLP_SFP_CONTROL_TX_DISABLE ),
+    ONLP_SFP_CONTROL_FLAGS_LP_MODE = ( 1 << ONLP_SFP_CONTROL_LP_MODE ),
+    ONLP_SFP_CONTROL_FLAGS_POWER_OVERRIDE = ( 1 << ONLP_SFP_CONTROL_POWER_OVERRIDE ),
+} onlp_sfp_control_flags_t;
+/* <auto.end.enum(tag:sfp2).define> */
 
 /**
  * Initialize the SFP subsystem.
@@ -122,55 +129,10 @@ int onlp_sfp_eeprom_read(int port, uint8_t** rv);
  */
 int onlp_sfp_dom_read(int port, uint8_t** rv);
 
-
-/**
- * @brief Reset the SFP on the given port.
- * @param port The SFP port.
- */
-int onlp_sfp_reset(int port);
-
-/**
- * @brief Reset all SFP ports.
- */
-int onlp_sfp_reset_all(void);
-
 /**
  * @brief Deinitialize the SFP subsystem.
  */
 int onlp_sfp_denit(void);
-
-/**
- * @brief Set the enable state on the given SFP.
- * @param port The SFP port.
- * @param enable The new enable state.
- */
-int onlp_sfp_enable_set(int port, int enable);
-
-/**
- * @brief Get the enable state of the given SFP.
- * @param port The SFP port.
- * @param [out] enable Receives the enable state.
- */
-int onlp_sfp_enable_get(int port, int* enable);
-
-typedef void (onlp_sfp_event_handler_f)(int port, void* cookie);
-
-/**
- * @brief Register for notifications on SFP events.
- * @param handler The event handler.
- * @param cookie The cookie passed to the handler.
- */
-int onlp_sfp_event_register(onlp_sfp_event_handler_f hander, void* cookie);
-
-/**
- * @brief Start or stop event processing.
- */
-int onlp_sfp_events_enable_set(int enable);
-
-/**
- * @brief Query event processing status.
- */
-int onlp_sfp_events_enable_get(int* enable);
 
 /**
  * @brief Get the RX_LOS bitmap for all ports.
@@ -208,14 +170,6 @@ int onlp_sfp_vioctl(int port, va_list vargs);
 int onlp_sfp_post_insert(int port, sff_info_t* info);
 
 /**
- * @brief Retrieve the SFP status flags.
- * @param port The port.
- * @param [out] flags Receives the flags.
- * @note See onlp_sfp_status_t
- */
-int onlp_sfp_status_get(int port, uint32_t* flags);
-
-/**
  * @brief Set an SFP control.
  * @param port The port.
  * @param control The control.
@@ -231,6 +185,13 @@ int onlp_sfp_control_set(int port, onlp_sfp_control_t control, int value);
  */
 int onlp_sfp_control_get(int port, onlp_sfp_control_t control, int* value);
 
+/**
+ * @brief Get the value of all SFP controls.
+ * @param port The port.
+ * @param flags Receives the control flag values. See onlp_sfp_control_flags_t
+ */
+int onlp_sfp_control_flags_get(int port, uint32_t* flags);
+
 /******************************************************************************
  *
  * Enumeration Support Definitions.
@@ -238,31 +199,12 @@ int onlp_sfp_control_get(int port, onlp_sfp_control_t control, int* value);
  * Please do not add additional code beyond this point.
  *
  *****************************************************************************/
-/* <auto.start.enum(tag:sfp).supportheader> */
-/** Enum names. */
-const char* onlp_sfp_status_name(onlp_sfp_status_t e);
-
-/** Enum values. */
-int onlp_sfp_status_value(const char* str, onlp_sfp_status_t* e, int substr);
-
-/** Enum descriptions. */
-const char* onlp_sfp_status_desc(onlp_sfp_status_t e);
-
-/** Enum validator. */
-int onlp_sfp_status_valid(onlp_sfp_status_t e);
-
-/** validator */
-#define ONLP_SFP_STATUS_VALID(_e) \
-    (onlp_sfp_status_valid((_e)))
-
-/** onlp_sfp_status_map table. */
-extern aim_map_si_t onlp_sfp_status_map[];
-/** onlp_sfp_status_desc_map table. */
-extern aim_map_si_t onlp_sfp_status_desc_map[];
-
+/* <auto.start.enum(tag:sfp1).supportheader> */
 /** Strings macro. */
 #define ONLP_SFP_CONTROL_STRINGS \
 {\
+    "RESET", \
+    "RESET_STATE", \
     "RX_LOS", \
     "TX_FAULT", \
     "TX_DISABLE", \
@@ -286,6 +228,29 @@ const char* onlp_sfp_control_desc(onlp_sfp_control_t e);
 extern aim_map_si_t onlp_sfp_control_map[];
 /** onlp_sfp_control_desc_map table. */
 extern aim_map_si_t onlp_sfp_control_desc_map[];
-/* <auto.end.enum(tag:sfp).supportheader> */
+/* <auto.end.enum(tag:sfp1).supportheader> */
+
+/* <auto.start.enum(tag:sfp2).supportheader> */
+/** Enum names. */
+const char* onlp_sfp_control_flags_name(onlp_sfp_control_flags_t e);
+
+/** Enum values. */
+int onlp_sfp_control_flags_value(const char* str, onlp_sfp_control_flags_t* e, int substr);
+
+/** Enum descriptions. */
+const char* onlp_sfp_control_flags_desc(onlp_sfp_control_flags_t e);
+
+/** Enum validator. */
+int onlp_sfp_control_flags_valid(onlp_sfp_control_flags_t e);
+
+/** validator */
+#define ONLP_SFP_CONTROL_FLAGS_VALID(_e) \
+    (onlp_sfp_control_flags_valid((_e)))
+
+/** onlp_sfp_control_flags_map table. */
+extern aim_map_si_t onlp_sfp_control_flags_map[];
+/** onlp_sfp_control_flags_desc_map table. */
+extern aim_map_si_t onlp_sfp_control_flags_desc_map[];
+/* <auto.end.enum(tag:sfp2).supportheader> */
 
 #endif /* __ONLP_SFP_H__ */

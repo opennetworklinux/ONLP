@@ -1,21 +1,21 @@
 /************************************************************
  * <bsn.cl fy=2014 v=onl>
- * 
- *        Copyright 2014, 2015 Big Switch Networks, Inc.       
- * 
+ *
+ *        Copyright 2014, 2015 Big Switch Networks, Inc.
+ *
  * Licensed under the Eclipse Public License, Version 1.0 (the
  * "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
- * 
+ *
  *        http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the
  * License.
- * 
+ *
  * </bsn.cl>
  ************************************************************
  *
@@ -154,20 +154,6 @@ onlp_sfp_dom_read_locked__(int port, uint8_t** rv)
 }
 ONLP_LOCKED_API2(onlp_sfp_dom_read, int, port, uint8_t**, rv);
 
-
-
-
-
-
-static int
-onlp_sfp_reset_locked__(int port)
-{
-    ONLP_SFP_PORT_VALIDATE_AND_MAP(port);
-    return onlp_sfpi_reset(port);
-}
-ONLP_LOCKED_API1(onlp_sfp_reset, int, port);
-
-
 void
 onlp_sfp_dump(aim_pvs_t* pvs)
 {
@@ -208,10 +194,11 @@ onlp_sfp_dump(aim_pvs_t* pvs)
         }
         else if(rv == 1) {
             /* Present, OK */
-            uint32_t status = 0;
-            int srv = onlp_sfp_status_get(p, &status);
+            int srv;
+            uint32_t flags = 0;
+            srv = onlp_sfp_control_flags_get(p, &flags);
             if(srv >= 0) {
-                aim_printf(pvs, "Present, Status = %{onlp_sfp_status_flags}\n", status);
+                aim_printf(pvs, "Present, Status = %{onlp_sfp_control_flags}\n", flags);
             }
             else {
                 aim_printf(pvs, "Present, Status Unavailable [ %{onlp_status} ]\n", srv);
@@ -244,46 +231,31 @@ onlp_sfp_post_insert_locked__(int port, sff_info_t* info)
 }
 ONLP_LOCKED_API2(onlp_sfp_post_insert, int, port, sff_info_t*, info);
 
-
-static int
-onlp_sfp_enable_set_locked__(int port, int enable)
-{
-    ONLP_SFP_PORT_VALIDATE_AND_MAP(port);
-    return onlp_sfpi_enable_set(port, enable);
-}
-ONLP_LOCKED_API2(onlp_sfp_enable_set, int, port, int, enable);
-
-static int
-onlp_sfp_enable_get_locked__(int port, int* enable)
-{
-    ONLP_SFP_PORT_VALIDATE_AND_MAP(port);
-    return onlp_sfpi_enable_get(port, enable);
-}
-ONLP_LOCKED_API2(onlp_sfp_enable_get, int, port, int*, enable);
-
-static int
-onlp_sfp_status_get_locked__(int port, uint32_t* flags)
-{
-    ONLP_SFP_PORT_VALIDATE_AND_MAP(port);
-    return onlp_sfpi_status_get(port, flags);
-}
-ONLP_LOCKED_API2(onlp_sfp_status_get, int, port, uint32_t*, flags);
-
 static int
 onlp_sfp_control_set_locked__(int port, onlp_sfp_control_t control, int value)
 {
+    int supported;
+
     ONLP_SFP_PORT_VALIDATE_AND_MAP(port);
 
     if(!ONLP_SFP_CONTROL_VALID(control)) {
         return ONLP_STATUS_E_PARAM;
     }
 
+    /* Does the platform advertise support for this control? */
+    if( (onlp_sfpi_control_supported(port, control, &supported) >= 0) &&
+        !supported) {
+        return ONLP_STATUS_E_UNSUPPORTED;
+    }
+
     switch(control)
         {
+
         case ONLP_SFP_CONTROL_RX_LOS:
         case ONLP_SFP_CONTROL_TX_FAULT:
             /** These are read-only. */
             return ONLP_STATUS_E_PARAM;
+
         default:
             break;
         }
@@ -301,10 +273,66 @@ onlp_sfp_control_get_locked__(int port, onlp_sfp_control_t control, int* value)
         return ONLP_STATUS_E_PARAM;
     }
 
+    /* Does the platform advertise support for this control? */
+    int supported;
+    if( (onlp_sfpi_control_supported(port, control, &supported) >= 0) &&
+        !supported) {
+        return ONLP_STATUS_E_UNSUPPORTED;
+    }
+
+    switch(control)
+        {
+        case ONLP_SFP_CONTROL_RESET:
+            /* This is a write-only control. */
+            return ONLP_STATUS_E_UNSUPPORTED;
+
+        default:
+            break;
+        }
+
     return (value) ? onlp_sfpi_control_get(port, control, value) : ONLP_STATUS_E_PARAM;
 }
 ONLP_LOCKED_API3(onlp_sfp_control_get, int, port, onlp_sfp_control_t, control,
                  int*, value);
+
+int
+onlp_sfp_control_flags_get(int port, uint32_t* flags)
+{
+    /**
+     * These are the control bits queried and returned.
+     */
+    onlp_sfp_control_t controls[] =
+        {
+            ONLP_SFP_CONTROL_RESET_STATE,
+            ONLP_SFP_CONTROL_RX_LOS,
+            ONLP_SFP_CONTROL_TX_DISABLE,
+            ONLP_SFP_CONTROL_LP_MODE
+        };
+
+    if(flags) {
+        *flags = 0;
+    }
+    else {
+        return ONLP_STATUS_E_PARAM;
+    }
+
+    int rv, i, v;
+
+    for(i = 0; i < AIM_ARRAYSIZE(controls); i++) {
+        rv = onlp_sfp_control_get(port, controls[i], &v);
+        if(rv >= 0) {
+            if(v) {
+                *flags |= (1 << controls[i]);
+            }
+        }
+        else {
+            if(rv != ONLP_STATUS_E_UNSUPPORTED) {
+                return rv;
+            }
+        }
+    }
+    return 0;
+}
 
 int
 onlp_sfp_ioctl(int port, ...)
