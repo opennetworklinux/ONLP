@@ -27,24 +27,32 @@
 
 #include <onlplib/onlplib_config.h>
 
+#define ONLP_BITMASK(_bit) ( 1 << (_bit))
 
 /**
  * Set and & or masks for active low bits.
  */
-#define ONLP_ACTIVE_LOW_MASKS(_enable, _bit, _andmask, _ormask)  \
-    do {                                                         \
-        _andmask = (_enable) ? ~(_bit) : ~0;                     \
-        _ormask = (_enable) ? 0 : (_bit);                        \
+#define ONLP_ACTIVE_LOW_MASKS(_enable, _bitmask, _andmask, _ormask)     \
+    do {                                                                \
+        _andmask = (_enable) ? ~(_bitmask) : ~0;                        \
+        _ormask = (_enable) ? 0 : (_bitmask);                           \
     } while(0)
+
+#define ONLP_ACTIVE_LOW_MASKS_BIT(_enable, _bit, _andmask, _ormask)     \
+    ONLP_ACTIVE_LOAS_MASKS(_enable, (1 << (_bit)), _andmask, _ormask)
 
 /**
  * Set and & or masks for active high bits.
  */
-#define ONLP_ACTIVE_HIGH_MASKS(_enable, _bit, _andmask, _ormask)        \
+#define ONLP_ACTIVE_HIGH_MASKS(_enable, _bitmask, _andmask, _ormask)    \
     do {                                                                \
-        _andmask = (_enable) ? ~0 : ~(_bit);                            \
-        _ormask = (_enable) ? (_bit) : 0;                               \
+        _andmask = (_enable) ? ~0 : ~(_bitmask);                        \
+        _ormask = (_enable) ? (_bitmask) : 0;                           \
     } while(0)
+
+#define ONLP_ACTIVE_HIGH_MASKS_BIT(_enable, _bit, _andmask, _ormask)    \
+    ONLP_ACTIVE_HIGH_MASKS(_enable, (1 << (_bit)), _andmask, _ormask)
+
 
 
 /**
@@ -60,14 +68,28 @@
     do {                                                \
         _offset = (_v) / (_size);                       \
         _bit = (_v) % (_size);                          \
-    } while(0);
+    } while(0)
+
+#define ONLP_BITMASK_POSITION(_size, _v, _offset, _bitmask)     \
+    do {                                                        \
+        ONLP_BIT_POSITION(_size, _v, _offset, _bitmask);        \
+        _bitmask = (1 << _bitmask);                             \
+    } while(0)
 
 #define ONLP_BIT_POSITION_8(_v, _offset, _bit) \
     ONLP_BIT_POSITION(8, _v, _offset, _bit)
+#define ONLP_BITMASK_POSITION_8(_v, _offset, _bitmask) \
+    ONLP_BITMASK_POSITION(8, _v, _offset, _bitmask)
+
 #define ONLP_BIT_POSITION_16(_v, _offset, _bit) \
     ONLP_BIT_POSITION(16, _v, _offset, _bit)
+#define ONLP_BITMASK_POSITION_16(_v, _offset, _bitmask) \
+    ONLP_BITMASK_POSITION(16, _v, _offset, _bitmask)
+
 #define ONLP_BIT_POSITION_32(_v, _offset, _bit) \
     ONLP_BIT_POSITION(32, _v, _offset, _bit)
+#define ONLP_BITMASK_POSITION_32(_v, _offset, _bitmask) \
+    ONLP_BITMASK_POSITION(32, _v, _offset, _bitmask)
 
 
 #define ONLP_VALIDATED_READ_AND_SHIFT_8(_read, _dst, _error)            \
