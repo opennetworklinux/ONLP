@@ -153,6 +153,48 @@
 #define SFF8471_CC60_FC_PI_4              0x02
 #define SFF8471_CC60_SFF8431              0x01
 
+/* diagnostic monitoring type 0x92 */
+#define SFF8472_DOM_IMPL                  0x40
+#define SFF8472_DOM_EXTCAL                0x10
+#define SFF8472_DOM_RXPWRTYPE             0x08
+
+#define SFF8472_DOM_SUPPORTED(idprom)          \
+    ((idprom[92] & SFF8472_DOM_IMPL)? 1:0)
+#define SFF8472_DOM_USE_EXTCAL(idprom)         \
+    ((idprom[92] & SFF8472_DOM_EXTCAL)? 1:0)
+#define SFF8472_DOM_GET_RXPWR_TYPE(idprom)     \
+    ((idprom[92] & SFF8472_DOM_RXPWRTYPE)? 1:0)
+
+/* SFF8472 A2 registers */
+
+/* 32-bit little-endian calibration constants */
+#define SFF8472_CAL_RXPWR4                 56
+#define SFF8472_CAL_RXPWR3                 60
+#define SFF8472_CAL_RXPWR2                 64
+#define SFF8472_CAL_RXPWR1                 68
+#define SFF8472_CAL_RXPWR0                 72
+
+/* 16-bit little endian calibration constants */
+#define SFF8472_CAL_TXI_SLP                76
+#define SFF8472_CAL_TXI_OFF                78
+#define SFF8472_CAL_TXPWR_SLP              80
+#define SFF8472_CAL_TXPWR_OFF              82
+#define SFF8472_CAL_T_SLP                  84
+#define SFF8472_CAL_T_OFF                  86
+#define SFF8472_CAL_V_SLP                  88
+#define SFF8472_CAL_V_OFF                  90
+
+#define SFF8472_RX_PWR(dom)                \
+    (dom[104] << 8 | dom[104 + 1])
+#define SFF8472_BIAS_CUR(dom)              \
+    (dom[100] << 8 | dom[100 + 1])
+#define SFF8472_SFP_VOLT(dom)              \
+    (dom[98] << 8 | dom[98 + 1])
+#define SFF8472_TX_PWR(dom)                \
+    (dom[102] << 8 | dom[102 + 1])
+#define SFF8472_SFP_TEMP(dom)              \
+    (dom[96] << 8 | dom[96 + 1])
+
 #define SFF8472_MEDIA_XGE_SR(idprom)            \
     ((idprom[3] & SFF8472_CC3_XGE_BASE_SR) != 0)
 #define SFF8472_MEDIA_XGE_LR(idprom)            \

@@ -200,7 +200,6 @@ extern aim_map_si_t sff_module_caps_map[];
 extern aim_map_si_t sff_module_caps_desc_map[];
 /* <auto.end.enum(ALL).header> */
 
-
 /**
  * @brief Determine the SFP type (from the idprom data).
  * @param idprom The SFF idprom.
@@ -282,6 +281,13 @@ typedef struct sff_info_s {
 
     /** whether this SFP is supported */
     int supported;
+
+    /** whether this SFP supports SFF8472(DOM) */
+    uint8_t support_dom;
+    /** whether externally calibrated */
+    uint8_t calibrate_ext;
+    /** Power measurement type */
+    uint8_t rx_power_type;
 
 } sff_info_t;
 
