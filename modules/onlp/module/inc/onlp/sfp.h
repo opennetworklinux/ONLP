@@ -48,16 +48,16 @@ typedef enum onlp_sfp_control_e {
 /* <auto.end.enum(tag:sfp1).define> */
 
 /* <auto.start.enum(tag:sfp2).define> */
-/** onlp_sfp_control_flags */
-typedef enum onlp_sfp_control_flags_e {
-    ONLP_SFP_CONTROL_FLAGS_RESET = (1 << ONLP_SFP_CONTROL_RESET),
-    ONLP_SFP_CONTROL_FLAGS_RESET_STATE = ( 1 << ONLP_SFP_CONTROL_RESET_STATE ),
-    ONLP_SFP_CONTROL_FLAGS_RX_LOS = ( 1 << ONLP_SFP_CONTROL_RX_LOS ),
-    ONLP_SFP_CONTROL_FLAGS_TX_FAULT = ( 1 << ONLP_SFP_CONTROL_TX_FAULT ),
-    ONLP_SFP_CONTROL_FLAGS_TX_DISABLE = ( 1 << ONLP_SFP_CONTROL_TX_DISABLE ),
-    ONLP_SFP_CONTROL_FLAGS_LP_MODE = ( 1 << ONLP_SFP_CONTROL_LP_MODE ),
-    ONLP_SFP_CONTROL_FLAGS_POWER_OVERRIDE = ( 1 << ONLP_SFP_CONTROL_POWER_OVERRIDE ),
-} onlp_sfp_control_flags_t;
+/** onlp_sfp_control_flag */
+typedef enum onlp_sfp_control_flag_e {
+    ONLP_SFP_CONTROL_FLAG_RESET = (1 << ONLP_SFP_CONTROL_RESET),
+    ONLP_SFP_CONTROL_FLAG_RESET_STATE = ( 1 << ONLP_SFP_CONTROL_RESET_STATE ),
+    ONLP_SFP_CONTROL_FLAG_RX_LOS = ( 1 << ONLP_SFP_CONTROL_RX_LOS ),
+    ONLP_SFP_CONTROL_FLAG_TX_FAULT = ( 1 << ONLP_SFP_CONTROL_TX_FAULT ),
+    ONLP_SFP_CONTROL_FLAG_TX_DISABLE = ( 1 << ONLP_SFP_CONTROL_TX_DISABLE ),
+    ONLP_SFP_CONTROL_FLAG_LP_MODE = ( 1 << ONLP_SFP_CONTROL_LP_MODE ),
+    ONLP_SFP_CONTROL_FLAG_POWER_OVERRIDE = ( 1 << ONLP_SFP_CONTROL_POWER_OVERRIDE ),
+} onlp_sfp_control_flag_t;
 /* <auto.end.enum(tag:sfp2).define> */
 
 /**
@@ -232,25 +232,25 @@ extern aim_map_si_t onlp_sfp_control_desc_map[];
 
 /* <auto.start.enum(tag:sfp2).supportheader> */
 /** Enum names. */
-const char* onlp_sfp_control_flags_name(onlp_sfp_control_flags_t e);
+const char* onlp_sfp_control_flag_name(onlp_sfp_control_flag_t e);
 
 /** Enum values. */
-int onlp_sfp_control_flags_value(const char* str, onlp_sfp_control_flags_t* e, int substr);
+int onlp_sfp_control_flag_value(const char* str, onlp_sfp_control_flag_t* e, int substr);
 
 /** Enum descriptions. */
-const char* onlp_sfp_control_flags_desc(onlp_sfp_control_flags_t e);
+const char* onlp_sfp_control_flag_desc(onlp_sfp_control_flag_t e);
 
 /** Enum validator. */
-int onlp_sfp_control_flags_valid(onlp_sfp_control_flags_t e);
+int onlp_sfp_control_flag_valid(onlp_sfp_control_flag_t e);
 
 /** validator */
-#define ONLP_SFP_CONTROL_FLAGS_VALID(_e) \
-    (onlp_sfp_control_flags_valid((_e)))
+#define ONLP_SFP_CONTROL_FLAG_VALID(_e) \
+    (onlp_sfp_control_flag_valid((_e)))
 
-/** onlp_sfp_control_flags_map table. */
-extern aim_map_si_t onlp_sfp_control_flags_map[];
-/** onlp_sfp_control_flags_desc_map table. */
-extern aim_map_si_t onlp_sfp_control_flags_desc_map[];
+/** onlp_sfp_control_flag_map table. */
+extern aim_map_si_t onlp_sfp_control_flag_map[];
+/** onlp_sfp_control_flag_desc_map table. */
+extern aim_map_si_t onlp_sfp_control_flag_desc_map[];
 /* <auto.end.enum(tag:sfp2).supportheader> */
 
 #endif /* __ONLP_SFP_H__ */

@@ -239,7 +239,7 @@ definitions:
         - TX_DISABLE
         - LP_MODE
         - POWER_OVERRIDE
-    onlp_sfp_control_flags:
+    onlp_sfp_control_flag:
       tag: sfp2
       members:
         - RESET :          (1 << ONLP_SFP_CONTROL_RESET)

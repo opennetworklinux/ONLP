@@ -38,7 +38,7 @@ datatypes_init__(void)
     /*
      * Register our flag maps.
      */
-    AIM_DATATYPE_FMAP_REGISTER(onlp_sfp_control_flags, onlp_sfp_control_flags_map, "SFP Control Flags", AIM_LOG_INTERNAL);
+    AIM_DATATYPE_FMAP_REGISTER(onlp_sfp_control_flags, onlp_sfp_control_flag_map, "SFP Control Flags", AIM_LOG_INTERNAL);
     AIM_DATATYPE_FMAP_REGISTER(onlp_fan_caps_flags, onlp_fan_caps_map, "FAN Capability Flags", AIM_LOG_INTERNAL);
     AIM_DATATYPE_FMAP_REGISTER(onlp_fan_status_flags, onlp_fan_status_map, "FAN Status Flags", AIM_LOG_INTERNAL);
     AIM_DATATYPE_FMAP_REGISTER(onlp_thermal_status_flags, onlp_thermal_status_map, "Thermal Status Flags", AIM_LOG_INTERNAL);
