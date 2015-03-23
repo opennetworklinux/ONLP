@@ -282,13 +282,6 @@ typedef struct sff_info_s {
     /** whether this SFP is supported */
     int supported;
 
-    /** whether this SFP supports SFF8472(DOM) */
-    uint8_t support_dom;
-    /** whether externally calibrated */
-    uint8_t calibrate_ext;
-    /** Power measurement type */
-    uint8_t rx_power_type;
-
 } sff_info_t;
 
 
