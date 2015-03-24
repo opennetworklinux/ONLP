@@ -66,6 +66,10 @@ sff_module_type_get(const uint8_t* idprom)
         return SFF_MODULE_TYPE_40G_BASE_ACTIVE;
 
     if (SFF8436_MODULE_QSFP_PLUS_V2(idprom)
+        && _sff8436_qsfp_40g_aoc_breakout(idprom))
+        return SFF_MODULE_TYPE_40G_BASE_SR4;
+
+    if (SFF8436_MODULE_QSFP_PLUS_V2(idprom)
         && SFF8436_MEDIA_40GE_CR(idprom))
         return SFF_MODULE_TYPE_40G_BASE_CR;
 
@@ -343,22 +347,30 @@ sff_info_init(sff_info_t* rv, uint8_t* eeprom)
         return -1;
     }
 
-    rv->length = -1;
-    if(rv->media_type == SFF_MEDIA_TYPE_COPPER) {
-        switch(rv->sfp_type)
-            {
-            case SFF_SFP_TYPE_QSFP_PLUS:
-                rv->length = rv->eeprom[146];
-                break;
-            case SFF_SFP_TYPE_SFP:
-                rv->length = rv->eeprom[18];
-                break;
-
-            case SFF_SFP_TYPE_QSFP:
-            case SFF_SFP_TYPE_COUNT:
-            case SFF_SFP_TYPE_INVALID:
-                break;
-            }
+    int aoc_length;
+    switch (rv->media_type) {
+    case SFF_MEDIA_TYPE_COPPER:
+        switch (rv->sfp_type) {
+        case SFF_SFP_TYPE_QSFP_PLUS:
+            rv->length = rv->eeprom[146];
+            break;
+        case SFF_SFP_TYPE_SFP:
+            rv->length = rv->eeprom[18];
+            break;
+        default:
+            rv->length = -1;
+            break;
+        }
+        break;
+    case SFF_MEDIA_TYPE_FIBER:
+        aoc_length = _sff8436_qsfp_40g_aoc_length(rv->eeprom);
+        if (aoc_length > 0)
+            rv->length = aoc_length;
+        else
+            rv->length = -1;
+        break;
+    default:
+        rv->length = -1;
     }
 
     const uint8_t *vendor, *model, *serial;
