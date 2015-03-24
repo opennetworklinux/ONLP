@@ -61,6 +61,11 @@
 /* addtional values from this spec */
 #define SFF8436_CONN_NONE                0x23
 
+/* Amphenol QSFP, identified as "QSFP" (not "QSFP+") and copper
+   pigtail */
+#define SFF8436_MEDIA_40GE_CR(idprom)                    \
+  (idprom[130] == SFF8436_CONN_CU_PIGTAIL)
+
 /* QSFP+ compliance codes, bytes 131-138 */
 #define SFF8436_CC131_XGE_BASE_LRM       SFF8472_CC3_XGE_BASE_LRM
 #define SFF8436_CC131_XGE_BASE_LR        SFF8472_CC3_XGE_BASE_LR
@@ -86,10 +91,8 @@
 #define SFF8436_MEDIA_40GE_ACTIVE(idprom)               \
   ((idprom[131] & SFF8436_CC131_40GE_ACTIVE) != 0)
 
-/* Amphenol QSFP, identified as "QSFP" (not "QSFP+") and copper
-   pigtail */
-#define SFF8436_MEDIA_40GE_CR(idprom)                    \
-  (idprom[130] == SFF8436_CONN_CU_PIGTAIL)
+#define SFF8436_MEDIA_NONE(idprom)              \
+    (idprom[131] == 0)
 
 #define SFF8436_CC132_40G_OTN            0x08
 #define SFF8436_CC132_OC48_LONG          SFF8472_CC4_OC48_LONG
@@ -181,12 +184,12 @@
 #define SFF8436_CC138_FC_SPEED_800       SFF8472_CC10_FC_SPEED_800
 #define SFF8436_CC138_FC_SPEED_1200      SFF8472_CC10_FC_SPEED_1200
 
-#define SFF8436_CC129_8B10B              0x01
-#define SFF8436_CC129_4B5B               0x02
-#define SFF8436_CC129_NRZ                0x03
-#define SFF8436_CC129_SONET              0x04
-#define SFF8436_CC129_64B66B             0x05
-#define SFF8436_CC129_MANCHESTER         0x06
+#define SFF8436_CC139_8B10B              0x01
+#define SFF8436_CC139_4B5B               0x02
+#define SFF8436_CC139_NRZ                0x03
+#define SFF8436_CC139_SONET              0x04
+#define SFF8436_CC139_64B66B             0x05
+#define SFF8436_CC139_MANCHESTER         0x06
 
 #define SFF8436_CC164_INF_SDR            0x01
 #define SFF8436_CC164_INF_DDR            0x02
@@ -261,6 +264,12 @@ static inline int
 _sff8436_length_om1(const uint8_t *idprom)
 {
     return idprom[145];
+}
+
+static inline int
+_sff8436_length_copper_active(const uint8_t *idprom)
+{
+    return idprom[146];
 }
 
 static inline int
@@ -358,6 +367,80 @@ _sff8436_qsfp_40g_sr4_aoc_pre(const uint8_t *idprom)
     if ((br >= 10LL*1000*1000000) && (br < 15LL*1000*1000000)) return 1;
     return 0;
     
+}
+
+/*
+ * 40G AOC breakout cable, e.g. Finisar
+ */
+static inline int
+_sff8436_qsfp_40g_aoc_breakout(const uint8_t *idprom)
+{
+    /* module should be qsfp */
+    if (!SFF8436_MODULE_QSFP_PLUS(idprom)
+        && !SFF8436_MODULE_QSFP_PLUS_V2(idprom))
+        return 0;
+
+    /* no separable connector -- likely active */
+    if (idprom[130] != SFF8436_CONN_NONE) return 0;
+
+    /* no media compliance, probably active or breakout */
+    if (!SFF8436_MEDIA_NONE(idprom)) return 0;
+
+    /* reject any 40G compliance codes */
+    if (SFF8436_MEDIA_40GE_CR4(idprom)) return 0;
+    if (SFF8436_MEDIA_40GE_SR4(idprom)) return 0;
+    if (SFF8436_MEDIA_40GE_LR4(idprom)) return 0;
+
+    /* also does not report as active! Ugh. */
+    if (SFF8436_MEDIA_40GE_ACTIVE(idprom)) return 0;
+
+    /* reject any unrelated compliance codes */
+    if (SFF8436_MEDIA_XGE_LRM(idprom)) return 0;
+    if (SFF8436_MEDIA_XGE_LR(idprom)) return 0;
+    if (SFF8436_MEDIA_XGE_SR(idprom)) return 0;
+
+    /* make sure it's MM fiber */
+    if (_sff8436_wavelength(idprom) != 850) return 0;
+
+    /* does not report a fiber length, but does report a cable length */
+    if (_sff8436_length_sm(idprom) > 0) return 0;
+    if (_sff8436_length_om1(idprom) > 0) return 0;
+    if (_sff8436_length_om2(idprom) > 0) return 0;
+    if (_sff8436_length_om3(idprom) > 0) return 0;
+    if (_sff8436_length_copper_active(idprom) == 0) return 0;
+
+    /* maybe, possibly an AOC breakout cable */
+    return 1;
+}
+
+/*
+ * Infer cable length for fixed-length (AOC) optical cables
+ *
+ * XXX roth -- may also be able to cook up a rule for SFP+ cables too.
+ */
+static inline int
+_sff8436_qsfp_40g_aoc_length(const uint8_t *idprom)
+{
+    /* module should be qsfp */
+    if (!SFF8436_MODULE_QSFP_PLUS(idprom)
+        && !SFF8436_MODULE_QSFP_PLUS_V2(idprom))
+        return -1;
+
+    /* no separable connector -- likely active */
+    if (idprom[130] != SFF8436_CONN_NONE) return -1;
+
+    /* make sure it's MM fiber */
+    if (_sff8436_wavelength(idprom) != 850) return 0;
+
+    /* does not report a fiber length, but does report a cable length */
+    if (_sff8436_length_sm(idprom) > 0) return -1;
+    if (_sff8436_length_om1(idprom) > 0) return -1;
+    if (_sff8436_length_om2(idprom) > 0) return -1;
+    if (_sff8436_length_om3(idprom) > 0) return -1;
+    if (_sff8436_length_copper_active(idprom) > 0)
+        return _sff8436_length_copper_active(idprom);
+
+    return -1;
 }
 
 #endif /* __SFF_8436_H__ */
