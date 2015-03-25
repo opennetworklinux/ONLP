@@ -39,6 +39,29 @@
   ((idprom[128] == SFF8436_IDENT_QSFP)          \
    || (idprom[128] == SFF8436_IDENT_QSFP_PLUS))
 
+#define SFF8436_RX1_PWR(idprom)                \
+    (idprom[34] << 8 | idprom[34 + 1])
+#define SFF8436_RX2_PWR(idprom)                \
+    (idprom[36] << 8 | idprom[36 + 1])
+#define SFF8436_RX3_PWR(idprom)                \
+    (idprom[38] << 8 | idprom[38 + 1])
+#define SFF8436_RX4_PWR(idprom)                \
+    (idprom[40] << 8 | idprom[40 + 1])
+
+#define SFF8436_TX1_BIAS(idprom)              \
+    (idprom[42] << 8 | idprom[42 + 1])
+#define SFF8436_TX2_BIAS(idprom)              \
+    (idprom[44] << 8 | idprom[44 + 1])
+#define SFF8436_TX3_BIAS(idprom)              \
+    (idprom[46] << 8 | idprom[46 + 1])
+#define SFF8436_TX4_BIAS(idprom)              \
+    (idprom[48] << 8 | idprom[48 + 1])
+
+#define SFF8436_SFP_VOLT(idprom)              \
+    (idprom[26] << 8 | idprom[26 + 1])
+#define SFF8436_SFP_TEMP(idprom)              \
+    (idprom[22] << 8 | idprom[22 + 1])
+
 /* connector value, byte 130 page 0 */
 
 #define SFF8436_CONN_UNKNOWN             SFF8472_CONN_UNKNOWN
@@ -196,6 +219,10 @@
 #define SFF8436_CC164_INF_QDR            0x04
 #define SFF8436_CC164_INF_FDR            0x08
 #define SFF8436_CC164_INF_EDR            0x10
+
+#define SFF8436_RX_PWR_TYPE_MASK         0x08
+#define SFF8436_DOM_GET_RXPWR_TYPE(idprom)               \
+        (idprom[220] & SFF8436_RX_PWR_TYPE_MASK)
 
 /* alternate ways to identify pre-standard 40G cables */
 static inline int

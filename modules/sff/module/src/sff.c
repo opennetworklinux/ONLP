@@ -423,10 +423,6 @@ sff_info_init(sff_info_t* rv, uint8_t* eeprom)
     }
     rv->supported = 1;
 
-    /* DOM(SFF-8472) related info  */
-    rv->support_dom = SFF8472_DOM_SUPPORTED(rv->eeprom);
-    rv->calibrate_ext = SFF8472_DOM_USE_EXTCAL(rv->eeprom);
-    rv->rx_power_type = SFF8472_DOM_GET_RXPWR_TYPE(rv->eeprom);
     return 0;
 }
 
