@@ -110,17 +110,27 @@ ONLP_LOCKED_API1(onlp_sfp_is_present, int, port);
 static int
 onlp_sfp_presence_bitmap_get_locked__(onlp_sfp_bitmap_t* dst)
 {
-    return onlp_sfpi_presence_bitmap_get(dst);
+    int rv = onlp_sfpi_presence_bitmap_get(dst);
+
+    if(rv == ONLP_STATUS_E_UNSUPPORTED) {
+        /* Generate from single-port API */
+        int p;
+        AIM_BITMAP_CLR_ALL(dst);
+        AIM_BITMAP_ITER(&sfpi_bitmap__, p) {
+            rv = onlp_sfp_is_present_locked__(p);
+            if(rv < 0) {
+                return rv;
+            }
+            if(rv > 0) {
+                AIM_BITMAP_SET(dst, p);
+            }
+        }
+        return 0;
+    }
+
+    return rv;
 }
 ONLP_LOCKED_API1(onlp_sfp_presence_bitmap_get, onlp_sfp_bitmap_t*, dst);
-
-
-static int
-onlp_sfp_rx_los_bitmap_get_locked__(onlp_sfp_bitmap_t* dst)
-{
-    return onlp_sfpi_rx_los_bitmap_get(dst);
-}
-ONLP_LOCKED_API1(onlp_sfp_rx_los_bitmap_get, onlp_sfp_bitmap_t*, dst);
 
 int
 onlp_sfp_port_valid(int port)
@@ -294,6 +304,34 @@ onlp_sfp_control_get_locked__(int port, onlp_sfp_control_t control, int* value)
 }
 ONLP_LOCKED_API3(onlp_sfp_control_get, int, port, onlp_sfp_control_t, control,
                  int*, value);
+
+
+
+static int
+onlp_sfp_rx_los_bitmap_get_locked__(onlp_sfp_bitmap_t* dst)
+{
+    int rv = onlp_sfpi_rx_los_bitmap_get(dst);
+
+    if(rv == ONLP_STATUS_E_UNSUPPORTED) {
+        /* Generate from control API */
+        int p;
+        AIM_BITMAP_CLR_ALL(dst);
+        AIM_BITMAP_ITER(&sfpi_bitmap__, p) {
+            int v;
+            rv = onlp_sfp_control_get_locked__(p, ONLP_SFP_CONTROL_RX_LOS, &v);
+            if(rv < 0) {
+                return rv;
+            }
+            if(v) {
+                AIM_BITMAP_SET(dst, p);
+            }
+        }
+    }
+
+    return rv;
+}
+ONLP_LOCKED_API1(onlp_sfp_rx_los_bitmap_get, onlp_sfp_bitmap_t*, dst);
+
 
 int
 onlp_sfp_control_flags_get(int port, uint32_t* flags)
