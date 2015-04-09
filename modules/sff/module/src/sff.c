@@ -124,8 +124,12 @@ sff_module_type_get(const uint8_t* idprom)
         return SFF_MODULE_TYPE_10G_BASE_CR;
 
     if (SFF8472_MODULE_SFP(idprom)
-        && _sff8472_media_cr_active(idprom))
-        return SFF_MODULE_TYPE_10G_BASE_CR;
+        && _sff8472_media_cr_active(idprom)) {
+        if (_sff8472_sfp_10g_aoc(idprom))
+            return SFF_MODULE_TYPE_10G_BASE_SR;
+        else
+            return SFF_MODULE_TYPE_10G_BASE_CR;
+    }
 
     if (SFF8472_MODULE_SFP(idprom)
         && SFF8472_MEDIA_GBE_SX(idprom))
@@ -364,6 +368,8 @@ sff_info_init(sff_info_t* rv, uint8_t* eeprom)
         break;
     case SFF_MEDIA_TYPE_FIBER:
         aoc_length = _sff8436_qsfp_40g_aoc_length(rv->eeprom);
+        if (aoc_length < 0)
+            aoc_length = _sff8472_sfp_10g_aoc_length(rv->eeprom);
         if (aoc_length > 0)
             rv->length = aoc_length;
         else

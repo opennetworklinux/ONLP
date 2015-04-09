@@ -444,23 +444,83 @@ _sff8472_sfp_plus_active(const uint8_t* idprom)
     ((idprom[60] == 0)                     \
      && (idprom[61] == 0))
 
-#define _SFF8472_COMPLIANCE_PASSIVE_FC(idprom)  \
-    (((idprom[60] & SFF8471_CC60_FC_PI_4) != 0) \
-     && (idprom[61] == 0))
+static inline int
+_sff8472_compliance_passive_fc(const uint8_t* idprom)
+{
+    if (idprom[61] != 0) return 0;
 
-#define _SFF8472_COMPLIANCE_PASSIVE_SFF(idprom) \
-    (((idprom[60] & SFF8471_CC60_SFF8431) != 0) \
-     && (idprom[61] == 0))
+    int byte = idprom[60];
 
-#define _SFF8472_COMPLIANCE_ACTIVE_FC(idprom)                   \
-    ((((idprom[60] & SFF8471_CC60_FC_PI_4) != 0)                \
-      || (idprom[60] & SFF8471_CC60_FC_PI_4_LIMITING) != 0)     \
-     && (idprom[61] == 0))
+    if ((byte & SFF8471_CC60_FC_PI_4) == 0) return 0;
 
-#define _SFF8472_COMPLIANCE_ACTIVE_SFF(idprom)                  \
-    ((((idprom[60] & SFF8471_CC60_SFF8431) != 0)                \
-      || (idprom[60] & SFF8471_CC60_SFF8431_LIMITING) != 0)     \
-     && (idprom[61] == 0))
+    /* no other wavelength-ish bits */
+    byte &= ~SFF8471_CC60_FC_PI_4;
+    byte &= ~SFF8471_CC60_SFF8431;
+    if (byte != 0) return 0;
+
+    return 1;
+}
+
+static inline int
+_sff8472_compliance_passive_sff(const uint8_t* idprom)
+{
+    if (idprom[61] != 0) return 0;
+
+    int byte = idprom[60];
+
+    if ((byte & SFF8471_CC60_SFF8431) == 0) return 0;
+
+    /* no other wavelength-ish bits */
+    byte &= ~SFF8471_CC60_FC_PI_4;
+    byte &= ~SFF8471_CC60_SFF8431;
+    if (byte != 0) return 0;
+
+    return 1;
+}
+
+static inline int
+_sff8472_compliance_active_fc(const uint8_t* idprom)
+{
+    if (idprom[61] != 0) return 0;
+
+    int byte = idprom[60];
+
+    if (((byte & SFF8471_CC60_FC_PI_4) == 0)
+        && ((byte & SFF8471_CC60_FC_PI_4_LIMITING) == 0))
+        return 0;
+
+    /* no other wavelength-ish bits */
+    byte &= ~SFF8471_CC60_FC_PI_4;
+    byte &= ~SFF8471_CC60_FC_PI_4_LIMITING;
+    byte &= ~SFF8471_CC60_SFF8431;
+    byte &= ~SFF8471_CC60_SFF8431_LIMITING;
+    if (byte != 0) return 0;
+
+    if (idprom[61] != 0) return 0;
+
+    return 1;
+}
+
+static inline int
+_sff8472_compliance_active_sff(const uint8_t* idprom)
+{
+    int byte = idprom[60];
+
+    if (((byte & SFF8471_CC60_SFF8431) == 0)
+        && ((byte & SFF8471_CC60_SFF8431_LIMITING) == 0))
+        return 0;
+
+    /* no other wavelength-ish bits */
+    byte &= ~SFF8471_CC60_FC_PI_4;
+    byte &= ~SFF8471_CC60_FC_PI_4_LIMITING;
+    byte &= ~SFF8471_CC60_SFF8431;
+    byte &= ~SFF8471_CC60_SFF8431_LIMITING;
+    if (byte != 0) return 0;
+
+    if (idprom[61] != 0) return 0;
+
+    return 1;
+}
 
 /*
  * Cisco pre-standard CR cables
@@ -633,8 +693,8 @@ _sff8472_media_cr_passive(const uint8_t* idprom)
         maybe = 1;
 
     if (maybe) {
-        if (!_SFF8472_COMPLIANCE_PASSIVE_FC(idprom)
-            && !_SFF8472_COMPLIANCE_PASSIVE_SFF(idprom)
+        if (!_sff8472_compliance_passive_fc(idprom)
+            && !_sff8472_compliance_passive_sff(idprom)
             && (_SFF8472_WAVELENGTH(idprom) != 850)
             && !_SFF8472_COMPLIANCE_UNSPEC(idprom)
             && !_sff8472_hack_cr(idprom))
@@ -693,8 +753,8 @@ _sff8472_media_cr_active(const uint8_t* idprom)
         return 0;
 
     if (maybe) {
-        if (!_SFF8472_COMPLIANCE_ACTIVE_FC(idprom)
-            && !_SFF8472_COMPLIANCE_ACTIVE_SFF(idprom)
+        if (!_sff8472_compliance_active_fc(idprom)
+            && !_sff8472_compliance_active_sff(idprom)
             && !_SFF8472_COMPLIANCE_UNSPEC(idprom))
             return 0;
     }
@@ -817,6 +877,79 @@ _sff8472_media_gbe_lx_fc_hack(const uint8_t *idprom)
         return 1;
     else
         return 0;
+}
+
+/*
+ * Try to identify active SR cables, like breakouts
+ */
+static inline int
+_sff8472_sfp_10g_aoc(const uint8_t *idprom)
+{
+    /* module should be sfp */
+    if (!SFF8472_MODULE_SFP(idprom)) return 0;
+
+    /* should report any normal specs */
+    if (_sff8472_fc_media(idprom)) return 0;
+    if (_sff8472_tech_fc(idprom)) return 0;
+
+    if (SFF8472_MEDIA_XGE_SR(idprom)) return 0;
+    if (SFF8472_MEDIA_XGE_LR(idprom)) return 0;
+    if (SFF8472_MEDIA_XGE_LRM(idprom)) return 0;
+    if (SFF8472_MEDIA_XGE_ER(idprom)) return 0;
+
+    if (SFF8472_MEDIA_GBE_SX(idprom)) return 0;
+    if (SFF8472_MEDIA_GBE_LX(idprom)) return 0;
+    if (SFF8472_MEDIA_GBE_CX(idprom)) return 0;
+    if (SFF8472_MEDIA_GBE_T(idprom)) return 0;
+    if (SFF8472_MEDIA_CBE_LX(idprom)) return 0;
+    if (SFF8472_MEDIA_CBE_FX(idprom)) return 0;
+
+    /* should be active */
+    if (!_sff8472_sfp_plus_active(idprom)) return 0;
+
+    /* should not report passive cable compliance */
+    if (_sff8472_compliance_passive_fc(idprom)) return 0;
+    if (_sff8472_compliance_passive_sff(idprom)) return 0;
+
+    /* should report active FC or SFF */
+    if (!_sff8472_compliance_active_fc(idprom)
+        && !_sff8472_compliance_active_sff(idprom))
+        return 0;
+
+    /* nominal BR should be 10g */
+    if (!_sff8472_bitrate_xge(idprom)) return 0;
+
+    /* should be a short-ish cable */
+    if (_sff8472_length_sm(idprom)) return 0;
+    if (_sff8472_length_om1(idprom)) return 0;
+    if (_sff8472_length_om2(idprom)) return 0;
+    if (_sff8472_length_om3(idprom)) return 0;
+
+    if (!_sff8472_length_cu(idprom)) return 0;
+    if (_sff8472_length_cu(idprom) > 3) return 0;
+
+    /* congratulations, probably an active optical cable */
+    return 1;
+}
+
+/*
+ * Infer cable length for fixed-length (AOC) optical cables
+ */
+static inline int
+_sff8472_sfp_10g_aoc_length(const uint8_t *idprom)
+{
+    /* module should be qsfp */
+    if (!SFF8472_MODULE_SFP(idprom)) return -1;
+
+    /* does not report a fiber length, but does report a cable length */
+    if (_sff8472_length_sm(idprom) > 0) return -1;
+    if (_sff8472_length_om1(idprom) > 0) return -1;
+    if (_sff8472_length_om2(idprom) > 0) return -1;
+    if (_sff8472_length_om3(idprom) > 0) return -1;
+    if (_sff8472_length_cu(idprom) > 0)
+        return _sff8472_length_cu(idprom);
+
+    return -1;
 }
 
 #endif
