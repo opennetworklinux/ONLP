@@ -78,9 +78,10 @@ onlpdump_main(int argc, char* argv[])
     int i = 0;
     int p = 0;
     int x = 0;
+    const char* O = NULL;
     const char* t = NULL;
 
-    while( (c = getopt(argc, argv, "srehdojmipxt:")) != -1) {
+    while( (c = getopt(argc, argv, "srehdojmipxt:O:")) != -1) {
         switch(c)
             {
             case 's': show=1; break;
@@ -95,6 +96,7 @@ onlpdump_main(int argc, char* argv[])
             case 'i': i=1; break;
             case 'p': p=1; show=-1; break;
             case 't': t = optarg; break;
+            case 'O': O = optarg; break;
             default: help=1; rv = 1; break;
             }
     }
@@ -112,10 +114,12 @@ onlpdump_main(int argc, char* argv[])
         printf("  -i   Iterate OIDs.\n");
         printf("  -p   Show SFP presence.\n");
         printf("  -t <file>  Decode TlvInfo data.\n");
+        printf("  -O <oid> Dump OID.\n");
         return rv;
     }
 
-    if(t) {
+
+    if(t){
         int rv;
         onlp_onie_info_t onie;
         rv = onlp_onie_decode_file(&onie, t);
@@ -131,6 +135,16 @@ onlpdump_main(int argc, char* argv[])
     }
 
     onlp_init();
+
+    if(O) {
+        int oid;
+        if(sscanf(O, "0x%x", &oid) == 1) {
+            onlp_oid_dump(oid, &aim_pvs_stdout,
+                          ONLP_OID_DUMP_F_RECURSE |
+                          ONLP_OID_DUMP_F_EVEN_IF_ABSENT);
+        }
+        return 0;
+    }
 
     if(i) {
         iterate_oids__();
