@@ -84,6 +84,45 @@ onlp_i2c_open(int bus, uint8_t addr, uint32_t flags)
 }
 
 int
+onlp_i2c_block_read(int bus, uint8_t addr, uint8_t offset, int size,
+                    uint8_t* rdata, uint32_t flags)
+{
+    int fd;
+
+    fd = onlp_i2c_open(bus, addr, flags);
+
+    if(fd < 0) {
+        return fd;
+    }
+
+    int count = size;
+    uint8_t* p = rdata;
+    while(count > 0) {
+        int rsize = (count >= ONLPLIB_CONFIG_I2C_BLOCK_SIZE) ? ONLPLIB_CONFIG_I2C_BLOCK_SIZE : count;
+        int rv = i2c_smbus_read_i2c_block_data(fd,
+                                               p - rdata,
+                                               rsize,
+                                               p);
+
+        if(rv != rsize) {
+            AIM_LOG_ERROR("i2c-%d: reading address 0x%x, offset %d, size=%d failed: %{errno}",
+                          bus, addr, p - rdata, rsize, errno);
+            goto error;
+        }
+
+        p += rsize;
+        count -= rsize;
+    }
+
+    close(fd);
+    return 0;
+
+ error:
+    close(fd);
+    return -1;
+}
+
+int
 onlp_i2c_read(int bus, uint8_t addr, uint8_t offset, int size,
               uint8_t* rdata, uint32_t flags)
 {

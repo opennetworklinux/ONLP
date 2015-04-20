@@ -63,9 +63,24 @@ int onlp_i2c_open(int bus, uint8_t addr, uint32_t flags);
  * @param size The byte count.
  * @param rdata [out] Receives the data.
  * @param flags See ONLP_I2C_F_*
+ * @note This function reads a byte at a time.
+ * See onlp_i2c_read_block() for block reads.
  */
+
 int onlp_i2c_read(int bus, uint8_t addr, uint8_t offset, int size,
                   uint8_t* rdata, uint32_t flags);
+
+/**
+ * @brief Read i2c data blocks.
+ * @param bus The i2c bus number.
+ * @param add The slave address.
+ * @param offset The starting offset.
+ * @param size The byte count.
+ * @param flags Seel ONLP_I2C_F_*
+ * @note This function reads in increments of ONLPLIB_CONFIG_I2C_BLOCK_SIZE
+ */
+int onlp_i2c_block_read(int bus, uint8_t addr, uint8_t offset, int size,
+                        uint8_t* rdata, uint32_t flags);
 
 /**
  * @brief Write i2c data.

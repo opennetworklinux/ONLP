@@ -125,6 +125,16 @@
 #define ONLPLIB_CONFIG_INCLUDE_I2C 1
 #endif
 
+/**
+ * ONLPLIB_CONFIG_I2C_BLOCK_SIZE
+ *
+ * Maximum read and write block size. */
+
+
+#ifndef ONLPLIB_CONFIG_I2C_BLOCK_SIZE
+#define ONLPLIB_CONFIG_I2C_BLOCK_SIZE 32
+#endif
+
 
 
 /**

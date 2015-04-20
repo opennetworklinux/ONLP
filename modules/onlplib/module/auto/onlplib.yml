@@ -48,7 +48,9 @@ cdefs: &cdefs
 - ONLPLIB_CONFIG_INCLUDE_I2C:
     doc: "Include Userspace I2C support."
     default: 1
-
+- ONLPLIB_CONFIG_I2C_BLOCK_SIZE:
+    doc: "Maximum read and write block size."
+    default: 32
 
 definitions:
   cdefs:

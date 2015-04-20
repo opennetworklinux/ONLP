@@ -70,6 +70,11 @@ onlplib_config_settings_t onlplib_config_settings[] =
 #else
 { ONLPLIB_CONFIG_INCLUDE_I2C(__onlplib_config_STRINGIFY_NAME), "__undefined__" },
 #endif
+#ifdef ONLPLIB_CONFIG_I2C_BLOCK_SIZE
+    { __onlplib_config_STRINGIFY_NAME(ONLPLIB_CONFIG_I2C_BLOCK_SIZE), __onlplib_config_STRINGIFY_VALUE(ONLPLIB_CONFIG_I2C_BLOCK_SIZE) },
+#else
+{ ONLPLIB_CONFIG_I2C_BLOCK_SIZE(__onlplib_config_STRINGIFY_NAME), "__undefined__" },
+#endif
     { NULL, NULL }
 };
 #undef __onlplib_config_STRINGIFY_VALUE
