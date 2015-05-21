@@ -335,6 +335,22 @@ platform_psus_notify__(void)
                                 "PSU %d has failed.", pid);
             }
 
+            if(!(new & ONLP_PSU_STATUS_FAILED)) {
+                if( (old & ONLP_PSU_STATUS_UNPLUGGED) && !(new & ONLP_PSU_STATUS_UNPLUGGED)) {
+                    /* PSU has been plugged in */
+                    AIM_SYSLOG_INFO("PSU <id> has been plugged in.",
+                                    "The given PSU has been plugged in.",
+                                    "PSU %d has been plugged in.", pid);
+                }
+
+                if(!(old & ONLP_PSU_STATUS_UNPLUGGED) && (new & ONLP_PSU_STATUS_UNPLUGGED)) {
+                    /* PSU has been unplugged. */
+                    AIM_SYSLOG_WARN("PSU <id> has been unplugged.",
+                                    "The given PSU has been unplugged.",
+                                    "PSU %d has been unplugged.", pid);
+                }
+            }
+
             memcpy(psu_info_table+i, &pi, sizeof(pi));
         }
     }
