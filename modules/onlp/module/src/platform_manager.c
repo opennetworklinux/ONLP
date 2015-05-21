@@ -330,7 +330,7 @@ platform_psus_notify__(void)
 
             if( !(old & ONLP_PSU_STATUS_FAILED) && (new & ONLP_PSU_STATUS_FAILED) ) {
                 /* PSU Failure */
-                AIM_SYSLOG_INFO("PSU <id> has failed.",
+                AIM_SYSLOG_CRIT("PSU <id> has failed.",
                                 "The given PSU has failed.",
                                 "PSU %d has failed.", pid);
             }
@@ -403,7 +403,7 @@ platform_fans_notify__(void)
 
             if( !(old & ONLP_FAN_STATUS_FAILED) && (new & ONLP_FAN_STATUS_FAILED) ) {
                 /* FAN Failure */
-                AIM_SYSLOG_WARN("Fan <id> has failed.",
+                AIM_SYSLOG_CRIT("Fan <id> has failed.",
                                 "The given fan has failed.",
                                 "Fan %d has failed.", fid);
             }
