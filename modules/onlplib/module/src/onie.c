@@ -357,7 +357,7 @@ onlp_onie_show(onlp_onie_info_t* info, aim_pvs_t* pvs)
     iof_iprintf(&iof, "Manufacture Date: %s", info->manufacture_date);
     iof_iprintf(&iof, "Vendor: %s", info->vendor);
     iof_iprintf(&iof, "Platform Name: %s", info->platform_name);
-    iof_iprintf(&iof, "Device Version: %s", info->device_version);
+    iof_iprintf(&iof, "Device Version: %u", info->device_version);
     iof_iprintf(&iof, "Label Revision: %s", info->label_revision);
     iof_iprintf(&iof, "Country Code: %s", info->country_code);
     iof_iprintf(&iof, "Diag Version: %s", info->diag_version);
