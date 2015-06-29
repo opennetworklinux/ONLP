@@ -390,7 +390,7 @@ onlp_onie_show_json(onlp_onie_info_t* info, aim_pvs_t* pvs)
     STROUT(Manufacture Date,manufacture_date);
     STROUT(Vendor,vendor);
     STROUT(Platform Name,platform_name);
-    STROUT(Device Version,device_version);
+    aim_printf(pvs, "    \"Device Version\": %u,\n", info->device_version);
     STROUT(Label Revision,label_revision);
     STROUT(Country Code,country_code);
     STROUT(Diag Version,diag_version);
