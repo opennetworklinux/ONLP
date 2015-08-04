@@ -1,21 +1,21 @@
 /************************************************************
  * <bsn.cl fy=2014 v=onl>
- * 
- *        Copyright 2014, 2015 Big Switch Networks, Inc.       
- * 
+ *
+ *        Copyright 2014, 2015 Big Switch Networks, Inc.
+ *
  * Licensed under the Eclipse Public License, Version 1.0 (the
  * "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
- * 
+ *
  *        http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the
  * License.
- * 
+ *
  * </bsn.cl>
  ************************************************************
  *
@@ -65,7 +65,7 @@ static char*
 platform_detect__(void)
 {
 #if ONLP_CONFIG_INCLUDE_PLATFORM_STATIC == 1
-    return ONLP_CONFIG_PLATFORM_STATIC ;
+    return aim_strdup(ONLP_CONFIG_PLATFORM_STATIC);
 #endif
     return platform_detect_fs__(1);
 }
@@ -94,6 +94,7 @@ onlp_sys_init_locked__(void)
     }
 
     /* If we get here, its all good */
+    aim_free((char*)current_platform);
     rv = onlp_sysi_init();
     return rv;
 }
@@ -162,6 +163,7 @@ void
 onlp_sys_info_free(onlp_sys_info_t* info)
 {
     onlp_onie_info_free(&info->onie_info);
+    onlp_sysi_platform_info_free(&info->platform_info);
 }
 
 void
