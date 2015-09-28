@@ -1,21 +1,21 @@
 /************************************************************
  * <bsn.cl fy=2014 v=onl>
- * 
- *        Copyright 2014, 2015 Big Switch Networks, Inc.       
- * 
+ *
+ *        Copyright 2014, 2015 Big Switch Networks, Inc.
+ *
  * Licensed under the Eclipse Public License, Version 1.0 (the
  * "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
- * 
+ *
  *        http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the
  * License.
- * 
+ *
  * </bsn.cl>
  ************************************************************
  *
@@ -39,8 +39,24 @@ typedef enum onlp_thermal_status_e {
 /** onlp_thermal_caps */
 typedef enum onlp_thermal_caps_e {
     ONLP_THERMAL_CAPS_GET_TEMPERATURE = (1 << 0),
+    ONLP_THERMAL_CAPS_GET_WARNING_THRESHOLD = (1 << 1),
+    ONLP_THERMAL_CAPS_GET_ERROR_THRESHOLD = (1 << 2),
+    ONLP_THERMAL_CAPS_GET_SHUTDOWN_THRESHOLD = (1 << 3),
 } onlp_thermal_caps_t;
 /* <auto.end.enum(tag:thermal).define> */
+
+/**
+ * Shortcut for specifying all capabilties.
+ */
+#define ONLP_THERMAL_CAPS_ALL 0xF
+
+/**
+ * Shortcut for determining the availability of any threshold value.
+ */
+#define ONLP_THERMAL_CAPS_GET_ANY_THRESHOLD                             \
+    ( ONLP_THERMAL_CAPS_GET_WARNING_THRESHOLD |                         \
+      ONLP_THERMAL_CAPS_GET_ERROR_THRESHOLD   |                         \
+      ONLP_THERMAL_CAPS_GET_SHUTDOWN_THRESHOLD )
 
 /**
  * Thermal sensor information structure.
@@ -58,6 +74,17 @@ typedef struct onlp_thermal_info_s {
 
     /* Current temperature in milli-celsius */
     int mcelsius;
+
+    struct {
+        /* Warning temperature threshold in milli-celsius */
+        int warning;
+
+        /* Error temperature threshold in milli-celsius */
+        int error;
+
+        /* System shutdown temperature threshold in milli-celsius */
+        int shutdown;
+    } thresholds;
 
 } onlp_thermal_info_t;
 

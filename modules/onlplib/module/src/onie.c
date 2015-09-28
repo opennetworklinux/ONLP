@@ -348,22 +348,51 @@ onlp_onie_show(onlp_onie_info_t* info, aim_pvs_t* pvs)
 {
     iof_t iof;
     iof_init(&iof, pvs);
-    iof_iprintf(&iof, "Product Name: %s", info->product_name);
-    iof_iprintf(&iof, "Part Number: %s", info->part_number);
-    iof_iprintf(&iof, "Serial Number: %s", info->serial_number);
-    iof_iprintf(&iof, "MAC: %{mac}", info->mac);
-    iof_iprintf(&iof, "MAC Range: %d", info->mac_range);
-    iof_iprintf(&iof, "Manufacturer: %s", info->manufacturer);
-    iof_iprintf(&iof, "Manufacture Date: %s", info->manufacture_date);
-    iof_iprintf(&iof, "Vendor: %s", info->vendor);
-    iof_iprintf(&iof, "Platform Name: %s", info->platform_name);
-    iof_iprintf(&iof, "Device Version: %u", info->device_version);
-    iof_iprintf(&iof, "Label Revision: %s", info->label_revision);
-    iof_iprintf(&iof, "Country Code: %s", info->country_code);
-    iof_iprintf(&iof, "Diag Version: %s", info->diag_version);
-    iof_iprintf(&iof, "Service Tag: %s", info->service_tag);
-    iof_iprintf(&iof, "ONIE Version: %s", info->onie_version);
-    iof_iprintf(&iof, "CRC: 0x%x", info->crc);
+    if(info->product_name) {
+        iof_iprintf(&iof, "Product Name: %s", info->product_name);
+    }
+    if(info->part_number) {
+        iof_iprintf(&iof, "Part Number: %s", info->part_number);
+    }
+    if(info->serial_number) {
+        iof_iprintf(&iof, "Serial Number: %s", info->serial_number);
+    }
+    if(info->mac) {
+        iof_iprintf(&iof, "MAC: %{mac}", info->mac);
+    }
+    if(info->mac_range) {
+        iof_iprintf(&iof, "MAC Range: %d", info->mac_range);
+    }
+    if(info->manufacturer) {
+        iof_iprintf(&iof, "Manufacturer: %s", info->manufacturer);
+    }
+    if(info->manufacture_date) {
+        iof_iprintf(&iof, "Manufacture Date: %s", info->manufacture_date);
+    }
+    if(info->vendor) {
+        iof_iprintf(&iof, "Vendor: %s", info->vendor);
+    }
+    if(info->platform_name) {
+        iof_iprintf(&iof, "Platform Name: %s", info->platform_name);
+    }
+    if(info->device_version) {
+        iof_iprintf(&iof, "Device Version: %u", info->device_version);
+    }
+    if(info->label_revision) {
+        iof_iprintf(&iof, "Label Revision: %s", info->label_revision);
+    }
+    if(info->country_code) {
+        iof_iprintf(&iof, "Country Code: %s", info->country_code);
+    }
+    if(info->diag_version) {
+        iof_iprintf(&iof, "Diag Version: %s", info->diag_version);
+    }
+    if(info->service_tag) {
+        iof_iprintf(&iof, "Service Tag: %s", info->service_tag);
+    }
+    if(info->onie_version) {
+        iof_iprintf(&iof, "ONIE Version: %s", info->onie_version);
+    }
 }
 
 void

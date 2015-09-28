@@ -984,12 +984,18 @@ onlp_psu_caps_valid(onlp_psu_caps_t e)
 aim_map_si_t onlp_thermal_caps_map[] =
 {
     { "GET_TEMPERATURE", ONLP_THERMAL_CAPS_GET_TEMPERATURE },
+    { "GET_WARNING_THRESHOLD", ONLP_THERMAL_CAPS_GET_WARNING_THRESHOLD },
+    { "GET_ERROR_THRESHOLD", ONLP_THERMAL_CAPS_GET_ERROR_THRESHOLD },
+    { "GET_SHUTDOWN_THRESHOLD", ONLP_THERMAL_CAPS_GET_SHUTDOWN_THRESHOLD },
     { NULL, 0 }
 };
 
 aim_map_si_t onlp_thermal_caps_desc_map[] =
 {
     { "None", ONLP_THERMAL_CAPS_GET_TEMPERATURE },
+    { "None", ONLP_THERMAL_CAPS_GET_WARNING_THRESHOLD },
+    { "None", ONLP_THERMAL_CAPS_GET_ERROR_THRESHOLD },
+    { "None", ONLP_THERMAL_CAPS_GET_SHUTDOWN_THRESHOLD },
     { NULL, 0 }
 };
 

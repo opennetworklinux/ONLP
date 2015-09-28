@@ -202,8 +202,10 @@ onlp_sys_show(onlp_oid_t id, aim_pvs_t* pvs, uint32_t flags)
     int rv;
     iof_t iof;
     onlp_sys_info_t si;
+    int yaml;
 
-    onlp_oid_show_iof_init_default(&iof, pvs);
+    onlp_oid_show_iof_init_default(&iof, pvs, flags);
+    yaml = (flags & ONLP_OID_SHOW_F_YAML);
 
     if(id && ONLP_OID_TYPE_GET(id) != ONLP_OID_TYPE_SYS) {
         return;
@@ -215,11 +217,15 @@ onlp_sys_show(onlp_oid_t id, aim_pvs_t* pvs, uint32_t flags)
         return;
     }
 
+#define YPUSH(key) do { if(yaml) { iof_push(&iof, key); } } while(0)
+#define YPOP()     do { if(yaml) { iof_pop(&iof); } } while(0)
+
     /*
      * The system information is not actually shown
      * unless you specify EXTENDED or !RECURSIVE
      */
-    if(flags & ONLP_OID_SHOW_F_EXTENDED ||
+    if(yaml ||
+       flags & ONLP_OID_SHOW_F_EXTENDED ||
        (flags & ONLP_OID_SHOW_F_RECURSE) == 0) {
         iof_push(&iof, "System Information");
         onlp_onie_show(&si.onie_info, &iof.inherit);
@@ -228,25 +234,36 @@ onlp_sys_show(onlp_oid_t id, aim_pvs_t* pvs, uint32_t flags)
 
     if(flags & ONLP_OID_SHOW_F_RECURSE) {
 
-        /** Show all Chassis Fans */
         onlp_oid_t* oidp;
+
+        /** Show all Chassis Fans */
+        YPUSH("Fans");
         ONLP_OID_TABLE_ITER_TYPE(si.hdr.coids, oidp, FAN) {
             onlp_oid_show(*oidp, &iof.inherit, flags);
         }
+        YPOP();
+
         /** Show all System Thermals */
+        YPUSH("Thermals");
         ONLP_OID_TABLE_ITER_TYPE(si.hdr.coids, oidp, THERMAL) {
             onlp_oid_show(*oidp, &iof.inherit, flags);
         }
+        YPOP();
+
         /** Show all PSUs */
+        YPUSH("PSUs");
         ONLP_OID_TABLE_ITER_TYPE(si.hdr.coids, oidp, PSU) {
             onlp_oid_show(*oidp, &iof.inherit, flags);
         }
+        YPOP();
 
         if(flags & ONLP_OID_SHOW_F_EXTENDED) {
             /** Show all LEDs */
+            YPUSH("LEDs");
             ONLP_OID_TABLE_ITER_TYPE(si.hdr.coids, oidp, LED) {
                 onlp_oid_show(*oidp, &iof.inherit, flags);
             }
+            YPOP();
         }
     }
     onlp_sys_info_free(&si);

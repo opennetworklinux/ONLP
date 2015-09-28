@@ -1,21 +1,21 @@
 /************************************************************
  * <bsn.cl fy=2014 v=onl>
- * 
- *        Copyright 2014, 2015 Big Switch Networks, Inc.       
- * 
+ *
+ *        Copyright 2014, 2015 Big Switch Networks, Inc.
+ *
  * Licensed under the Eclipse Public License, Version 1.0 (the
  * "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
- * 
+ *
  *        http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the
  * License.
- * 
+ *
  * </bsn.cl>
  ************************************************************
  *
@@ -41,7 +41,7 @@ onlp_oid_dump_iof_init_default(iof_t* iof, aim_pvs_t* pvs)
     }
 }
 void
-onlp_oid_show_iof_init_default(iof_t* iof, aim_pvs_t* pvs)
+onlp_oid_show_iof_init_default(iof_t* iof, aim_pvs_t* pvs, uint32_t flags)
 {
     if(iof_init(iof, pvs) == 0) {
         /* Default settings */
@@ -49,7 +49,12 @@ onlp_oid_show_iof_init_default(iof_t* iof, aim_pvs_t* pvs)
         iof->level=1;
         iof->indent_terminator="";
         iof->pop_string = NULL;
-        iof->push_string = "";
+        if(flags & ONLP_OID_SHOW_F_YAML) {
+            iof->push_string = ":";
+        }
+        else {
+            iof->push_string = "";
+	    }
     }
 }
 
