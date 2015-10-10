@@ -135,6 +135,16 @@
 #define ONLPLIB_CONFIG_I2C_BLOCK_SIZE 32
 #endif
 
+/**
+ * ONLPLIB_CONFIG_I2C_HEADER_DIVERTED
+ *
+ * Include the diverted i2c header (include/linux/i2c-dev.h.kernel) */
+
+
+#ifndef ONLPLIB_CONFIG_I2C_HEADER_DIVERTED
+#define ONLPLIB_CONFIG_I2C_HEADER_DIVERTED 0
+#endif
+
 
 
 /**

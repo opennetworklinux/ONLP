@@ -29,7 +29,12 @@
 #include <onlplib/file.h>
 #include <fcntl.h>
 #include <unistd.h>
+
+#if ONLPLIB_CONFIG_I2C_HEADER_DIVERTED == 1
+#include <linux/i2c-dev.h.kernel>
+#else
 #include <linux/i2c-dev.h>
+#endif
 #include <sys/types.h>
 #include <sys/ioctl.h>
 #include <errno.h>

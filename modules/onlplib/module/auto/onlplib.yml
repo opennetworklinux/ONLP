@@ -51,6 +51,9 @@ cdefs: &cdefs
 - ONLPLIB_CONFIG_I2C_BLOCK_SIZE:
     doc: "Maximum read and write block size."
     default: 32
+- ONLPLIB_CONFIG_I2C_HEADER_DIVERTED:
+    doc: "Include the diverted i2c header (include/linux/i2c-dev.h.kernel)"
+    default: 0
 
 definitions:
   cdefs:
