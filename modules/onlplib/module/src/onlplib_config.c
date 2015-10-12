@@ -75,10 +75,10 @@ onlplib_config_settings_t onlplib_config_settings[] =
 #else
 { ONLPLIB_CONFIG_I2C_BLOCK_SIZE(__onlplib_config_STRINGIFY_NAME), "__undefined__" },
 #endif
-#ifdef ONLPLIB_CONFIG_I2C_HEADER_DIVERTED
-    { __onlplib_config_STRINGIFY_NAME(ONLPLIB_CONFIG_I2C_HEADER_DIVERTED), __onlplib_config_STRINGIFY_VALUE(ONLPLIB_CONFIG_I2C_HEADER_DIVERTED) },
+#ifdef ONLPLIB_CONFIG_I2C_USE_CUSTOM_HEADER
+    { __onlplib_config_STRINGIFY_NAME(ONLPLIB_CONFIG_I2C_USE_CUSTOM_HEADER), __onlplib_config_STRINGIFY_VALUE(ONLPLIB_CONFIG_I2C_USE_CUSTOM_HEADER) },
 #else
-{ ONLPLIB_CONFIG_I2C_HEADER_DIVERTED(__onlplib_config_STRINGIFY_NAME), "__undefined__" },
+{ ONLPLIB_CONFIG_I2C_USE_CUSTOM_HEADER(__onlplib_config_STRINGIFY_NAME), "__undefined__" },
 #endif
     { NULL, NULL }
 };

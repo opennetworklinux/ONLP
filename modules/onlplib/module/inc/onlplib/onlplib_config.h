@@ -136,13 +136,13 @@
 #endif
 
 /**
- * ONLPLIB_CONFIG_I2C_HEADER_DIVERTED
+ * ONLPLIB_CONFIG_I2C_USE_CUSTOM_HEADER
  *
- * Include the diverted i2c header (include/linux/i2c-dev.h.kernel) */
+ * Include the custom i2c header (include/linux/i2c-devices.h) to avoid conflicts with the kernel and i2c-dev packages. */
 
 
-#ifndef ONLPLIB_CONFIG_I2C_HEADER_DIVERTED
-#define ONLPLIB_CONFIG_I2C_HEADER_DIVERTED 0
+#ifndef ONLPLIB_CONFIG_I2C_USE_CUSTOM_HEADER
+#define ONLPLIB_CONFIG_I2C_USE_CUSTOM_HEADER 1
 #endif
 
 
