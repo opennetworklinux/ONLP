@@ -27,6 +27,91 @@
 #include <unistd.h>
 #include <onlp/sys.h>
 #include <onlp/sfp.h>
+#include <sff/sff.h>
+
+/**
+ * Human-readable SFP inventory.
+ * This should be moved to common.
+ */
+static void
+show_inventory__(aim_pvs_t* pvs)
+{
+    int port;
+    onlp_sfp_bitmap_t bitmap;
+
+    onlp_sfp_bitmap_t_init(&bitmap);
+    onlp_sfp_bitmap_get(&bitmap);
+
+    if(AIM_BITMAP_COUNT(&bitmap) == 0) {
+        aim_printf(pvs, "No SFPs on this platform.\n");
+    }
+    else {
+        aim_printf(pvs, "Port  Type            Media   Status  Len    Vendor            Model             S/N             \n");
+        aim_printf(pvs, "----  --------------  ------  ------  -----  ----------------  ----------------  ----------------\n");
+
+        AIM_BITMAP_ITER(&bitmap, port) {
+            int rv;
+            uint8_t* data;
+
+            rv = onlp_sfp_is_present(port);
+
+            if(rv == 0) {
+                aim_printf(pvs, "%4d  NONE\n", port);
+                continue;
+            }
+
+            if(rv < 0) {
+                aim_printf(pvs, "%4d  Error %{onlp_status}\n", port, rv);
+                continue;
+            }
+
+            rv = onlp_sfp_eeprom_read(port, &data);
+
+            if(rv < 0) {
+                aim_printf(pvs, "%4d  Error %{onlp_status}\n", port, rv);
+                continue;
+            }
+
+            sff_info_t sff;
+            char status_str[32] = {0};
+
+            sff_info_init(&sff, data);
+
+            if(!sff.supported) {
+                /* Present but unidentified. */
+                aim_printf(pvs, "%13d  UNK\n", port);
+                continue;
+            }
+
+
+            uint32_t status = 0;
+            char* cp = status_str;
+            onlp_sfp_control_flags_get(port, &status);
+            if(status & ONLP_SFP_CONTROL_FLAG_RX_LOS) {
+                *cp++ = 'R';
+            }
+            if(status & ONLP_SFP_CONTROL_FLAG_TX_FAULT) {
+                *cp++ = 'T';
+            }
+            if(status & ONLP_SFP_CONTROL_FLAG_TX_DISABLE) {
+                *cp++ = 'X';
+            }
+            if(status & ONLP_SFP_CONTROL_FLAG_LP_MODE) {
+                *cp++ = 'L';
+            }
+            aim_printf(pvs, "%4d  %-14s  %-6s  %-6.6s  %-5.5s  %-16.16s  %-16.16s  %16.16s\n",
+                       port,
+                       sff.module_type_name,
+                       sff.media_type_name,
+                       status_str,
+                       sff.length_desc,
+                       sff.vendor,
+                       sff.model,
+                       sff.serial);
+        }
+    }
+}
+
 
 static int
 iterate_oids_callback__(onlp_oid_t oid, void* cookie)
@@ -78,10 +163,11 @@ onlpdump_main(int argc, char* argv[])
     int i = 0;
     int p = 0;
     int x = 0;
+    int S = 0;
     const char* O = NULL;
     const char* t = NULL;
 
-    while( (c = getopt(argc, argv, "srehdojmipxt:O:")) != -1) {
+    while( (c = getopt(argc, argv, "srehdojmipxSt:O:")) != -1) {
         switch(c)
             {
             case 's': show=1; break;
@@ -97,6 +183,7 @@ onlpdump_main(int argc, char* argv[])
             case 'p': p=1; show=-1; break;
             case 't': t = optarg; break;
             case 'O': O = optarg; break;
+            case 'S': S=1; break;
             default: help=1; rv = 1; break;
             }
     }
@@ -113,8 +200,9 @@ onlpdump_main(int argc, char* argv[])
         printf("  -m   Run platform manager.\n");
         printf("  -i   Iterate OIDs.\n");
         printf("  -p   Show SFP presence.\n");
-        printf("  -t <file>  Decode TlvInfo data.\n");
-        printf("  -O <oid> Dump OID.\n");
+        printf("  -t   <file>  Decode TlvInfo data.\n");
+        printf("  -O   <oid> Dump OID.\n");
+        printf("   -S   Decode SFP Inventory\n");
         return rv;
     }
 
@@ -135,6 +223,11 @@ onlpdump_main(int argc, char* argv[])
     }
 
     onlp_init();
+
+    if(S) {
+        show_inventory__(&aim_pvs_stdout);
+        return 0;
+    }
 
     if(O) {
         int oid;
@@ -213,5 +306,6 @@ onlpdump_main(int argc, char* argv[])
             aim_printf(&aim_pvs_stdout, "%{aim_bitmap}\n", &presence);
         }
     }
+
     return 0;
 }
