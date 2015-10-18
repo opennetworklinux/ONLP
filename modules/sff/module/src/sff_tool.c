@@ -1,21 +1,21 @@
 /************************************************************
  * <bsn.cl fy=2014 v=onl>
- * 
- *        Copyright 2014, 2015 Big Switch Networks, Inc.       
- * 
+ *
+ *        Copyright 2014, 2015 Big Switch Networks, Inc.
+ *
  * Licensed under the Eclipse Public License, Version 1.0 (the
  * "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
- * 
+ *
  *        http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the
  * License.
- * 
+ *
  * </bsn.cl>
  ************************************************************
  *
@@ -43,11 +43,12 @@ sff_tool(int argc, char* argv[])
     int help = 0;
     int n = 0;
     int v = 0;
+    int sin = 0;
 
     biglist_t* fnames=NULL;
 
 
-    while( (c = getopt(argc, argv, "sehnv")) != -1) {
+    while( (c = getopt(argc, argv, "sehnvi")) != -1) {
         switch(c)
             {
             case 's': s = 1; break;
@@ -55,12 +56,14 @@ sff_tool(int argc, char* argv[])
             case 'h': help=1; rv=0; break;
             case 'n': n=1; break;
             case 'v': v=1; break;
+            case 'i': sin=1; break;
             default: help=1; rv = 1; break;
             }
     }
 
     if(help) {
         printf("Usage: %s [OPTIONS] [FILES]\n", argv[0]);
+        printf("  -i    Read eeprom data from stdin.\n");
         printf("  -s    Read filenames from stdin. \n");
         printf("  -n    Print the filename if successful.\n");
         printf("  -v    Print the filename always.\n");
@@ -68,6 +71,28 @@ sff_tool(int argc, char* argv[])
         printf("  -h    Help.\n");
         return rv;
     }
+
+    if(sin) {
+        uint8_t data[512];
+        if(fread(data, 256, 1, stdin) == 1) {
+            sff_info_t info;
+            sff_info_init(&info, data);
+            if(info.supported) {
+                sff_info_show(&info, &aim_pvs_stdout);
+                return 0;
+            }
+            else {
+                aim_printf(&aim_pvs_stderr, "The eeprom data could not be parsed.\n");
+            }
+        }
+        else {
+            aim_printf(&aim_pvs_stderr, "Error reading eeprom data from stdin.\n");
+        }
+        return 1;
+    }
+
+
+
 
     if(s) {
         /* Read filenames from stdin */
