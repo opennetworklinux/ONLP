@@ -1,21 +1,21 @@
 /************************************************************
  * <bsn.cl fy=2014 v=onl>
- * 
- *        Copyright 2014, 2015 Big Switch Networks, Inc.       
- * 
+ *
+ *        Copyright 2014, 2015 Big Switch Networks, Inc.
+ *
  * Licensed under the Eclipse Public License, Version 1.0 (the
  * "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
- * 
+ *
  *        http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the
  * License.
- * 
+ *
  * </bsn.cl>
  ************************************************************
  *
@@ -93,6 +93,32 @@ onlp_file_read_int(int* value, const char* fmt, ...)
     return rv;
 }
 
+int
+onlp_file_read_int_max(int* value, char** files)
+{
+    char** s = NULL;
+    int max = 0;
+
+    if(value == NULL || files == NULL || *files == NULL) {
+        return ONLP_STATUS_E_PARAM;
+    }
+
+    *value = 0;
+
+    for(s = files; *s; s++) {
+        int value = 0;
+        int rv = onlp_file_read_int(&value, *s);
+        if(rv < 0) {
+            return rv;
+        }
+        if(max < value) {
+            max = value;
+        }
+    }
+
+    *value = max;
+    return 0;
+}
 
 int
 onlp_file_vwrite(uint8_t* data, int len, const char* fmt, va_list vargs)
