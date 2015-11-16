@@ -190,7 +190,7 @@ onlp_sys_platform_manage_thread__(void* vctrl)
         if(twe == NULL) {
             /* Nothing in the next two seconds. */
             tv.tv_sec = 2;
-            tv.tv_sec = 0;
+            tv.tv_usec = 0;
         }
         else {
             if(twe->deadline > now) {
