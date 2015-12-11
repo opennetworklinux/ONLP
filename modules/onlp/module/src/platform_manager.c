@@ -335,7 +335,7 @@ platform_psus_notify__(void)
                                 "PSU %d has failed.", pid);
             }
 
-            if(!(new & ONLP_PSU_STATUS_FAILED)) {
+            if(!(new & ONLP_PSU_STATUS_FAILED) && (new & ONLP_PSU_STATUS_PRESENT)) {
                 if( (old & ONLP_PSU_STATUS_UNPLUGGED) && !(new & ONLP_PSU_STATUS_UNPLUGGED)) {
                     /* PSU has been plugged in */
                     AIM_SYSLOG_INFO("PSU <id> has been plugged in.",
