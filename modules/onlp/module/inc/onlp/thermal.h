@@ -43,6 +43,13 @@ typedef enum onlp_thermal_caps_e {
     ONLP_THERMAL_CAPS_GET_ERROR_THRESHOLD = (1 << 2),
     ONLP_THERMAL_CAPS_GET_SHUTDOWN_THRESHOLD = (1 << 3),
 } onlp_thermal_caps_t;
+
+/** onlp_thermal_threshold */
+typedef enum onlp_thermal_threshold_e {
+    ONLP_THERMAL_THRESHOLD_WARNING_DEFAULT = 45000,
+    ONLP_THERMAL_THRESHOLD_ERROR_DEFAULT = 55000,
+    ONLP_THERMAL_THRESHOLD_SHUTDOWN_DEFAULT = 60000,
+} onlp_thermal_threshold_t;
 /* <auto.end.enum(tag:thermal).define> */
 
 /**
@@ -57,6 +64,14 @@ typedef enum onlp_thermal_caps_e {
     ( ONLP_THERMAL_CAPS_GET_WARNING_THRESHOLD |                         \
       ONLP_THERMAL_CAPS_GET_ERROR_THRESHOLD   |                         \
       ONLP_THERMAL_CAPS_GET_SHUTDOWN_THRESHOLD )
+
+/**
+ * Shortcut for all default thermal threshold value.
+ */
+#define ONLP_THERMAL_THRESHOLD_INIT_DEFAULTS                            \
+    { ONLP_THERMAL_THRESHOLD_WARNING_DEFAULT,                           \
+      ONLP_THERMAL_THRESHOLD_ERROR_DEFAULT,                             \
+      ONLP_THERMAL_THRESHOLD_SHUTDOWN_DEFAULT }
 
 /**
  * Thermal sensor information structure.
@@ -183,6 +198,27 @@ int onlp_thermal_caps_valid(onlp_thermal_caps_t e);
 extern aim_map_si_t onlp_thermal_caps_map[];
 /** onlp_thermal_caps_desc_map table. */
 extern aim_map_si_t onlp_thermal_caps_desc_map[];
+
+/** Enum names. */
+const char* onlp_thermal_threshold_name(onlp_thermal_threshold_t e);
+
+/** Enum values. */
+int onlp_thermal_threshold_value(const char* str, onlp_thermal_threshold_t* e, int substr);
+
+/** Enum descriptions. */
+const char* onlp_thermal_threshold_desc(onlp_thermal_threshold_t e);
+
+/** Enum validator. */
+int onlp_thermal_threshold_valid(onlp_thermal_threshold_t e);
+
+/** validator */
+#define ONLP_THERMAL_THRESHOLD_VALID(_e) \
+    (onlp_thermal_threshold_valid((_e)))
+
+/** onlp_thermal_threshold_map table. */
+extern aim_map_si_t onlp_thermal_threshold_map[];
+/** onlp_thermal_threshold_desc_map table. */
+extern aim_map_si_t onlp_thermal_threshold_desc_map[];
 /* <auto.end.enum(tag:thermal).supportheader> */
 
 #endif /* __ONLP_THERMAL_H__ */

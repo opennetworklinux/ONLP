@@ -29,13 +29,14 @@
 #include <onlp/onlp.h>
 
 /* <auto.start.enum(tag:fan).define> */
-/** onlp_fan_status */
-typedef enum onlp_fan_status_e {
-    ONLP_FAN_STATUS_PRESENT = (1 << 0),
-    ONLP_FAN_STATUS_FAILED = (1 << 1),
-    ONLP_FAN_STATUS_B2F = (1 << 2),
-    ONLP_FAN_STATUS_F2B = (1 << 3),
-} onlp_fan_status_t;
+/** onlp_fan_dir */
+typedef enum onlp_fan_dir_e {
+    ONLP_FAN_DIR_B2F,
+    ONLP_FAN_DIR_F2B,
+    ONLP_FAN_DIR_LAST = ONLP_FAN_DIR_F2B,
+    ONLP_FAN_DIR_COUNT,
+    ONLP_FAN_DIR_INVALID = -1,
+} onlp_fan_dir_t;
 
 /** onlp_fan_mode */
 typedef enum onlp_fan_mode_e {
@@ -59,14 +60,13 @@ typedef enum onlp_fan_caps_e {
     ONLP_FAN_CAPS_GET_PERCENTAGE = (1 << 5),
 } onlp_fan_caps_t;
 
-/** onlp_fan_dir */
-typedef enum onlp_fan_dir_e {
-    ONLP_FAN_DIR_B2F,
-    ONLP_FAN_DIR_F2B,
-    ONLP_FAN_DIR_LAST = ONLP_FAN_DIR_F2B,
-    ONLP_FAN_DIR_COUNT,
-    ONLP_FAN_DIR_INVALID = -1,
-} onlp_fan_dir_t;
+/** onlp_fan_status */
+typedef enum onlp_fan_status_e {
+    ONLP_FAN_STATUS_PRESENT = (1 << 0),
+    ONLP_FAN_STATUS_FAILED = (1 << 1),
+    ONLP_FAN_STATUS_B2F = (1 << 2),
+    ONLP_FAN_STATUS_F2B = (1 << 3),
+} onlp_fan_status_t;
 /* <auto.end.enum(tag:fan).define> */
 
 /**
@@ -179,26 +179,29 @@ void onlp_fan_show(onlp_oid_t id, aim_pvs_t* pvs, uint32_t flags);
  *
  *****************************************************************************/
 /* <auto.start.enum(tag:fan).supportheader> */
+/** Strings macro. */
+#define ONLP_FAN_DIR_STRINGS \
+{\
+    "B2F", \
+    "F2B", \
+}
 /** Enum names. */
-const char* onlp_fan_status_name(onlp_fan_status_t e);
+const char* onlp_fan_dir_name(onlp_fan_dir_t e);
 
 /** Enum values. */
-int onlp_fan_status_value(const char* str, onlp_fan_status_t* e, int substr);
+int onlp_fan_dir_value(const char* str, onlp_fan_dir_t* e, int substr);
 
 /** Enum descriptions. */
-const char* onlp_fan_status_desc(onlp_fan_status_t e);
-
-/** Enum validator. */
-int onlp_fan_status_valid(onlp_fan_status_t e);
+const char* onlp_fan_dir_desc(onlp_fan_dir_t e);
 
 /** validator */
-#define ONLP_FAN_STATUS_VALID(_e) \
-    (onlp_fan_status_valid((_e)))
+#define ONLP_FAN_DIR_VALID(_e) \
+    ( (0 <= (_e)) && ((_e) <= ONLP_FAN_DIR_F2B))
 
-/** onlp_fan_status_map table. */
-extern aim_map_si_t onlp_fan_status_map[];
-/** onlp_fan_status_desc_map table. */
-extern aim_map_si_t onlp_fan_status_desc_map[];
+/** onlp_fan_dir_map table. */
+extern aim_map_si_t onlp_fan_dir_map[];
+/** onlp_fan_dir_desc_map table. */
+extern aim_map_si_t onlp_fan_dir_desc_map[];
 
 /** Strings macro. */
 #define ONLP_FAN_MODE_STRINGS \
@@ -248,29 +251,26 @@ extern aim_map_si_t onlp_fan_caps_map[];
 /** onlp_fan_caps_desc_map table. */
 extern aim_map_si_t onlp_fan_caps_desc_map[];
 
-/** Strings macro. */
-#define ONLP_FAN_DIR_STRINGS \
-{\
-    "B2F", \
-    "F2B", \
-}
 /** Enum names. */
-const char* onlp_fan_dir_name(onlp_fan_dir_t e);
+const char* onlp_fan_status_name(onlp_fan_status_t e);
 
 /** Enum values. */
-int onlp_fan_dir_value(const char* str, onlp_fan_dir_t* e, int substr);
+int onlp_fan_status_value(const char* str, onlp_fan_status_t* e, int substr);
 
 /** Enum descriptions. */
-const char* onlp_fan_dir_desc(onlp_fan_dir_t e);
+const char* onlp_fan_status_desc(onlp_fan_status_t e);
+
+/** Enum validator. */
+int onlp_fan_status_valid(onlp_fan_status_t e);
 
 /** validator */
-#define ONLP_FAN_DIR_VALID(_e) \
-    ( (0 <= (_e)) && ((_e) <= ONLP_FAN_DIR_F2B))
+#define ONLP_FAN_STATUS_VALID(_e) \
+    (onlp_fan_status_valid((_e)))
 
-/** onlp_fan_dir_map table. */
-extern aim_map_si_t onlp_fan_dir_map[];
-/** onlp_fan_dir_desc_map table. */
-extern aim_map_si_t onlp_fan_dir_desc_map[];
+/** onlp_fan_status_map table. */
+extern aim_map_si_t onlp_fan_status_map[];
+/** onlp_fan_status_desc_map table. */
+extern aim_map_si_t onlp_fan_status_desc_map[];
 /* <auto.end.enum(tag:fan).supportheader> */
 
 
