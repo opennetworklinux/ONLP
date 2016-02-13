@@ -168,7 +168,7 @@ onlpdump_main(int argc, char* argv[])
     const char* O = NULL;
     const char* t = NULL;
 
-    while( (c = getopt(argc, argv, "srehdojmipxlSt:O:")) != -1) {
+    while( (c = getopt(argc, argv, "srehdojmipxlSt:O:y")) != -1) {
         switch(c)
             {
             case 's': show=1; break;
@@ -186,6 +186,7 @@ onlpdump_main(int argc, char* argv[])
             case 'O': O = optarg; break;
             case 'S': S=1; break;
             case 'l': l=1; break;
+            case 'y': show=1; showflags |= ONLP_OID_SHOW_F_YAML; break;
             default: help=1; rv = 1; break;
             }
     }
@@ -196,6 +197,7 @@ onlpdump_main(int argc, char* argv[])
         printf("  -s   Use show() instead of dump().\n");
         printf("  -r   Recursive show(). Implies -s\n");
         printf("  -e   Extended show(). Implies -s\n");
+        printf("  -y   Yaml show(). Implies -s\n");
         printf("  -o   Dump ONIE data only.\n");
         printf("  -x   Dump Platform Info only.\n");
         printf("  -j   Dump ONIE data in JSON format.\n");
