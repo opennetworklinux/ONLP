@@ -30,7 +30,11 @@ DEBUG := 1
 MODULE := onlpdump
 include $(BUILDER)/standardinit.mk
 
-DEPENDMODULES := AIM onlp onlpie onlplib onlp_platform_defaults IOF cjson cjson_util sff timer_wheel OS
+ifndef ONLPI_MODULE
+ONLPI_MODULE := onlpie
+endif
+
+DEPENDMODULES := AIM onlp $(ONLPI_MODULE) onlplib onlp_platform_defaults IOF cjson cjson_util sff timer_wheel OS
 
 include $(BUILDER)/dependmodules.mk
 
@@ -44,6 +48,11 @@ GLOBAL_CFLAGS += -DAIM_CONFIG_INCLUDE_MAIN=1
 GLOBAL_CFLAGS += -DONLP_CONFIG_API_LOCK_TIMEOUT=1
 GLOBAL_CFLAGS += -DONLP_CONFIG_INCLUDE_PLATFORM_STATIC=1
 GLOBAL_CFLAGS += -DONLP_CONFIG_PLATFORM_STATIC=\"onlp-example-platform-driver\"
+
+ifdef ONLPSIM_CONFIG_SFP_COUNT
+GLOBAL_CFLAGS += -DONLPSIM_CONFIG_SFP_COUNT=$(ONLPSIM_CONFIG_SFP_COUNT)
+endif
+
 GLOBAL_LINK_LIBS += -lpthread -lm
 
 include $(BUILDER)/targets.mk
