@@ -96,12 +96,17 @@ int onlp_sys_vioctl(int code, va_list vargs);
 /**
  * @brief Start the platform management thread.
  */
-int onlp_sys_platform_manage_start(void);
+int onlp_sys_platform_manage_start(int block);
 
 /**
  * @brief Stop the platform management thread.
  */
-int onlp_sys_platform_manage_stop(void);
+int onlp_sys_platform_manage_stop(int block);
+
+/**
+ * @brief Join the platform management thread.
+ */
+int onlp_sys_platform_manage_join(void);
 
 /**
  * @brief Perform any pending platform management activities.
