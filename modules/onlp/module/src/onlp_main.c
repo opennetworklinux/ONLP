@@ -174,7 +174,7 @@ onlpdump_main(int argc, char* argv[])
     const char* O = NULL;
     const char* t = NULL;
 
-    while( (c = getopt(argc, argv, "srehdojmM:ipxlSt:O:")) != -1) {
+    while( (c = getopt(argc, argv, "srehdojmyM:ipxlSt:O:")) != -1) {
         switch(c)
             {
             case 's': show=1; break;
