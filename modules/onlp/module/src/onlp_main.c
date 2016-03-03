@@ -198,11 +198,6 @@ onlpdump_main(int argc, char* argv[])
             }
     }
 
-    if(M) {
-        platform_manager_daemon__(pidfile);
-        exit(0);
-    }
-
     if(help) {
         printf("Usage: %s [OPTIONS]\n", argv[0]);
         printf("  -d   Use dump(). This is the default.\n");
@@ -225,7 +220,7 @@ onlpdump_main(int argc, char* argv[])
     }
 
 
-    if(t){
+    if(t) {
         int rv;
         onlp_onie_info_t onie;
         rv = onlp_onie_decode_file(&onie, t);
@@ -241,6 +236,11 @@ onlpdump_main(int argc, char* argv[])
     }
 
     onlp_init();
+
+    if(M) {
+        platform_manager_daemon__(pidfile);
+        exit(0);
+    }
 
     if(l) {
         extern int onlp_api_lock_test(void);
