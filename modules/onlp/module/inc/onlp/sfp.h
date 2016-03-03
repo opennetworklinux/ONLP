@@ -41,7 +41,8 @@ typedef enum onlp_sfp_control_e {
     ONLP_SFP_CONTROL_TX_DISABLE,
     ONLP_SFP_CONTROL_LP_MODE,
     ONLP_SFP_CONTROL_POWER_OVERRIDE,
-    ONLP_SFP_CONTROL_LAST = ONLP_SFP_CONTROL_POWER_OVERRIDE,
+    ONLP_SFP_CONTROL_CDR62,
+    ONLP_SFP_CONTROL_LAST = ONLP_SFP_CONTROL_CDR62,
     ONLP_SFP_CONTROL_COUNT,
     ONLP_SFP_CONTROL_INVALID = -1,
 } onlp_sfp_control_t;
@@ -57,6 +58,7 @@ typedef enum onlp_sfp_control_flag_e {
     ONLP_SFP_CONTROL_FLAG_TX_DISABLE = ( 1 << ONLP_SFP_CONTROL_TX_DISABLE ),
     ONLP_SFP_CONTROL_FLAG_LP_MODE = ( 1 << ONLP_SFP_CONTROL_LP_MODE ),
     ONLP_SFP_CONTROL_FLAG_POWER_OVERRIDE = ( 1 << ONLP_SFP_CONTROL_POWER_OVERRIDE ),
+    ONLP_SFP_CONTROL_FLAG_CDR62 = ( 1 << ONLP_SFP_CONTROL_CDR62 ),
 } onlp_sfp_control_flag_t;
 /* <auto.end.enum(tag:sfp2).define> */
 
@@ -210,6 +212,7 @@ int onlp_sfp_control_flags_get(int port, uint32_t* flags);
     "TX_DISABLE", \
     "LP_MODE", \
     "POWER_OVERRIDE", \
+    "CDR62", \
 }
 /** Enum names. */
 const char* onlp_sfp_control_name(onlp_sfp_control_t e);
@@ -222,7 +225,7 @@ const char* onlp_sfp_control_desc(onlp_sfp_control_t e);
 
 /** validator */
 #define ONLP_SFP_CONTROL_VALID(_e) \
-    ( (0 <= (_e)) && ((_e) <= ONLP_SFP_CONTROL_POWER_OVERRIDE))
+    ( (0 <= (_e)) && ((_e) <= ONLP_SFP_CONTROL_CDR62))
 
 /** onlp_sfp_control_map table. */
 extern aim_map_si_t onlp_sfp_control_map[];
