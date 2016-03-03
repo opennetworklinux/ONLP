@@ -728,6 +728,7 @@ aim_map_si_t onlp_sfp_control_map[] =
     { "TX_DISABLE", ONLP_SFP_CONTROL_TX_DISABLE },
     { "LP_MODE", ONLP_SFP_CONTROL_LP_MODE },
     { "POWER_OVERRIDE", ONLP_SFP_CONTROL_POWER_OVERRIDE },
+    { "CDR62", ONLP_SFP_CONTROL_CDR62 },
     { NULL, 0 }
 };
 
@@ -740,6 +741,7 @@ aim_map_si_t onlp_sfp_control_desc_map[] =
     { "None", ONLP_SFP_CONTROL_TX_DISABLE },
     { "None", ONLP_SFP_CONTROL_LP_MODE },
     { "None", ONLP_SFP_CONTROL_POWER_OVERRIDE },
+    { "None", ONLP_SFP_CONTROL_CDR62 },
     { NULL, 0 }
 };
 
@@ -792,6 +794,7 @@ aim_map_si_t onlp_sfp_control_flag_map[] =
     { "TX_DISABLE", ONLP_SFP_CONTROL_FLAG_TX_DISABLE },
     { "LP_MODE", ONLP_SFP_CONTROL_FLAG_LP_MODE },
     { "POWER_OVERRIDE", ONLP_SFP_CONTROL_FLAG_POWER_OVERRIDE },
+    { "CDR62", ONLP_SFP_CONTROL_FLAG_CDR62 },
     { NULL, 0 }
 };
 
@@ -804,6 +807,7 @@ aim_map_si_t onlp_sfp_control_flag_desc_map[] =
     { "None", ONLP_SFP_CONTROL_FLAG_TX_DISABLE },
     { "None", ONLP_SFP_CONTROL_FLAG_LP_MODE },
     { "None", ONLP_SFP_CONTROL_FLAG_POWER_OVERRIDE },
+    { "None", ONLP_SFP_CONTROL_FLAG_CDR62 },
     { NULL, 0 }
 };
 
