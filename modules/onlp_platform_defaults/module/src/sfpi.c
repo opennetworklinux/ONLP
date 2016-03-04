@@ -40,3 +40,5 @@ __ONLP_DEFAULTI_IMPLEMENTATION(onlp_sfpi_ioctl(int port, va_list vargs));
 __ONLP_DEFAULTI_IMPLEMENTATION(onlp_sfpi_control_supported(int port, onlp_sfp_control_t control, int* rv));
 __ONLP_DEFAULTI_IMPLEMENTATION(onlp_sfpi_control_set(int port, onlp_sfp_control_t control, int value));
 __ONLP_DEFAULTI_IMPLEMENTATION(onlp_sfpi_control_get(int port, onlp_sfp_control_t control, int* value));
+__ONLP_DEFAULTI_IMPLEMENTATION(onlp_sfpi_dev_readb(int port, uint8_t devaddr, uint8_t addr, uint8_t* rv));
+__ONLP_DEFAULTI_IMPLEMENTATION(onlp_sfpi_dev_writeb(int port, uint8_t devaddr, uint8_t addr, uint8_t value));
