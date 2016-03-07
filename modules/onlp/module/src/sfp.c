@@ -399,3 +399,17 @@ onlp_sfp_vioctl_locked__(int port, va_list vargs)
 ONLP_LOCKED_API2(onlp_sfp_vioctl, int, port, va_list, vargs);
 
 
+int
+onlp_sfp_dev_readb_locked__(int port, uint8_t devaddr, uint8_t addr, uint8_t* rv)
+{
+    return onlp_sfpi_dev_readb(port, devaddr, addr, rv);
+}
+ONLP_LOCKED_API4(onlp_sfp_dev_readb, int, port, uint8_t, devaddr, uint8_t, addr, uint8_t*, rv);
+
+int
+onlp_sfp_dev_writeb_locked__(int port, uint8_t devaddr, uint8_t addr, uint8_t value)
+{
+    return onlp_sfpi_dev_writeb(port, devaddr, addr, value);
+}
+ONLP_LOCKED_API4(onlp_sfp_dev_writeb, int, port, uint8_t, devaddr, uint8_t, addr, uint8_t, value);
+
