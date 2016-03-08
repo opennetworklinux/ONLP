@@ -67,6 +67,10 @@
 #define SFF8636_SFP_TEMP(idprom)              \
     (idprom[22] << 8 | idprom[22 + 1])
 
+/* Rx and Tx CDR controls, byte 98 */
+#define SFF8636_CDR62_CTRL                  0x62
+#define SFF8636_CDR62_ENABLE_ALL            0xFF
+
 /* connector value, byte 130 page 0 */
 
 #define SFF8636_CONN_UNKNOWN             SFF8472_CONN_UNKNOWN
