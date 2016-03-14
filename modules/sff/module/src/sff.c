@@ -380,6 +380,49 @@ sff_info_init(sff_info_t* rv, uint8_t* eeprom)
     }
     rv->sfp_type_name = sff_sfp_type_desc(rv->sfp_type);
 
+    const uint8_t *vendor, *model, *serial;
+
+    switch(rv->sfp_type)
+        {
+        case SFF_SFP_TYPE_QSFP_PLUS:
+        case SFF_SFP_TYPE_QSFP28:
+            vendor=rv->eeprom+148;
+            model=rv->eeprom+168;
+            serial=rv->eeprom+196;
+            break;
+
+        case SFF_SFP_TYPE_SFP:
+        default:
+            vendor=rv->eeprom+20;
+            model=rv->eeprom+40;
+            serial=rv->eeprom+68;
+            break;
+        }
+
+    /* handle NULL fields, they should actually be space-padded */
+    const char *empty = "                ";
+    if (*vendor) {
+        aim_strlcpy(rv->vendor, (char*)vendor, sizeof(rv->vendor));
+        make_printable__(rv->vendor);
+    }
+    else {
+        aim_strlcpy(rv->vendor, empty, 17);
+    }
+    if (*model) {
+        aim_strlcpy(rv->model, (char*)model, sizeof(rv->model));
+        make_printable__(rv->model);
+    }
+    else {
+        aim_strlcpy(rv->model, empty, 17);
+    }
+    if (*serial) {
+        aim_strlcpy(rv->serial, (char*)serial, sizeof(rv->serial));
+        make_printable__(rv->serial);
+    }
+    else {
+        aim_strlcpy(rv->serial, empty, 17);
+    }
+
     rv->module_type = sff_module_type_get(rv->eeprom);
     if(rv->module_type == SFF_MODULE_TYPE_INVALID) {
         AIM_LOG_ERROR("sff_info_init() failed: invalid module type");
@@ -434,49 +477,6 @@ sff_info_init(sff_info_t* rv, uint8_t* eeprom)
         break;
     default:
         rv->length = -1;
-    }
-
-    const uint8_t *vendor, *model, *serial;
-
-    switch(rv->sfp_type)
-        {
-        case SFF_SFP_TYPE_QSFP_PLUS:
-        case SFF_SFP_TYPE_QSFP28:
-            vendor=rv->eeprom+148;
-            model=rv->eeprom+168;
-            serial=rv->eeprom+196;
-            break;
-
-        case SFF_SFP_TYPE_SFP:
-        default:
-            vendor=rv->eeprom+20;
-            model=rv->eeprom+40;
-            serial=rv->eeprom+68;
-            break;
-        }
-
-    /* handle NULL fields, they should actually be space-padded */
-    const char *empty = "                ";
-    if (*vendor) {
-        aim_strlcpy(rv->vendor, (char*)vendor, sizeof(rv->vendor));
-        make_printable__(rv->vendor);
-    }
-    else {
-        aim_strlcpy(rv->vendor, empty, 17);
-    }
-    if (*model) {
-        aim_strlcpy(rv->model, (char*)model, sizeof(rv->model));
-        make_printable__(rv->model);
-    }
-    else {
-        aim_strlcpy(rv->model, empty, 17);
-    }
-    if (*serial) {
-        aim_strlcpy(rv->serial, (char*)serial, sizeof(rv->serial));
-        make_printable__(rv->serial);
-    }
-    else {
-        aim_strlcpy(rv->serial, empty, 17);
     }
 
     if(rv->length == -1) {
