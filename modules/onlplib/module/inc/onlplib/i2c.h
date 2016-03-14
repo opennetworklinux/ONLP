@@ -45,7 +45,7 @@
  */
 #define ONLP_I2C_F_PEC 0x4
 
-n
+
 /**
  * Do not deselect mux channels after device operations.
  * The default is to deselect all intermediate muxes if possible.
@@ -320,7 +320,7 @@ int onlp_i2c_dev_writew(onlp_i2c_dev_t* dev,
 
 /**************************************************************************//**
  *
- * Reusable MUX device drivers. 
+ * Reusable MUX device drivers.
  *
  *****************************************************************************/
 extern onlp_i2c_mux_driver_t onlp_i2c_mux_driver_pca9547a;
