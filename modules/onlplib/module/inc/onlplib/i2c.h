@@ -52,6 +52,14 @@
  */
 #define ONLP_I2C_F_NO_MUX_DESELECT 0x8
 
+/**
+ * Do not select mux channels prior to device operations.
+ * The default is to select all intermediate muxes.
+ *
+ * This option is useful if you want to manually select
+ * the mux channels for multiple operations.
+ */
+#define ONLP_I2C_F_NO_MUX_SELECT 0x10
 
 
 /**

@@ -363,6 +363,15 @@ onlp_i2c_dev_mux_channels_deselect(onlp_i2c_dev_t* dev)
 
 
 static int
+dev_mux_channels_select__(onlp_i2c_dev_t* dev, uint32_t flags)
+{
+    if(flags & ONLP_I2C_F_NO_MUX_SELECT) {
+        return 0;
+    }
+    return onlp_i2c_dev_mux_channels_select(dev);
+}
+
+static int
 dev_mux_channels_deselect__(onlp_i2c_dev_t* dev, uint32_t flags)
 {
     if(flags & ONLP_I2C_F_NO_MUX_DESELECT) {
@@ -378,11 +387,13 @@ onlp_i2c_dev_read(onlp_i2c_dev_t* dev, uint8_t offset, int size,
 {
     int error, rv;
 
-    if( (error = onlp_i2c_dev_mux_channels_select(dev)) < 0) {
+    if( (error = dev_mux_channels_select__(dev, flags)) < 0) {
         return error;
     }
 
     if( (rv = onlp_i2c_read(dev->bus, dev->addr, offset, size, rdata, flags)) < 0) {
+        AIM_LOG_ERROR("Device %s: read() failed: %d",
+                      dev->name, rv);
         return rv;
     }
 
@@ -400,11 +411,13 @@ onlp_i2c_dev_write(onlp_i2c_dev_t* dev,
 {
     int error, rv;
 
-    if( (error = onlp_i2c_dev_mux_channels_select(dev)) < 0) {
+    if( (error = dev_mux_channels_select__(dev, flags)) < 0) {
         return error;
     }
 
     if( (rv = onlp_i2c_write(dev->bus, dev->addr, offset, size, data, flags)) < 0) {
+        AIM_LOG_ERROR("Device %s: write() failed: %d",
+                      dev->name, rv);
         return rv;
     }
 
@@ -421,11 +434,13 @@ onlp_i2c_dev_readb(onlp_i2c_dev_t* dev, uint8_t offset, uint32_t flags)
 {
     int error, rv;
 
-    if( (error = onlp_i2c_dev_mux_channels_select(dev)) < 0) {
+    if( (error = dev_mux_channels_select__(dev, flags)) < 0) {
         return error;
     }
 
     if( (rv = onlp_i2c_readb(dev->bus, dev->addr, offset, flags)) < 0) {
+        AIM_LOG_ERROR("Device %s: readb() failed: %d",
+                      dev->name, rv);
         return rv;
     }
 
@@ -443,11 +458,13 @@ onlp_i2c_dev_writeb(onlp_i2c_dev_t* dev,
 {
     int error, rv;
 
-    if( (error = onlp_i2c_dev_mux_channels_select(dev)) < 0) {
+    if( (error = dev_mux_channels_select__(dev, flags)) < 0) {
         return error;
     }
 
     if( (rv = onlp_i2c_writeb(dev->bus, dev->addr, offset, byte, flags)) < 0) {
+        AIM_LOG_ERROR("Device %s: writeb() failed: %d",
+                      dev->name, rv);
         return rv;
     }
 
@@ -465,11 +482,13 @@ onlp_i2c_dev_readw(onlp_i2c_dev_t* dev,
 {
     int error, rv;
 
-    if( (error = onlp_i2c_dev_mux_channels_select(dev)) < 0) {
+    if( (error = dev_mux_channels_select__(dev, flags)) < 0) {
         return error;
     }
 
     if( (rv = onlp_i2c_readw(dev->bus, dev->addr, offset, flags)) < 0) {
+        AIM_LOG_ERROR("Device %s: readw() failed: %d",
+                      dev->name, rv);
         return rv;
     }
 
@@ -487,11 +506,13 @@ onlp_i2c_dev_writew(onlp_i2c_dev_t* dev,
 {
     int error, rv;
 
-    if( (error = onlp_i2c_dev_mux_channels_select(dev)) < 0) {
+    if( (error = dev_mux_channels_select__(dev, flags)) < 0) {
         return error;
     }
 
     if( (rv = onlp_i2c_writew(dev->bus, dev->addr, offset, word, flags)) < 0) {
+        AIM_LOG_ERROR("Device %s: writew() failed: %d",
+                      dev->name, rv);
         return rv;
     }
 
