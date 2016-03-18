@@ -174,6 +174,14 @@ onlpdump_main(int argc, char* argv[])
     const char* O = NULL;
     const char* t = NULL;
 
+    /**
+     * debug trap
+     */
+    if(argc > 1 && !strcmp(argv[1], "debug")) {
+        onlp_init();
+        return onlp_sys_debug(&aim_pvs_stdout, argc-2, argv+2);
+    }
+
     while( (c = getopt(argc, argv, "srehdojmyM:ipxlSt:O:")) != -1) {
         switch(c)
             {

@@ -287,3 +287,9 @@ onlp_sys_vioctl_locked__(int code, va_list vargs)
 }
 ONLP_LOCKED_API2(onlp_sys_vioctl, int, code, va_list, vargs);
 
+static int
+onlp_sys_debug_locked__(aim_pvs_t* pvs, int argc, char* argv[])
+{
+    return onlp_sysi_debug(pvs, argc, argv);
+}
+ONLP_LOCKED_API3(onlp_sys_debug, aim_pvs_t*, pvs, int, argc, char**, argv);
