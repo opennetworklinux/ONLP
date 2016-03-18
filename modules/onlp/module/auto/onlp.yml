@@ -81,6 +81,9 @@ cdefs: &cdefs
 - ONLP_CONFIG_INFO_STR_MAX:
     doc: "The maximum size of static information string buffers."
     default: 64
+- ONLP_CONFIG_INCLUDE_THERMAL_THRESHOLDS:
+    doc: "Include thermal threshold reporting."
+    default: 1
 
 # Error codes
 onlp_status: &onlp_status

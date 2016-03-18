@@ -234,6 +234,16 @@
 #define ONLP_CONFIG_INFO_STR_MAX 64
 #endif
 
+/**
+ * ONLP_CONFIG_INCLUDE_THERMAL_THRESHOLDS
+ *
+ * Include thermal threshold reporting. */
+
+
+#ifndef ONLP_CONFIG_INCLUDE_THERMAL_THRESHOLDS
+#define ONLP_CONFIG_INCLUDE_THERMAL_THRESHOLDS 1
+#endif
+
 
 
 /**

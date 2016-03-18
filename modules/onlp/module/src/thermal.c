@@ -203,6 +203,8 @@ onlp_thermal_show(onlp_oid_t id, aim_pvs_t* pvs, uint32_t flags)
                     iof_iprintf(&iof, "Temperature: %d.%d C",
                                 ONLP_MILLI_NORMAL_INTEGER_TENTHS(ti.mcelsius));
                 }
+#if ONLP_CONFIG_INCLUDE_THERMAL_THRESHOLDS == 1
+
                 if(ti.caps & ONLP_THERMAL_CAPS_GET_ANY_THRESHOLD) {
                     iof_push(&iof, "Thresholds:");
                     if(ti.caps & ONLP_THERMAL_CAPS_GET_WARNING_THRESHOLD) {
@@ -219,6 +221,7 @@ onlp_thermal_show(onlp_oid_t id, aim_pvs_t* pvs, uint32_t flags)
                     }
                     iof_pop(&iof);
                 }
+#endif
             }
         }
         else {
