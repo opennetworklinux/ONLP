@@ -412,9 +412,9 @@ platform_manager_daemon__(const char* pidfile, char** argv)
 
 #else
 static void
-platform_manager_daemon__(const char* pidfile)
+platform_manager_daemon__(const char* pidfile, char** argv)
 {
-    fprintf(stderr, "Daemon mode not supported in this build.");
+    fprintf(stderr, "Daemon mode not supported in this build.\n");
     exit(1);
 }
 #endif
