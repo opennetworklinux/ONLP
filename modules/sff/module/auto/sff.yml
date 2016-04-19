@@ -32,6 +32,9 @@ cdefs: &cdefs
 - SFF_CONFIG_INCLUDE_EXT_CC_CHECK:
     doc: "Include extended checksum verification."
     default: 0
+- SFF_CONFIG_INCLUDE_DATABASE:
+    doc: "Include eeprom database."
+    default: 0
 
 sff_media_types: &sff_media_types
 - COPPER:
