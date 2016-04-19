@@ -28,6 +28,7 @@
 #include <onlp/sys.h>
 #include <onlp/sfp.h>
 #include <sff/sff.h>
+#include <sff/sff_db.h>
 #include <AIM/aim_log_handler.h>
 #include <syslog.h>
 
@@ -38,7 +39,7 @@ static void platform_manager_daemon__(const char* pidfile, char** argv);
  * This should be moved to common.
  */
 static void
-show_inventory__(aim_pvs_t* pvs)
+show_inventory__(aim_pvs_t* pvs, int database)
 {
     int port;
     onlp_sfp_bitmap_t bitmap;
@@ -50,8 +51,10 @@ show_inventory__(aim_pvs_t* pvs)
         aim_printf(pvs, "No SFPs on this platform.\n");
     }
     else {
-        aim_printf(pvs, "Port  Type            Media   Status  Len    Vendor            Model             S/N             \n");
-        aim_printf(pvs, "----  --------------  ------  ------  -----  ----------------  ----------------  ----------------\n");
+        if(!database) {
+            aim_printf(pvs, "Port  Type            Media   Status  Len    Vendor            Model             S/N             \n");
+            aim_printf(pvs, "----  --------------  ------  ------  -----  ----------------  ----------------  ----------------\n");
+        }
 
         AIM_BITMAP_ITER(&bitmap, port) {
             int rv;
@@ -60,7 +63,9 @@ show_inventory__(aim_pvs_t* pvs)
             rv = onlp_sfp_is_present(port);
 
             if(rv == 0) {
-                aim_printf(pvs, "%4d  NONE\n", port);
+                if(!database) {
+                    aim_printf(pvs, "%4d  NONE\n", port);
+                }
                 continue;
             }
 
@@ -87,6 +92,10 @@ show_inventory__(aim_pvs_t* pvs)
                 continue;
             }
 
+            if(database) {
+                sff_db_entry_struct(&sff, &aim_pvs_stdout);
+                continue;
+            }
 
             uint32_t status = 0;
             char* cp = status_str;
@@ -170,6 +179,7 @@ onlpdump_main(int argc, char* argv[])
     int S = 0;
     int l = 0;
     int M = 0;
+    int b = 0;
     char* pidfile = NULL;
     const char* O = NULL;
     const char* t = NULL;
@@ -182,7 +192,7 @@ onlpdump_main(int argc, char* argv[])
         return onlp_sys_debug(&aim_pvs_stdout, argc-2, argv+2);
     }
 
-    while( (c = getopt(argc, argv, "srehdojmyM:ipxlSt:O:")) != -1) {
+    while( (c = getopt(argc, argv, "srehdojmyM:ipxlSt:O:b")) != -1) {
         switch(c)
             {
             case 's': show=1; break;
@@ -201,6 +211,7 @@ onlpdump_main(int argc, char* argv[])
             case 'O': O = optarg; break;
             case 'S': S=1; break;
             case 'l': l=1; break;
+            case 'b': b=1; break;
             case 'y': show=1; showflags |= ONLP_OID_SHOW_F_YAML; break;
             default: help=1; rv = 1; break;
             }
@@ -223,6 +234,7 @@ onlpdump_main(int argc, char* argv[])
         printf("  -t   <file>  Decode TlvInfo data.\n");
         printf("  -O   <oid> Dump OID.\n");
         printf("  -S   Decode SFP Inventory\n");
+        printf("  -b   Decode SFP Inventory into SFF database entries.\n");
         printf("  -l   API Lock test.\n");
         return rv;
     }
@@ -262,7 +274,7 @@ onlpdump_main(int argc, char* argv[])
     }
 
     if(S) {
-        show_inventory__(&aim_pvs_stdout);
+        show_inventory__(&aim_pvs_stdout, b);
         return 0;
     }
 
