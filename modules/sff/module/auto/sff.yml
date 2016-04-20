@@ -34,7 +34,7 @@ cdefs: &cdefs
     default: 0
 - SFF_CONFIG_INCLUDE_DATABASE:
     doc: "Include eeprom database."
-    default: 0
+    default: 1
 
 sff_media_types: &sff_media_types
 - COPPER:

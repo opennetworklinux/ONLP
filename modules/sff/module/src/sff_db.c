@@ -62,7 +62,6 @@ static sff_db_entry_t sff_database__[] =
     {
 
 #if SFF_CONFIG_INCLUDE_DATABASE == 1
-
         {
             {
                 {
