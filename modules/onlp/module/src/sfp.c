@@ -250,7 +250,7 @@ onlp_sfp_post_insert_locked__(int port, sff_info_t* info)
 ONLP_LOCKED_API2(onlp_sfp_post_insert, int, port, sff_info_t*, info);
 
 static int
-onlp_sfp_control_set_locked__(int port, onlp_sfp_control_t control, int value)
+onlp_sfp_control_set_locked__(int port, int channel, onlp_sfp_control_t control, int value)
 {
     int supported;
 
@@ -277,9 +277,9 @@ onlp_sfp_control_set_locked__(int port, onlp_sfp_control_t control, int value)
         default:
             break;
         }
-    return onlp_sfpi_control_set(port, control, value);
+    return onlp_sfpi_control_set(port, channel, control, value);
 }
-ONLP_LOCKED_API3(onlp_sfp_control_set, int, port, onlp_sfp_control_t, control,
+ONLP_LOCKED_API4(onlp_sfp_control_set, int, port, int, channel, onlp_sfp_control_t, control,
                  int, value);
 
 static int

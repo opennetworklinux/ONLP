@@ -106,9 +106,6 @@ show_inventory__(aim_pvs_t* pvs, int database)
             if(status & ONLP_SFP_CONTROL_FLAG_TX_FAULT) {
                 *cp++ = 'T';
             }
-            if(status & ONLP_SFP_CONTROL_FLAG_TX_DISABLE) {
-                *cp++ = 'X';
-            }
             if(status & ONLP_SFP_CONTROL_FLAG_LP_MODE) {
                 *cp++ = 'L';
             }

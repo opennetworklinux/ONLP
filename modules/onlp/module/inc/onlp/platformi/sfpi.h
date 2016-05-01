@@ -128,10 +128,11 @@ int onlp_sfpi_control_supported(int port, onlp_sfp_control_t control, int* rv);
 /**
  * @brief Set an SFP control.
  * @param port The port.
+ * @param channel The breakout port.
  * @param control The control.
  * @param value The value.
  */
-int onlp_sfpi_control_set(int port, onlp_sfp_control_t control, int value);
+int onlp_sfpi_control_set(int port, int channel, onlp_sfp_control_t control, int value);
 
 /**
  * @brief Get an SFP control.

@@ -54,7 +54,6 @@ typedef enum onlp_sfp_control_flag_e {
     ONLP_SFP_CONTROL_FLAG_RESET_STATE = ( 1 << ONLP_SFP_CONTROL_RESET_STATE ),
     ONLP_SFP_CONTROL_FLAG_RX_LOS = ( 1 << ONLP_SFP_CONTROL_RX_LOS ),
     ONLP_SFP_CONTROL_FLAG_TX_FAULT = ( 1 << ONLP_SFP_CONTROL_TX_FAULT ),
-    ONLP_SFP_CONTROL_FLAG_TX_DISABLE = ( 1 << ONLP_SFP_CONTROL_TX_DISABLE ),
     ONLP_SFP_CONTROL_FLAG_LP_MODE = ( 1 << ONLP_SFP_CONTROL_LP_MODE ),
     ONLP_SFP_CONTROL_FLAG_POWER_OVERRIDE = ( 1 << ONLP_SFP_CONTROL_POWER_OVERRIDE ),
 } onlp_sfp_control_flag_t;
@@ -202,10 +201,11 @@ int onlp_sfp_post_insert(int port, sff_info_t* info);
 /**
  * @brief Set an SFP control.
  * @param port The port.
+ * @param channel The breakout port.
  * @param control The control.
  * @param value The value.
  */
-int onlp_sfp_control_set(int port, onlp_sfp_control_t control, int value);
+int onlp_sfp_control_set(int port, int channel, onlp_sfp_control_t control, int value);
 
 /**
  * @brief Get an SFP control.
