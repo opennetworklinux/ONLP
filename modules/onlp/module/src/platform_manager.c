@@ -134,6 +134,8 @@ onlp_sys_platform_manage_init(void)
         int i;
         uint64_t now = os_time_monotonic();
 
+        onlp_sysi_platform_manage_init();
+
         control__.tw = timer_wheel_create(4, 512, now);
 
         for(i = 0; i < AIM_ARRAYSIZE(management_entries); i++) {
@@ -484,5 +486,3 @@ platform_fans_notify__(void)
     }
     return 0;
 }
-
-
