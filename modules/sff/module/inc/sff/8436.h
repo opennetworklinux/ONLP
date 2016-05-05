@@ -224,6 +224,9 @@
 #define SFF8436_DOM_GET_RXPWR_TYPE(idprom)               \
         (idprom[220] & SFF8436_RX_PWR_TYPE_MASK)
 
+/* SFF8436 registers */
+#define SFF8436_CONTROL_TX_DISABLE       86
+
 /* alternate ways to identify pre-standard 40G cables */
 static inline int
 _sff8436_qsfp_40g_pre(const uint8_t* idprom)
