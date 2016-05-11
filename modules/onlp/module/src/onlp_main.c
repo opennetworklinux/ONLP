@@ -81,12 +81,12 @@ show_inventory__(aim_pvs_t* pvs, int database)
                 continue;
             }
 
-            sff_info_t sff;
+            sff_eeprom_t sff;
             char status_str[32] = {0};
 
-            sff_info_init(&sff, data);
+            sff_eeprom_parse(&sff, data);
 
-            if(!sff.supported) {
+            if(!sff.identified) {
                 /* Present but unidentified. */
                 aim_printf(pvs, "%13d  UNK\n", port);
                 continue;
@@ -114,13 +114,13 @@ show_inventory__(aim_pvs_t* pvs, int database)
             }
             aim_printf(pvs, "%4d  %-14s  %-6s  %-6.6s  %-5.5s  %-16.16s  %-16.16s  %16.16s\n",
                        port,
-                       sff.module_type_name,
-                       sff.media_type_name,
+                       sff.info.module_type_name,
+                       sff.info.media_type_name,
                        status_str,
-                       sff.length_desc,
-                       sff.vendor,
-                       sff.model,
-                       sff.serial);
+                       sff.info.length_desc,
+                       sff.info.vendor,
+                       sff.info.model,
+                       sff.info.serial);
         }
     }
 }

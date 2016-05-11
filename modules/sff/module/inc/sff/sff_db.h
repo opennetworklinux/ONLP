@@ -30,7 +30,7 @@
 #include <AIM/aim_pvs.h>
 
 typedef struct {
-    sff_info_t info;
+    sff_eeprom_t se;
 } sff_db_entry_t;
 
 /**
@@ -42,10 +42,10 @@ int sff_db_get(sff_db_entry_t** entries, int* count);
 
 /**
  * @brief Return any entry with the given module type.
- * @param info Receives the information struct.
+ * @param se Receives the information struct.
  * @param type The type to retreive.
  */
-int sff_db_get_type(sff_info_t* info, sff_module_type_t type);
+int sff_db_get_type(sff_eeprom_t* se, sff_module_type_t type);
 
 
 /**
@@ -54,7 +54,7 @@ int sff_db_get_type(sff_info_t* info, sff_module_type_t type);
  * @param pvs The output pvs.;
  * @note This is used mainly for generating new entries for the SFF db from a running system.
  */
-int sff_db_entry_struct(sff_info_t* info, aim_pvs_t* pvs);
+int sff_db_entry_struct(sff_eeprom_t* se, aim_pvs_t* pvs);
 
 #endif /* __SFF_DB_H__ */
 
