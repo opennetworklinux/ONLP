@@ -258,7 +258,7 @@ _sff8436_qsfp_40g_pre(const uint8_t* idprom)
 
     return 0;
 }
-int
+static inline int
 _sff8436_qsfp_40g_lm4(const uint8_t* idprom)
 {
     if(!SFF8436_MODULE_QSFP_PLUS_V2(idprom)) {
