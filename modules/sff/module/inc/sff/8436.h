@@ -258,6 +258,19 @@ _sff8436_qsfp_40g_pre(const uint8_t* idprom)
 
     return 0;
 }
+int
+_sff8436_qsfp_40g_lm4(const uint8_t* idprom)
+{
+    if(!SFF8436_MODULE_QSFP_PLUS_V2(idprom)) {
+        return 0;
+    }
+    /* Restrict to Finisar FTL4C3QE1C at this point. */
+    if(strncmp("FTL4C3QE1C      ", (char*)idprom+168, 16)) {
+        return 0;
+    }
+    return SFF8436_MEDIA_NONE(idprom);
+}
+
 
 static inline int
 _sff8436_bitrate(const uint8_t *idprom)
@@ -351,7 +364,7 @@ _sff8436_qsfp_40g_sr2_bidi_pre(const uint8_t *idprom)
     long long br = (long long) idprom[140] * 100 * 1000000;
     if ((br >= 20LL*1000*1000000) && (br < 40LL*1000*1000000)) return 1;
     return 0;
-    
+
 }
 
 /*
@@ -396,7 +409,7 @@ _sff8436_qsfp_40g_sr4_aoc_pre(const uint8_t *idprom)
     long long br = (long long) idprom[140] * 100 * 1000000;
     if ((br >= 10LL*1000*1000000) && (br < 15LL*1000*1000000)) return 1;
     return 0;
-    
+
 }
 
 /*
