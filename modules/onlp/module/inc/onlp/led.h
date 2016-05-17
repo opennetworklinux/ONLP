@@ -32,11 +32,12 @@
 /** onlp_led_caps */
 typedef enum onlp_led_caps_e {
     ONLP_LED_CAPS_ON_OFF = (1 << 0),
+    ONLP_LED_CAPS_CHAR = (1 << 1),
     ONLP_LED_CAPS_RED = (1 << 10),
     ONLP_LED_CAPS_RED_BLINKING = (1 << 11),
     ONLP_LED_CAPS_ORANGE = (1 << 12),
     ONLP_LED_CAPS_ORANGE_BLINKING = (1 << 13),
-    ONLP_LED_CAPS_YELLOW = ( 1 << 14),
+    ONLP_LED_CAPS_YELLOW = (1 << 14),
     ONLP_LED_CAPS_YELLOW_BLINKING = (1 << 15),
     ONLP_LED_CAPS_GREEN = (1 << 16),
     ONLP_LED_CAPS_GREEN_BLINKING = (1 << 17),
@@ -91,6 +92,8 @@ typedef struct onlp_led_info_s {
 
     /** Current mode, if capable. */
     onlp_led_mode_t mode;
+    /** Current char, if capable. */
+    char character;
 } onlp_led_info_t;
 
 /**
@@ -123,6 +126,13 @@ int onlp_led_set(onlp_oid_t id, int on_or_off);
  * @note Only relevant if the LED supports the color capability.
  */
 int onlp_led_mode_set(onlp_oid_t id, onlp_led_mode_t color);
+/**
+ * @brief Set the LED char
+ * @param id The LED OID
+ * @param c The character.
+ * @note Only relevant if the LED supports the char capability.
+ */
+int onlp_led_char_set(onlp_oid_t id, char c);
 
 /**
  * @brief LED OID debug dump

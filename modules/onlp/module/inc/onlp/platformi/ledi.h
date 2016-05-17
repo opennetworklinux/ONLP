@@ -63,4 +63,11 @@ int onlp_ledi_ioctl(onlp_oid_t id, va_list vargs);
  */
 int onlp_ledi_mode_set(onlp_oid_t id, onlp_led_mode_t mode);
 
+/**
+ * @brief Set the LED character.
+ * @param id The LED OID
+ * @param c The character..
+ * @notes Only called if the char capability is set.
+ */
+int onlp_ledi_char_set(onlp_oid_t id, char c);
 #endif /* __ONLP_LED_H__ */

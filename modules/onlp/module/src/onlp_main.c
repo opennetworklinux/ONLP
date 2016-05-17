@@ -384,7 +384,7 @@ platform_manager_daemon__(const char* pidfile, char** argv)
     AIM_BITMAP_CLR(&rconfig.signal_restarts, SIGTERM);
     AIM_BITMAP_CLR(&rconfig.exit_restarts, 0);
     rconfig.maximum_restarts=50;
-    rconfig.pvs = NULL; /* fixme - aim_pvs_syslog_get(); */
+    rconfig.pvs = NULL;
     config.wd = "/";
 
     aim_daemonize(&config, &rconfig);
