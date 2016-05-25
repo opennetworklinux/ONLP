@@ -83,7 +83,7 @@ cdefs: &cdefs
     default: 64
 - ONLP_CONFIG_INCLUDE_THERMAL_THRESHOLDS:
     doc: "Include thermal threshold reporting."
-    default: 1
+    default: 0
 
 # Error codes
 onlp_status: &onlp_status
