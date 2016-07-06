@@ -55,16 +55,16 @@ onlp_i2c_open(int bus, uint8_t addr, uint32_t flags)
 
     /* Set 10 or 7 bit mode */
     rv = ioctl(fd, I2C_TENBIT, (flags & ONLP_I2C_F_TENBIT) ? 1 : 0);
-    if(rv != 0) {
-        AIM_LOG_ERROR("i2c-%d: failed to set %d bit mode",
+    if(rv == -1) {
+        AIM_LOG_ERROR("i2c-%d: failed to set %d bit mode", bus,
                       (flags & ONLP_I2C_F_TENBIT) ? 10 : 7);
         goto error;
     }
 
     /* Enable/Disable PEC */
     rv = ioctl(fd, I2C_PEC, (flags & ONLP_I2C_F_PEC) ? 1 : 0);
-    if(rv != 0) {
-        AIM_LOG_ERROR("i2c-%d: failed to set PEC mode %d",
+    if(rv == -1) {
+        AIM_LOG_ERROR("i2c-%d: failed to set PEC mode %d", bus,
                       (flags & ONLP_I2C_F_PEC) ? 1 : 0);
         goto error;
     }
@@ -74,10 +74,11 @@ onlp_i2c_open(int bus, uint8_t addr, uint32_t flags)
                (flags & ONLP_I2C_F_FORCE) ? I2C_SLAVE_FORCE : I2C_SLAVE,
                addr);
 
-    if(rv != 0) {
+    if(rv == -1) {
         AIM_LOG_ERROR("i2c-%d: %s slave address 0x%x failed: %{errno}",
                       bus,
                       (flags & ONLP_I2C_F_FORCE) ? "forcing" : "setting",
+                      addr,
                       errno);
         goto error;
     }
