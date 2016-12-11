@@ -1,21 +1,21 @@
 /************************************************************
  * <bsn.cl fy=2014 v=onl>
- * 
- *        Copyright 2014, 2015 Big Switch Networks, Inc.       
- * 
+ *
+ *        Copyright 2014, 2015 Big Switch Networks, Inc.
+ *
  * Licensed under the Eclipse Public License, Version 1.0 (the
  * "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
- * 
+ *
  *        http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the
  * License.
- * 
+ *
  * </bsn.cl>
  ************************************************************
  *
@@ -112,6 +112,22 @@ int onlp_fan_init(void);
  * @param rv [out] Receives the fan information.
  */
 int onlp_fan_info_get(onlp_oid_t id, onlp_fan_info_t* rv);
+
+/**
+ * @brief Retrieve the fan's operational status.
+ * @param id The fan OID.
+ * @param rv [out] Receives the fan's operations status flags.
+ * @notes Only operational state needs to be returned -
+ *        PRESENT/FAILED
+ */
+int onlp_fan_status_get(onlp_oid_t id, uint32_t* rv);
+
+/**
+ * @brief Retrieve the fan's OID hdr.
+ * @param id The fan OID.
+ * @param rv [out] Receives the OID header.
+ */
+int onlp_fan_hdr_get(onlp_oid_t id, onlp_oid_hdr_t* hdr);
 
 /**
  * @brief Set the fan speed in RPMs.

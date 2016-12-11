@@ -1,21 +1,21 @@
 /************************************************************
  * <bsn.cl fy=2014 v=onl>
- * 
- *        Copyright 2014, 2015 Big Switch Networks, Inc.       
- * 
+ *
+ *        Copyright 2014, 2015 Big Switch Networks, Inc.
+ *
  * Licensed under the Eclipse Public License, Version 1.0 (the
  * "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
- * 
+ *
  *        http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the
  * License.
- * 
+ *
  * </bsn.cl>
  ************************************************************
  *
@@ -107,6 +107,20 @@ int onlp_led_init(void);
  * @param rv [out] Receives the information structure.
  */
 int onlp_led_info_get(onlp_oid_t id, onlp_led_info_t* rv);
+
+/**
+ * @brief Get the LED operational status.
+ * @param id The LED OID
+ * @param rv [out] Receives the operational status.
+ */
+int onlp_led_status_get(onlp_oid_t id, uint32_t* rv);
+
+/**
+ * @brief Get the LED header.
+ * @param id The LED OID
+ * @param rv [out] Receives the header.
+ */
+int onlp_led_hdr_get(onlp_oid_t id, onlp_oid_hdr_t* rv);
 
 /**
  * @brief Turn an LED on or off.
